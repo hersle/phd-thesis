@@ -1,0 +1,80 @@
+\documentclass[USenglish, thumbmarks]{uiophdthesis} % https://www.uio.no/english/about/designmanual/profile-in-use/latex/
+\usepackage[utf8]{inputenc}
+
+\usepackage[T1]{url}
+\urlstyle{same} % no special font (template default is sf)
+\usepackage[hidelinks, hypertexnames=false]{hyperref}
+
+\usepackage{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{bookmark}
+
+\usepackage[nospace]{varioref}
+\usepackage{cleveref}
+
+\usepackage[backend=biber, style=numeric-comp, url=false]{biblatex}
+\DeclareFieldFormat{titlecase}{#1}
+
+\newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
+\newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
+
+\title{New tools for exploring modified cosmological models}
+%\subtitle{Subtitle}
+\author{Herman Sletmoen}
+
+\addbibresource{thesis.bib}
+
+\begin{document}
+
+\frontmatter{}
+\maketitle[
+  supervisor={Hans A. Winther},
+  dept={Institute of Theoretical Astrophysics},
+  %fac={Faculty of Mathematics and Natural Sciences},
+  %info={Additional information},
+  %year={2026}
+]
+
+\begin{abstract}
+\TODO{3--6 sentences describing your thesis.}
+\end{abstract}
+\begin{xabstract}[Sammendrag]
+\TODO{In Norwegian}
+\end{xabstract}
+
+\tableofcontents{}
+\listoffigures{}
+\listoftables{}
+
+\begin{preface}
+\TODO{Preface, including acknowledgments and thanks.}
+\section*{Acknowledgements}
+\TODO{}
+\end{preface}
+
+\mainmatter{}
+
+\chapter{Background}
+\section{The state of cosmology today}
+
+\TODO{}
+
+\cite{sletmoenSimplePredictionNonlinear2024}
+
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+
+SymBoltz repository \url{https://github.com/hersle/SymBoltz.jl}
+
+\uiopaper[%compact,
+  authors={Herman Sletmoen\and Hans A. Winther},
+  published={Published in \href{https://doi.org/10.1051/0004-6361/202450050}{Astronomy \& Astrophysics (Sept. 2024)}},
+  info={Equivalent preprint on \arxiv{2403.03786}},
+]{A simple prediction of the nonlinear matter power spectrum in Brans–Dicke gravity from linear theory}
+\uioincludepdf{paper1.pdf}
+
+\backmatter{}
+\printbibliography{}
+
+\end{document}
