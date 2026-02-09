@@ -12,8 +12,22 @@ jobs:
         with:
           root_file: thesis.tex
           texlive_version: 2023 # same as my laptop
-      - name: Upload PDF file
-        uses: actions/upload-artifact@v6
+      - name: Upload artifact to Github pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: PDF
-          path: thesis.pdf
+          path: .
+
+  deploy:
+    needs: build_latex
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Github Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
