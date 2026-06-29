@@ -11,6 +11,9 @@
 \usepackage{textcomp}
 \usepackage{bookmark}
 
+\usepackage[table]{xcolor} % color tables
+\usepackage{booktabs}
+
 \usepackage[nospace]{varioref}
 \usepackage{cleveref}
 
@@ -65,7 +68,41 @@
 
 \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 
+\section{The motivation and development of SymBoltz}
+
 SymBoltz repository \url{https://github.com/hersle/SymBoltz.jl}
+
+\begin{table}[htbp]
+\begin{center}
+\small
+\setlength{\tabcolsep}{2pt}
+\def\arraystretch{1.5}
+\begin{tabular}{lllllll}
+\toprule
+ & CAMB & CLASS & PyCosmo & DISCO-EB & Bolt${}^1$ & SymBoltz \\
+\midrule
+Best implicit solver  & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
+Approximation-free    & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Solver order (stable) & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
+Newton iterations     & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
+Jacobian method       & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
+Jacobian sparsity     & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+Differentiable        & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{%
+Characteristic of SymBoltz compared to other Einstein--Boltzmann codes.
+AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
+${}^1$Development appears to have ceased.
+${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
+${}^3$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order (e.g. \url{https://doi.org/10.1137/S1064827594276424}).
+${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ (see \url{https://arxiv.org/abs/1708.05177} eq. (21)).
+${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
+${}^6$Sparsity found numerically and changes with approximations.
+}
+\label{tab:boltzmann-comparison}
+\end{table}
 
 \uiopaper[%compact,
   authors={Herman Sletmoen\and Hans A. Winther},
