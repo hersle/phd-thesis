@@ -20,6 +20,8 @@
 \usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
 
+\newcommand\diff{\mathrm{d}}
+\newcommand\ini{\mathrm{ini}}
 \newcommand\LCDM{\ensuremath{\mathrm{\Lambda CDM}}}
 \newcommand\EB{Einstein--Boltzmann}
 \newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
@@ -75,36 +77,44 @@
 \section{History of \EB{} codes}
 
 \begin{itemize}
-\item \textbf{COSMICS} \cite{maCosmologicalPerturbationTheory1995a} is the code that accompanied the seminal paper that gave a complete and systematic treatment of linear cosmological perturbation theory in both the Newtonian and synchronous gauge with general relativity, cold dark matter, massless neutrinos, massive neutrions, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}
+\item \textbf{COSMICS} \cite{maCosmologicalPerturbationTheory1995a}
+is the code that accompanied the seminal paper that gave a complete and systematic treatment of linear cosmological perturbation theory in both the Newtonian and synchronous gauge with general relativity, cold dark matter, massless neutrinos, massive neutrions, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}
 This has served as a seminal reference paper and standardized notation and conventions across different codes.
 The code was written in Fortran and is abandoned now, and later evolved into CMBFAST.
 \TODO{url from internet archive?}
 Introduced several concepts that are still used by present solvers:
 cubic spline interpolation in $\ell$,
 
-\item \textbf{CMBFAST} \cite{seljakLineSightApproach1996} was the next iteration to the COSMICS code.
+\item \textbf{CMBFAST} \cite{seljakLineSightApproach1996}
+was the next iteration to the COSMICS code.
 It accompanied the line-of-sight integration.
 It has since been abandoned, but has sprung out to become CAMB and the fork CMBEASY.
 
-\item \textbf{CAMB} \cite{lewisEfficientComputationCMB2000a} is one of the two most established codes in use today, and is a further evolution of CMBFAST.
+\item \textbf{CAMB} \cite{lewisEfficientComputationCMB2000a}
+is one of the two most established codes in use today, and is a further evolution of CMBFAST.
 Fortran with Python wrapper.
 It has been extended into many different forks, such as EFTCAMB (for effective field theory), MGCAMB (for select modified gravity theories) and gCAMB (for parallellizing perturbations with GPUs).
 ...
 These characteristics make CAMB a code works extremely well for the standard \LCDM{} model, at the cost of being more difficult to extend to other models.
 
-\item \textbf{CLASS} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f} is the other most established code in use today, and is the first major independent code that is not from the same branch as CAMB.
+\item \textbf{CLASS} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f}
+is the other most established code in use today, and is the first major independent code that is not from the same branch as CAMB.
 It is written in C and C++, and has a wrapper for use in Python.
 It has been extended into a plethora of modified codes: hi\_class, MGCLASS, CLASSIER, CLASS-PT, SONG.
 
-\item \textbf{PyCosmo} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021} is a third independent code and the first to be primarily written in Python, which is currently the most popular programming language used in cosmology.
-It is the first code that features mixed symbolic-numeric structure: equations are defined with sympy, then compiled to efficient C/C++ code using sympy2c \cite{schmittSympy2cSymbolicExpressions2022a}.
-It is also the first code to be truly approximation-free: using \TODO{}
-It is written in Python and defines symbolic equations with sympy, and compiles them to efficient C/C++ code using their own compiler sympy2c .
+\item \textbf{PyCosmo} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021}
+is a third independent code and the first to be primarily written in Python,
+which is the high-level programming language that has become most popular in the cosmological community in recent years.
+It is the first code that features a mixed symbolic-numeric structure:
+equations are defined with sympy,
+then compiled to efficient C/C++ code using the sympy2c utility \cite{schmittSympy2cSymbolicExpressions2022a} that was made in tandem with the code.
+It is also the first code to be truly approximation-free:
+using the implicit BDF2 method coupled with the sparse and analytical Jacobians to completely circumvent approximation schemes found in older codes.
 
 %\item \textbf{CMBAns:}
 %???
 
-\item \textbf{Bolt}
+\item \textbf{Bolt} \cite{XzackliBoltjlCitation}
 is the first differentiable \EB{} code and the first code written in the Julia programming language.
 Using ForwardDiff.jl, it can compute gradients of the matter and CMB power spectra with forward-mode automatic differentiation.
 Its implementation is minimal and direct in only a few hundred lines of code,
@@ -141,6 +151,58 @@ which is no easy task.
 \TODO{Add a tree showing evolution/parent history? Not including derivatives.}
 
 \section{The motivation and development of SymBoltz}
+
+
+Cosomology II project: COMBO.jl
+
+History of EB code development in UiO, e.g. Peter Callinn.
+
+As a computational physicist,
+a significant source of my interest in \EB{} codes come from their combination of a surprising number of numerical methods and algorithms:
+\begin{itemize}
+\item \textbf{Ordinary differential equations (ODEs):}
+The most fundamental part of any \EB{} codes is the solution of ODEs in time $t$
+\begin{equation}
+    \frac{\diff u}{\diff t} = f(u, t, p),
+    \quad
+    u(t_\ini) = u_\ini.
+\end{equation}
+for the solution $u(t)$ of the background and perturbation equations $f(u, t, p)$ with initial conditions $u_\ini$ and parameters $p$.
+The background (including thermodynamics\footnote{Many places the thermodynamics is not considered part of the background.}) typically features only 1-10 coupled equations,
+while the perturbations feature 10s or 100s of coupled equations that must be solved repeatedly for 100s to 1000s of different values of the perturbation wavenumber $k \in p$.
+Solving the equations is made even more challenging because they are \textbf{stiff} due to several different timescales coexisting in the same equations.
+Standard explicit ODE methods,
+such as the well-known Euler, RK4 and Dormand--Prince methods,
+fail catastrophically at solving stiff ODEs by taking tiny step sizes and diverging with huge errors.
+Some \EB{} codes remove the stiffness in the equations by approximating them with different versions in different regimes,
+which makes the use of explicit solvers possible, but makes highly model-dependent statements that make it much more difficult to modify the model.
+Instead of approximating the equations, one can solve the full stiff equations with implicit ODE solvers,
+such as lesser-known BDF, Radau and Rosenbrock methods,
+which are much more computationally demanding, harder to implement efficiently and has performance characteristics that depend much more on the equations than for explicit methods.
+
+\item \textbf{Quadrature (numerical integration):}
+With the introduction of the line-of-sight integration method by \cite{seljakLineSightApproach1996},
+\EB{} codes switched to evaluating $\ell$-dependent photon multipoles from ODEs to integrals
+\begin{equation}
+    I(a, b) = \int_a^b f(t) \, \diff t.
+\end{equation}
+Every integral can be reduced to a one-dimensional ODE and thus solved with an ODE solver,
+but most ODEs cannot be reformulated to integral equations.
+Quadrature methods are methods designed specifically for evaluating full integrals without obtaining the cumulative solution at intermediate time points.
+
+\item \textbf{Linear algebra:}
+\item \textbf{Interpolation:}
+\item \textbf{Symbolic computation:}
+\item \textbf{Special functions:}
+\item \textbf{Nonlinear equation solving:}
+\item \textbf{Differentiation:}
+\item \textbf{Parallellization:}
+\end{itemize}
+
+Want to combine this into one cohesive package.
+Two approaches:
+1. physical approximations with traditional numerical algorithms,
+2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
 
 \begin{figure}[htbp]
 \centering
