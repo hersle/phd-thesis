@@ -17,9 +17,11 @@
 \usepackage[nospace]{varioref}
 \usepackage{cleveref}
 
-\usepackage[backend=biber, style=numeric-comp, url=false]{biblatex}
+\usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
 
+\newcommand\LCDM{\ensuremath{\mathrm{\Lambda CDM}}}
+\newcommand\EB{Einstein--Boltzmann}
 \newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
 
@@ -68,6 +70,76 @@
 
 \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 
+\chapter{The linear part: SymBoltz}
+
+\section{History of \EB{} codes}
+
+\begin{itemize}
+\item \textbf{COSMICS} \cite{maCosmologicalPerturbationTheory1995a} is the code that accompanied the seminal paper that gave a complete and systematic treatment of linear cosmological perturbation theory in both the Newtonian and synchronous gauge with general relativity, cold dark matter, massless neutrinos, massive neutrions, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}
+This has served as a seminal reference paper and standardized notation and conventions across different codes.
+The code was written in Fortran and is abandoned now, and later evolved into CMBFAST.
+\TODO{url from internet archive?}
+Introduced several concepts that are still used by present solvers:
+cubic spline interpolation in $\ell$,
+
+\item \textbf{CMBFAST} \cite{seljakLineSightApproach1996} was the next iteration to the COSMICS code.
+It accompanied the line-of-sight integration.
+It has since been abandoned, but has sprung out to become CAMB and the fork CMBEASY.
+
+\item \textbf{CAMB} \cite{lewisEfficientComputationCMB2000a} is one of the two most established codes in use today, and is a further evolution of CMBFAST.
+Fortran with Python wrapper.
+It has been extended into many different forks, such as EFTCAMB (for effective field theory), MGCAMB (for select modified gravity theories) and gCAMB (for parallellizing perturbations with GPUs).
+...
+These characteristics make CAMB a code works extremely well for the standard \LCDM{} model, at the cost of being more difficult to extend to other models.
+
+\item \textbf{CLASS} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f} is the other most established code in use today, and is the first major independent code that is not from the same branch as CAMB.
+It is written in C and C++, and has a wrapper for use in Python.
+It has been extended into a plethora of modified codes: hi\_class, MGCLASS, CLASSIER, CLASS-PT, SONG.
+
+\item \textbf{PyCosmo} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021} is a third independent code and the first to be primarily written in Python, which is currently the most popular programming language used in cosmology.
+It is the first code that features mixed symbolic-numeric structure: equations are defined with sympy, then compiled to efficient C/C++ code using sympy2c \cite{schmittSympy2cSymbolicExpressions2022a}.
+It is also the first code to be truly approximation-free: using \TODO{}
+It is written in Python and defines symbolic equations with sympy, and compiles them to efficient C/C++ code using their own compiler sympy2c .
+
+%\item \textbf{CMBAns:}
+%???
+
+\item \textbf{Bolt}
+is the first differentiable \EB{} code and the first code written in the Julia programming language.
+Using ForwardDiff.jl, it can compute gradients of the matter and CMB power spectra with forward-mode automatic differentiation.
+Its implementation is minimal and direct in only a few hundred lines of code,
+However, the code unpublished and has not been used in any published work,
+and it appears to have been abandoned at the time of writing.
+
+\item \textbf{DISCO-EB} \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}
+is another differentiable \EB{} code written in the Jax framework in Python.
+This has become a popular framework for extending numpy library in Python to differentiable programming and GPUs.
+The code is released as the first part of the DISCO-DJ I+II project \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026},
+which is the first differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation.
+At the time of writing, the code is focused at structure formation, features a highly simplified recombination treatment and does not compute CMB observables.
+
+%\item \textbf{ABCMB:}
+%Python and Jax.
+
+%\item \textbf{nanoCMB:}
+%Python.
+%Very minimal.
+
+\item \textbf{SymBoltz} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+is the first \EB{} code that is both symbolic-numeric, approximation-free and differentiable.
+It attemps to bring together the successes of the other \EB{} codes.
+It is inspired by the symbolic-numeric structure of PyCosmo,
+which makes it easier to modify models without touching code internals and generates ODE functions and sparse and analytical ODE Jacobians automatically.
+It follows through on the approximation-free property that begun partly with CLASS, PyCosmo, DISCO-EB and Bolt,
+but makes it stronger by combining Rosenbrock ODE methods with sparse and analytical Jacobians generated by the symbolic-numeric machinery.
+It also supports gradient computation with forward-mode automatic differentiation,
+but makes this compatible with both the symbolic-numeric interface and the implicit ODE solvers using sparse Jacobians,
+which is no easy task.
+
+\end{itemize}
+
+\TODO{Add a tree showing evolution/parent history? Not including derivatives.}
+
 \section{The motivation and development of SymBoltz}
 
 \begin{figure}[htbp]
@@ -97,7 +169,7 @@ Differentiable        & \cellcolor{red}No             & \cellcolor{red}No       
 \end{tabular}
 \end{center}
 \caption{%
-Characteristic of SymBoltz compared to other Einstein--Boltzmann codes.
+Characteristics of SymBoltz compared to other Einstein--Boltzmann codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
 AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
 ${}^1$Development appears to have ceased.
 ${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
