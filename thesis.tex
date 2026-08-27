@@ -220,13 +220,14 @@ Two approaches:
 \toprule
  & CAMB & CLASS & PyCosmo & DISCO-EB & Bolt${}^1$ & SymBoltz \\
 \midrule
-Best implicit solver  & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
-Approximation-free    & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Solver order (stable) & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
-Newton iterations     & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
-Jacobian method       & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
-Jacobian sparsity     & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
-Differentiable        & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Best implicit solver   & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
+Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Solver order (stable)  & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
+Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
+Jacobian method        & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
+Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub.  spl.       & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
 \bottomrule
 \end{tabular}
 \end{center}
