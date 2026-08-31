@@ -105,9 +105,86 @@ In particular, modern cosmology relies on Einstein--Boltzmann codes for evolving
 and $N$-body simulations for non-linear evolution of the matter distribution in the universe.
 This poses a software engineering problem:
 
-\section{The state of cosmology today}
+\section{The standard model of cosmology}
 
-\TODO{}
+Over the last century, the standard model of cosmology has been successively refined and evolved to the standard \LCDM{} model.
+Here the cosmological constant ($\Lambda$) acts as dark energy,
+and cold dark matter (CDM) is a collisionless form of matter.
+
+With the detection of the cosmic microwave background (CMB) in the 1960s,
+the earlier steady state model was put to rest.
+It argued that the expansion of the universe is eternal and that it satisfies a theoretically elegant \emph{perfect cosmological principle},
+where the universe is homogeneous and isotropic in both space and time.
+In other words, the universe should look the same also when looking backward and forward in time.
+It also argues that the background microwave radiation was due to starlight being scattered by galactic dust.
+Penzias and Wilson measured the microwave background with a finite temperature in 1964,
+whose values was consistent with that of a perfect black body but redshifted from an early state with a hot and dense state that we call the \emph{Big Bang} today.
+
+In 1990, COBE confirmed that the spectrum of the microwave background matched that of a black body to unprecedented precision.
+In following years, WMAP and Planck further refined observations of what was now referred to as the \emph{cosmic} microwave background.
+This made it possible to shift from decades of research on the \emph{qualitative} features of the universe
+into \emph{quantitative} research on precision cosmology, measuring parameters of cosmological models.
+
+\TODO{CMB in 1960s, CMB anisotropy in 1990s, accelerating expansion in 1998, continuing into precision cosmology with WMAP and Planck}
+
+\subsection{The cosmological principle}
+
+A central geometrical assumption in the standard model is that when averaged over sufficiently large scales,
+the 3D spatial universe looks \emph{almost} the same in every direction (isotropy) and from every point (homogeneity).
+\TODO{galaxy survey figure?}
+This allows to write down a simplified metric function $g_{\mu\nu}(x)$:
+\begin{equation}
+    \diff{s}^2 = -\diff{\tau}^2 + a(\tau)^2 \left( \frac{\diff{r}}{1-Kr^2} + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
+\end{equation}
+
+This dramatically simplifies the analysis of Einstein's field equations.
+
+Verified experimentally...,
+but challenged by ...
+
+\subsection{General Relativistic gravity}
+
+\begin{equation}
+    G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
+\end{equation}
+where
+
+\subsection{Baryons and photons}
+
+\TODO{recombination and recombination codes}
+
+\subsection{Neutrinos}
+
+\subsection{Dark matter}
+
+\TODO{Zwicky, Coma Cluster}
+
+\TODO{rotation curves}
+
+\subsection{Dark energy}
+
+\TODO{cosmological constant was introduced, taken out and came back in the 90s}
+
+\section{Alternatives to the standard model}
+
+\subsection{Modified gravity}
+
+\TODO{Brans-Dicke, Horndeski, ...}
+
+\subsection{Dark matter particles}
+
+\TODO{WIMPs, ...}
+
+\subsection{Dark energy models}
+
+\TODO{$w_0 w_a$, ...}
+
+\subsection{Interacting models}
+
+\section{Computational tools}
+
+From the 1980s and onwards,
+advances in technology and computers made it possible to ...
 
 \cite{sletmoenSimplePredictionNonlinear2024}
 
@@ -244,6 +321,8 @@ Want to combine this into one cohesive package.
 Two approaches:
 1. physical approximations with traditional numerical algorithms,
 2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
+
+\TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
 
 \begin{figure}[htbp]
 \centering
