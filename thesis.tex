@@ -5,6 +5,8 @@
 \urlstyle{same} % no special font (template default is sf)
 \usepackage[hidelinks, hypertexnames=false]{hyperref}
 
+\usepackage{amssymb}
+
 \usepackage{babel}
 \usepackage{csquotes}
 \usepackage{graphicx}
@@ -26,6 +28,7 @@
 \newcommand\EB{Einstein--Boltzmann}
 \newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
+\newcommand\Mpc{\ensuremath{\mathrm{Mpc}}}
 
 \title{New tools for exploring modified cosmological models}
 %\subtitle{Subtitle}
@@ -64,6 +67,7 @@
 \mainmatter{}
 
 \chapter{Background}
+\label{chap:back}
 
 % Theoretical
 
@@ -169,6 +173,9 @@ where
 
 \subsection{Modified gravity}
 
+Just like Newton was a genius and his theory of gravity breaks down in relativistic regimes,
+maybe Einstein was also a genius and his theory of gravity breaks down at cosmological scales?
+
 \TODO{Brans-Dicke, Horndeski, ...}
 
 \subsection{Dark matter particles}
@@ -177,20 +184,67 @@ where
 
 \subsection{Dark energy models}
 
+Time-dependent dark energy
+
 \TODO{$w_0 w_a$, ...}
 
 \subsection{Interacting models}
 
 \section{Computational tools}
 
-From the 1980s and onwards,
-advances in technology and computers made it possible to ...
+As computers have become more and more powerful in the 1980s and onwards,
+cosmology has shifted from a science with analytical \enquote{pen-and-paper} work
+into a field that increasingly relies on numerical computations.
+Cosmology has become a scientific software development discipline,
+due to user-friendliness, flexibility, speed and robustness that are required in order to
 
-\cite{sletmoenSimplePredictionNonlinear2024}
+In particular, this computational science relies on three types of computational tools that I highlight in this thesis.
+
+\subsection{Linear \EB{} codes}
+
+Linear \EB{} codes solve the background and linear perturbations of the \EB{} equations that define a cosmological model.
+This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$,
+but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
+For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB.
+
+Generally, this is the must fundamental code that must be modified for a given cosmological model,
+requiring the implementation of background (including thermodynamcis) and perturbation equations.
+These codes stitch together a wide range of advanced numerical methods to solve several steps.
+For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
+Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
+and now run on the order of seconds on a normal laptop.
+
+As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
+In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
+particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
 
 \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 
+\subsection{Nonlinear $N$-body simulation codes}
+
+$N$-body simulations model the matter distribution in the universe with particles,
+and evolve them forward in time with gravitational forces.
+This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
+
+Slow
+
+Ramses, COLA, ...
+
+More on this in \cref{chap:nonlin}.
+
+\cite{sletmoenSimplePredictionNonlinear2024}
+
+\subsection{Emulators}
+
+Linear \EB{} solvers, and to an even greater extent $N$-body simulations, are expensive to run.
+However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
+Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
+
+In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
+A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
+
 \chapter{The linear part: SymBoltz}
+\label{chap:lin}
 
 \section{History of \EB{} codes}
 
