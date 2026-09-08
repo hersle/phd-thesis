@@ -148,16 +148,33 @@ but challenged by ...
 
 \subsection{General Relativistic gravity}
 
+In general relativity, space and time are geometrically intertwined on a $3+1$-dimensional manifold,
+whose fundamental object is the metric tensor $g_{\mu\nu}(x)$.
+The most fundamental way of formulating it is as a field theory with the Einstein--Hilbert action
+\begin{equation}
+    S = \frac{1}{16\pi} \int \diff{^4 x} \sqrt{-g} R,
+\end{equation}
+where $g<0$ is the determinant of the metric and the Ricci scalar $R$ is the simplest scalar invariant
+(invariant to coordinate transformations) that describes the curvature of spacetime.
+
+The equations of motion follow from the principle of least action:
+varying the action $S$ with respect to the metric $g_{\mu\nu}(x)$ gives the Einstein field equations:
 \begin{equation}
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
 \end{equation}
-where
+Here $G_{\mu\nu} = R_{\mu\nu} - \frac12 g_{\mu\nu} R$ is the Einstein tensor,
+$R_{\mu\nu}$ is the Ricci tensor and $R$ \TODO{tensor notation package} the Ricci scalar.
+The left side of the equation is purely \emph{geometrical} and a function of the metric $g_{\mu\nu}$ alone.
+The right side of the equation contains the stress-energy tensor $T_{\mu\nu}$, which encodes the density and flux of energy due to the \emph{matter} content that fills space and time.
+It is in this way that \enquote{spacetime tells matter how to move; matter tells spacetime how to curve} \TODO{ref Wheeler}.
 
-\subsection{Baryons and photons}
+From the Einstein field equations, it follows that the conservation of energy and momentum
+\begin{equation}
+    \nabla_\mu T^{\mu\nu} = 0.
+\end{equation}
+This can be derived as a purely geometrical consequence from the left side of the equations \TODO{ref?}.
 
-\TODO{recombination and recombination codes}
-
-\subsection{Neutrinos}
+\TODO{cosmological constant, biggest blunder, initially put in to stabilize, then removed and Einstein thought it was his biggest blunder, and then put back again in 1998 forwards due to accelerating universe observations}
 
 \subsection{Dark matter}
 
@@ -165,7 +182,17 @@ where
 
 \TODO{rotation curves}
 
+\subsection{Baryons and photons}
+
+Definition is not consistent with particle physics? Includes e.g. electrons?
+
+\TODO{recombination and recombination codes}
+
+\subsection{Neutrinos}
+
 \subsection{Dark energy}
+
+The cosmological constant $\Lambda$ has a troubled history.
 
 \TODO{cosmological constant was introduced, taken out and came back in the 90s}
 
@@ -190,7 +217,9 @@ Time-dependent dark energy
 
 \subsection{Interacting models}
 
-\section{Computational tools}
+\section{Computational paradigm of cosmology}
+
+\TODO{define model; predict observables; run MCMC}
 
 As computers have become more and more powerful in the 1980s and onwards,
 cosmology has shifted from a science with analytical \enquote{pen-and-paper} work
@@ -236,7 +265,7 @@ More on this in \cref{chap:nonlin}.
 
 \subsection{Emulators}
 
-Linear \EB{} solvers, and to an even greater extent $N$-body simulations, are expensive to run.
+Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
 However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
 Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
 
@@ -417,6 +446,74 @@ ${}^6$Sparsity found numerically and changes with approximations.
 }
 \label{tab:boltzmann-comparison}
 \end{table}
+
+\chapter{The nonlinear part}
+\label{chap:nonlin}
+
+\chapter{Conclusion and outlook}
+\label{sec:conclusion}
+
+\subsection{AI/LLM usage}
+
+In a thesis about numerical methods, coding and software in astronomy in 2026,
+I cannot avoid discussing the impact of artificial intelligence (AI) and large language models (LLMs) on software development.
+ChatGPT was launched by OpenAI -- an extremely misleading name -- in November 2022, only a few months after I began my PhD.
+This sparked a race among competitors, and Microsoft/Google/Antrophic launched Copilot/Gemini/Claude the next year.
+These chatbot services were eagerly tested and adopted by many people in personal usage, scientific workcases and industry workplaces.
+
+However, in 2025 and onwards, these services have evolved further into \emph{agentic} AI systems.
+They have access to a computer, can read and write code and files, run programs, analyze results and inspect error messages.
+This ability addresses the hallucination problem of AI, since now a model can iteratively correct itself when it writes code that does not run or when it computes results that are not correct.
+Copy-pasting the output of the chatbots.
+
+Pressure to use these tools to increase productivity.
+In my experience, a significant amount of PhD students even pay for these tools out of their own pockets,
+while the university does currently not pay for it.
+
+The increasing use of AI tools has sparked a debate in the scientific community about whether or not one should use them \TODO{refs}.
+Created significant polarization in the community, regarding what is accepted and not.
+Here I also offer my thoughts on the role of AI in scientific research and astronomy.
+
+CLAX and nanoCMB?
+
+Fallacies (in my opinion) about AI and LLMs:
+
+LLMs are knowledge banks that are genuinely useful to navigate the literature.
+
+Some people object that they do not have knowledge or intelligence, but that they are only statistical machines for predicting which word comes after another word.
+But there is a correlation between words/language and knowledge.
+
+Good computing is about finding the right level of abstraction.
+AI can be viewed as another layer of abstraction, that allows humans to focus on high-level tasks merely by writing textual prompts,
+while agentic AI performs lower-level tasks.
+It is inevitable that as the volume of human knowledge and \enquote{the literature} grows,
+finding ways to \enquote{compress} or accelerate the existing knowledge will become more important,
+unless we want children to spend an increasing part of their lives in elementary school.
+
+Short prompts and long output are a symptom of a problem:
+the abstraction (say software library) does not exist to handle the prompt,
+OR we are for some reason motivated to produce e.g. a 12-page research article about a 
+Thus, I believe that journals have an important role in modernizing themselves,
+for example in making it possible to publish research findings in other formats that allow for smaller \enquote{chunks} (e.g. using HTML)
+rather than forcing everything through the (sometimes bureaucratic).
+For example, in mathematics they have started using \enquote{graph networks} with knowledge nodes.
+
+The training problem: AI needs to be verified, but if noone does things manually anymore, then noone will be able to verify.
+
+Another problem: \enquote{bad}/\enquote{messy} software engineering practices in sciences amplifies the problem.
+Some people treat scripting only as a means to an end to produce scientific results:
+it can be however messy you want, and all you care about is the input and output.
+This workflow is what attracts the use of AI/LLMs.
+Instead, I believe we should take the software engineering aspect in science seriously,
+and strive to create modular and well-tested libraries and package that can build upon eachother.
+
+Others dismiss AI for not being sustainable due to massive use of energy, and that the AI companies are subsidizing usage in early phases and that the cost will ramp up significantly in the future.
+But as with any technology ever created, I believe it is a failure to not account for that the technology will improve and become more efficient in the future.
+
+In my opinion, communicating research results should always be done by humans.
+
+I think it is genuinely very important that we, as the cosmological research community,
+resolve the \enquote{political tension} in AI use and figure out the accepted way to use these tools while preserving the literature that we want as humans.
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
