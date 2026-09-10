@@ -5,6 +5,7 @@
 \urlstyle{same} % no special font (template default is sf)
 \usepackage[hidelinks, hypertexnames=false]{hyperref}
 
+\usepackage{amsmath}
 \usepackage{amssymb}
 
 \usepackage{babel}
@@ -19,6 +20,9 @@
 \usepackage[nospace]{varioref}
 \usepackage{cleveref}
 
+\usepackage{derivative}
+%\derivset{\odv}[style-inf=\mathrm] % write normal derivatives with upright d
+
 \usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
 
@@ -29,6 +33,7 @@
 \newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
 \newcommand\Mpc{\ensuremath{\mathrm{Mpc}}}
+\newcommand\const{\ensuremath{\mathrm{const}}}
 
 \title{New tools for exploring modified cosmological models}
 %\subtitle{Subtitle}
@@ -140,6 +145,8 @@ This allows to write down a simplified metric function $g_{\mu\nu}(x)$:
 \begin{equation}
     \diff{s}^2 = -\diff{\tau}^2 + a(\tau)^2 \left( \frac{\diff{r}}{1-Kr^2} + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
 \end{equation}
+This is called the Friedmann--Lemaître--Robertson--Walker (FLRW) metric,
+named after four people whose works established it.
 
 This dramatically simplifies the analysis of Einstein's field equations.
 
@@ -176,9 +183,33 @@ This can be derived as a purely geometrical consequence from the left side of th
 
 \TODO{cosmological constant, biggest blunder, initially put in to stabilize, then removed and Einstein thought it was his biggest blunder, and then put back again in 1998 forwards due to accelerating universe observations}
 
+The Einstein equations with the FLRW metric gives the first and second Friedmann equations:
+\TODO{$\rho$ and $P$ from $T_{\mu\nu}$}
+\begin{subequations}
+\begin{align}
+    H^2 = \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \\
+    \dot{H} + H^2 = - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3},
+\end{align}
+\end{subequations}
+where $H = \odv{a}/{t}$ is the Hubble function and $\rho = \sum_s \rho_s$ and $P = \sum_s P_s$ are total energy densities and pressures of each species $s$ in the universe.
+
 \subsection{Dark matter}
 
-\TODO{Zwicky, Coma Cluster}
+Using velocity measurements of stars in galaxies, or of galaxies in galaxy clusters,
+Lord Kelvin, Jacobus Kapteyn and Fritz Zwicky independently (?) suggested that the universe contains more matter than the luminous matter we can observe from Earth.
+At the time it was thought that the missing matter was ordinary matter that was simply hard to observe due to it being very dim.
+In 50 years, evidence piled up that suggested that dark matter is a type of matter that behaves qualitatively differently from ordinary matter:
+\enquote{extinguished stars, dark clouds, meteors, comets, and so on} \TODO{ref}. % https://arxiv.org/pdf/1605.04909
+
+In the 1970s, observations of galaxy rotation curves added more weight to the dark matter hypothesis.
+Assuming a Newtonian gravitational force $F = g m M / r^2$ and centripetal acceleration $a = v^2/r$,
+one can easily use measurements of $v$ to compute the mass $M(r) = v^2 r / G$ enclosed within $r$
+and in turn the density $\rho(r) = \diff{M} / 4\pi r^2 \diff{r}$.
+In the outskirts of a halo, beyond which there is no visible matter,
+one would expect that $M(r)$ is constant so $v(r) \propto r^{-1/2}$ should decay.
+However, observations instead show $v(r) \propto \const$.
+This discrepancy is now widely thought to be due to a halo of dark matter that surrounds galaxies like a cloud.
+\TODO{figure of rotation curve?}
 
 \TODO{rotation curves}
 
