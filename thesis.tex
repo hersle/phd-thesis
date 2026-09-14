@@ -137,6 +137,7 @@ into \emph{quantitative} research on precision cosmology, measuring parameters o
 \TODO{CMB in 1960s, CMB anisotropy in 1990s, accelerating expansion in 1998, continuing into precision cosmology with WMAP and Planck}
 
 \subsection{The cosmological principle}
+\label{sec:principle}
 
 A central geometrical assumption in the standard model is that when averaged over sufficiently large scales,
 the 3D spatial universe looks \emph{almost} the same in every direction (isotropy) and from every point (homogeneity).
@@ -210,6 +211,8 @@ one would expect that $M(r)$ is constant so $v(r) \propto r^{-1/2}$ should decay
 However, observations instead show $v(r) \propto \const$.
 This discrepancy is now widely thought to be due to a halo of dark matter that surrounds galaxies like a cloud.
 \TODO{figure of rotation curve?}
+
+Dark matter is modeled as a perfect fluid
 
 \TODO{rotation curves}
 
@@ -305,6 +308,53 @@ A wide number of emulators have been created for emulating CMB predictions from 
 
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
+
+The cosmological principle in \cref{sec:principle} does not hold exactly.
+The real universe is homogeneous and isotropic only in a statistical sense when averaged over sufficiently large scales \TODO{figure?}.
+
+This means that the background equations in \cref{chap:back} are not sufficient for describing the universe.
+Assuming the universe is approximately homogeneous and isotropic,
+we may do \emph{cosmological perturbation theory} around a perfectly homogeneous and isotropic universe \cite{maCosmologicalPerturbationTheory1995a}.
+Of particular interest is the first-order corrections to the background that comes from linear perturbation theory:
+\begin{equation}
+    g_{\mu\nu} = \bar{g}_{\mu\nu} + h_{\mu\nu},
+\end{equation}
+where $\bar{g}_\mu\nu$ is the background metric from \cref{chap:back}
+and $h_{\mu\nu}$ are the linear corrections to it.
+
+A few mathematical properties are important for setting up the framework around cosmological perturbation theory:
+\begin{itemize}
+\item
+Particularly at linear order, perturbaiton theory is much simpler in Fourier space $\vec{k}$ than in position space $\vec{x}$.
+A general quantity $f(t, \vec{x})$ is transformed to Fourier space and back to position space with
+\begin{subequations}
+\begin{align}
+    f(t, \vec{k}) &= \int \diff{^3 x} \, e^{i \vec{k} \cdot \vec{x}} f(t, \vec{x}), \\
+    f(t, \vec{x}) &= \int \frac{\diff{^3 k}}{(2\pi)^3} \, e^{-i \vec{k} \cdot \vec{x}} f(t, \vec{k}),
+\end{align}
+\end{subequations}
+At linear order, any equation must by definition be in the general form $F(t, \vec{x}) = \sum_i c_i(t) \delta f_i(t, \vec{x}) = 0$,
+with $\delta f_i(t, \vec{x})$ containing derivatives in both space and time.
+Going to Fourier space, the equation becomes $F(t, \vec{k}) = \sum_i c_i(t) \delta f_i(t, \vec{k}) = 0$,
+which holds \emph{indepdendently per wavenumber} $k$.
+where all spatial derivatives are transformed into products with $(-i \vec{k}) f$.
+Thus, going to Fourier space decouples the linear PDEs in $(t, \vec{x})$ into ODEs in $t$ for \emph{independent} $\vec{k}$.
+
+\item
+The metric and equations of motion can be decomposed into independent scalar-vector-tensor contributions.
+An important result is that the metric perturbation $h_{\mu\nu}$ can be decomposed with the scalar-vector-tensor decomposition \cite{bertschingerCosmologicalPerturbationTheory2000}
+
+Under 3-space $\vec{x}$, we have scalar $h_{00}$, vector $h_{0i}$ and tensor $h_{ij}$.
+Set $h_{00} = 2A$.
+Set $h_{0i} = -\pdv{B}{x^i}$
+
+\item
+Gauge choice
+\end{itemize}
+
+This works because the universe is approximately homogeneous and isotropic.
+This is more complicated, but also holds richer information than the background alone.
+
 
 \section{History of \EB{} codes}
 
