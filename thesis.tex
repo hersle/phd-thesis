@@ -341,15 +341,22 @@ where all spatial derivatives are transformed into products with $(-i \vec{k}) f
 Thus, going to Fourier space decouples the linear PDEs in $(t, \vec{x})$ into ODEs in $t$ for \emph{independent} $\vec{k}$.
 
 \item
-The metric and equations of motion can be decomposed into independent scalar-vector-tensor contributions.
+Due to the rotational symmetry in 3-space of the background FLRW metric,
+any tensor perturbation (including the metric perturbation) be decomposed into independent scalar-vector-tensor contributions.
+This is similar to in electromagnetism, where an electric and magnetic field can be decomposed into
+
 An important result is that the metric perturbation $h_{\mu\nu}$ can be decomposed with the scalar-vector-tensor decomposition \cite{bertschingerCosmologicalPerturbationTheory2000}
 
 Under 3-space $\vec{x}$, we have scalar $h_{00}$, vector $h_{0i}$ and tensor $h_{ij}$.
 Set $h_{00} = 2A$.
 Set $h_{0i} = -\pdv{B}{x^i}$
 
+Here we will only consider scalar perturbations,
+which are most important for the cosmic microwave background and structure formation.
+
 \item
-Gauge choice
+Gauge choice.
+Here
 \end{itemize}
 
 This works because the universe is approximately homogeneous and isotropic.
@@ -432,10 +439,82 @@ which is no easy task.
 
 \TODO{Add a tree showing evolution/parent history? Not including derivatives.}
 
-\section{The motivation and development of SymBoltz}
+\section{The history and development of SymBoltz}
 
+A significant part of my PhD has been spent developing a new \EB{} code from scratch called SymBoltz.
+During my PhD, I became very interested in these codes as I gradually learned to use CAMB and CLASS myself,
+and saw that many cosmologists spend work on modifying these codes to implement various extended cosmological models.
+My interest became stronger after completing the \enquote{Cosmology II} course offered by the University of Oslo,
+which has a mandatory project about writing a simplified \EB{} code from scratch split into four milestones:
+background $\rightarrow$ thermodynamics $\rightarrow$ perturbations $\rightarrow$ power spectra.
+My implementation of this project is still available at \url{https://github.com/hersle/COMBO.jl}.
+This project provided me with insight into how \EB{} codes work, and how CAMB and CLASS are structured.
 
-Cosomology II project: COMBO.jl
+This project gave me several ideas for writing a new \EB{} code.
+In particular, I learned about the libraries OrdinaryDiffEq.jl (for solving ODEs) and ModelingToolkit.jl (for specifying ODEs symbolically)
+that I thought could make a powerful foundation for creating a new \EB{} solver in Julia.
+Compared to what I refer to as \enquote{traditional} \EB{} codes such as CAMB, CLASS and the Cosmology II project,
+there are three major aspects I tried to improve with the design of SymBoltz.
+I will discuss these in the upcoming sections.
+
+\subsubsection{Symbolic-numeric interface for easy model specification}
+
+To modify the equations of the cosmological model,
+one must generally edit the code in many different places.
+In CLASS one must generally modify at least
+parameter handling in \texttt{input.c} and \texttt{input.h},
+background equations in \texttt{background.c} and \texttt{background.h},
+perturbation equations in the \texttt{perturbations.c} and \texttt{perturbations.h},
+If the model changes thermodynamics behavior,
+one must also modify \texttt{thermodynamics.c} and \texttt{thermodynamics.h},
+which is even more difficult because they are very rigidly structured around recombination codes like RECFAST and HyRec.
+In addition, each file must typically be changed in several places:
+initial conditions, evolution equations, parameter handling and reading or writing of output from one stage as input to the next through interpolating splines or output tables, for example.
+
+My vision with SymBoltz is to completely avoid this problem by separating the full model specification out from the internal machinery of the numerical solver.
+It should be possible for users to specify equations for the background, thermodynamics, perturbations, initial conditions, parameter relations and so on through one single interface.
+This is made possible by a mixed symbolic-numeric interface,
+where the full model (background, thermodynamics, perturbations, initial conditions and parameters) is specified entirely as one large system of symbolic equations.
+SymBoltz then processes the equations and creates a graph that encodes which variables depend on which variables.
+The equations are then automatically split into subsystems of coupled equations that must be integrated together,
+such as the background, thermodynamics and perturbations.
+Then numerical code for solving the ODE is generated.
+
+\subsubsection{Lack of approximation schemes}
+
+\TODO{}
+Everything in physical modeling involves some type of approximations,
+as no unified physical theory exists that describes everything happening in the universe.
+In my opinion, it is helpful to distinguish between two types of approximations:
+\begin{itemize}
+\item \textbf{Structural approximations:}
+These are the most fundamental types of approximations that determine the structure of the overall computational framework.
+One example is the use of perturbation theory in itself,
+which leads to the entire framework of cosmological perturbation theory.
+This is what is responsible for the separation of the background and linear perturbations in an \EB{} code, for example.
+These approximations make very few but very general assumptions,
+and thus define the framework within which a field of physical modeling
+\item \textbf{Model-independent approximations:}
+Good
+\item \textbf{Model-dependent approximations:}
+Bad. TCA, ...
+\end{itemize}
+
+Traditional \EB{} codes do not solve the same equations at all times.
+Instead, they employ a large array of approximation schemes that switch between different equations at different times and wavenumbers,
+depending on the value of some control parameter relative to some tunable threshold.
+
+This is very well illustrated by the following figure: \TODO{CLASS figure}.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{media/approximations}
+\caption{Approximation schemes in CLASS. \TODO{ref}.}
+\label{fig:approximations}
+\end{figure}
+
+Traditional \EB{}, in particular CAMB and CLASS, contain several approximation schemes
+
+\subsubsection{Differentiable output}
 
 History of EB code development in UiO, e.g. Peter Callinn.
 
