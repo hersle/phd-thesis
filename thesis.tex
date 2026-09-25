@@ -508,13 +508,88 @@ This is very well illustrated by the following figure: \TODO{CLASS figure}.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.8\textwidth]{media/approximations}
-\caption{Approximation schemes in CLASS. \TODO{ref}.}
+\caption{Approximation schemes in CLASS. \TODO{referene}.}
 \label{fig:approximations}
 \end{figure}
+
+Approximation schemes are also less necessary in the time of emulators.
 
 Traditional \EB{}, in particular CAMB and CLASS, contain several approximation schemes
 
 \subsubsection{Differentiable output}
+
+\TODO{why we want derivatives}
+Evaluating derivatives through \EB{} codes is necessary for performing Fisher forecasts, using gradient-based MCMC methods and is desirable when training emulators.
+
+Any computer program can be interpreted as a mathematical function $F:~\mathbb{R}^m \rightarrow \mathbb{R}^n$
+that takes $m$ input parameters and computes $n$ output numbers.
+No matter how complicated, any program can be reduced to a composite function
+\begin{equation}
+\label{eq:program}
+F = f_N \circ f_{N-1} \circ \cdots \circ f_2 \circ f_1,
+\qquad \text{i.e.} \qquad
+F(p) = f_N(f_{N-1}(\cdots f_2(f_1(p)))),
+\end{equation}
+of elementary functions $f_i: \mathbb{R}^{m_i} \rightarrow \mathbb{R}^{n_i}$, such as additions, multiplications, exponentials, trigonometric functions and if statements.
+It can be instructive to think of $f_i$ as the $i$-th line of the source code.
+For example, an \EB{} code takes in cosmological parameters $p = \{h, \Omega_{b0}, \Omega_{c0}, \ldots\}$ and computes distances, matter power spectra and CMB power spectra $F = \{D(z), P(k), C_\ell, \ldots\}$ at some desired redshifts $z$, wavenumbers $k$ and multipoles $\ell$.
+
+\textbf{Finite differences} is the traditional method to compute derivatives of the output with respect to the input for an arbitrary program $F$.
+For example, with central finite differences:
+\begin{equation}
+\pdv{F}{p_i} \approx \frac{F(p_1, \ldots, p_i+\epsilon, \ldots, p_m) - F(p_1, \ldots, p_i-\epsilon, \ldots, p_m)}{2 \epsilon} .
+\label{eq:fd}
+\end{equation}
+This is very simple, works on any program and treats $F$ as a \enquote{black box},
+but it is approximate and needs $2m$ evaluations of $F$ to compute the gradient with respect to $m$ parameters.
+Moreover, the step $\epsilon$ must be tuned:
+the finite difference approximation itself is more accurate with smaller $\epsilon$,
+but too small $\epsilon$ results in numerical round-off errors due to noise in $F$.
+This is particularly true in \EB{} codes,
+which produces numerical noise around the level of precision of the solver due to internal precision parameters that trade speed and accuracy.
+The best step generally also depends on which parameter $p_i$ that is being differentiated,
+so it must generally be tuned again for each parameter.
+
+\textbf{Automatic differentiation} is a different method that avoids these issues.
+It \enquote{opens the black box} and instead numerically evaluates the chain rule
+\begin{equation}
+\pdv{F}{p} = J_N \cdot J_{N-1} \cdots J_2 \cdot J_1
+\label{eq:ad}
+\end{equation}
+by propagating the Jacobian $J_i = \pdv{f_i}/{f_{i-1}}$ through every elementary function $f_i$ of the program.
+\enquote{Automatic} means that the code $F$ is translated into different code for the Jacobians $J_i$ without additional user input,
+and requires a programming language or compiler that is flexible enough to handle this.
+This method is exact (to machine precision) and has no additional hyperparameters that needs to be tuned.
+
+The program \eqref{eq:program} must evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
+but this is in fact not required for the differentiation \eqref{eq:ad}.
+The Jacobian matrix product is associative, so it can be evaluated in any order.
+This property gives rise to two main ways of performing automatic differentiation:
+\begin{subequations}
+\begin{align}
+& \text{Forward-mode:} && \text{seed } \pdv{f_1}{p} = 1 \text{ and propagate } \pdv{f_i}{p} = J_i \cdot \pdv{f_{i-1}}{p} , \label{eq:fd_forward} \\
+& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{p} = 1 \text{ and propagate } \pdv{f_N}{p} = \pdv{f_{i+1}}{p} \cdot J_i . \label{eq:fd_backward}
+\end{align}
+\end{subequations}
+The seeds only state that the derivative of the input or output with respect to itself is $1$.
+While the two methods are mathematically equivalent, they differ fundamentally in how they are implemented and in performance characteristics.
+A rule of thumb is that forward-mode is simpler to implement and performs better when there are many more outputs than inputs ($m \ll n$),
+while reverse-mode is more challenging to implement and performs better when there are many more inputs than outputs ($m \gg n$).
+In the following, we will therefore concentrate on forward-mode, as it is the only mode currently supported by SymBoltz,
+and is most appropriate for an \EB{} code that take 1s or 10s input parameters and outputs distances and power spectra at 100s or 1000s of $z$, $k$ and $\ell$.
+
+\textbf{Dual numbers} is a natural way to implement forward-mode automatic differentiation.
+Similarly to how a complex number $z = x + i y$ is a pair of real numbers defined with an algebra such that $i^2 = -1$,
+dual numbers $z = x + \epsilon y$ is also a pair of real numbers but defined such that instead $\epsilon^2 = 0$.
+The significance of this is that the Taylor expansion through any operation $f$ on the dual numbers produce
+\begin{equation}
+f(x + \epsilon y) = f(x) + \epsilon y f^\prime(y)
+\end{equation}
+\emph{exactly} because $\epsilon^2 = \epsilon^3 = \ldots = 0$.
+\TODO{This is exactly \eqref{eq:ad_foward}}
+\TODO{example product rule and sin-cos derivative?}
+\TODO{To differentiate the whole program, it therefore suffices to overload every elementary function $f_i$ with a method that takes in dual numbers and computes its derivative, and run it as usual}
+\TODO{SymBoltz uses ForwardDiff in Julia}
 
 History of EB code development in UiO, e.g. Peter Callinn.
 
