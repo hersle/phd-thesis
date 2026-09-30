@@ -567,8 +567,8 @@ The Jacobian matrix product is associative, so it can be evaluated in any order.
 This property gives rise to two main ways of performing automatic differentiation:
 \begin{subequations}
 \begin{align}
-& \text{Forward-mode:} && \text{seed } \pdv{f_1}{p} = 1 \text{ and propagate } \pdv{f_i}{p} = J_i \cdot \pdv{f_{i-1}}{p} , \label{eq:fd_forward} \\
-& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{p} = 1 \text{ and propagate } \pdv{f_N}{p} = \pdv{f_{i+1}}{p} \cdot J_i . \label{eq:fd_backward}
+& \text{Forward-mode:} && \text{seed } \pdv{f_1}{p} = 1 \text{ and propagate } \pdv{f_i}{p} = J_i \cdot \pdv{f_{i-1}}{p} , \label{eq:ad_forward} \\
+& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{p} = 1 \text{ and propagate } \pdv{f_N}{p} = \pdv{f_{i+1}}{p} \cdot J_i . \label{eq:ad_backward}
 \end{align}
 \end{subequations}
 The seeds only state that the derivative of the input or output with respect to itself is $1$.
@@ -578,18 +578,45 @@ while reverse-mode is more challenging to implement and performs better when the
 In the following, we will therefore concentrate on forward-mode, as it is the only mode currently supported by SymBoltz,
 and is most appropriate for an \EB{} code that take 1s or 10s input parameters and outputs distances and power spectra at 100s or 1000s of $z$, $k$ and $\ell$.
 
-\textbf{Dual numbers} is a natural way to implement forward-mode automatic differentiation.
-Similarly to how a complex number $z = x + i y$ is a pair of real numbers defined with an algebra such that $i^2 = -1$,
-dual numbers $z = x + \epsilon y$ is also a pair of real numbers but defined such that instead $\epsilon^2 = 0$.
-The significance of this is that the Taylor expansion through any operation $f$ on the dual numbers produce
+\textbf{Dual numbers} are a natural way to implement forward-mode automatic differentiation.
+Similarly to how a complex number $z = x + i y$ is a pair of real numbers $x$ and $y$ defined with an algebra such that $i^2 = -1$,
+a dual number $z = x + \epsilon y$ is a pair of real numbers defined with an algebra such that $\epsilon^2 = 0$.
+The significance of this is that $\epsilon^2 = \epsilon^3 = \ldots = 0$,
+so the Taylor expansion to first order through any function $f(z)$ on dual numbers produce \emph{exactly}
 \begin{equation}
-f(x + \epsilon y) = f(x) + \epsilon y f^\prime(y)
+f(x + \epsilon y) = f(x) + \epsilon y f^\prime(y).
 \end{equation}
-\emph{exactly} because $\epsilon^2 = \epsilon^3 = \ldots = 0$.
-\TODO{This is exactly \eqref{eq:ad_foward}}
+This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i-1}$ and derivative $f_{i-1}^\prime = \pdv{f_{i-1}}/{p}$ of the $i$-th line of code in the program \eqref{eq:program},
+then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $(i+1)$-th line by the forward chain rule \eqref{eq:ad_forward}.
+By starting at $i=0$, evaluating the program with dual numbers give $F$ and $\pdv{F}/{P}$ at the final line $i=N$.
+
+In practice, evaluating the program with dual numbers requires that every single elementary function $f_i$ needs to support evaluation with both standard real numbers and dual numbers.
+This requires a flexible programming language that allows any given function to be compiled with one version for standard floating point input and another version for dual number input,
+which will result different machine code.
+Just-in-time (JIT) compiled languages and frameworks naturally accommodate this requirement, such as Julia (a fully JIT-compiled programming language) and Jax (a JIT framework on top of Python, which is not JIT compiled itself) \TODO{cite}.
+SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \TODO{cite}.
 \TODO{example product rule and sin-cos derivative?}
 \TODO{To differentiate the whole program, it therefore suffices to overload every elementary function $f_i$ with a method that takes in dual numbers and computes its derivative, and run it as usual}
-\TODO{SymBoltz uses ForwardDiff in Julia}
+
+On the other hand, implementing automatic differentiation systems is more challenging in traditional (ahead-of-time) compiled languages like C, C++ and Fortran.
+For example, when a C/C++ compiler compiles CLASS, it is compiled a binary with low-level machine instructions that works with floating point numbers at every step in the program.
+A completely different path of compiled code would be needed to run it with dual numbers to differentiate it.
+Moreover, the differentiated code would depend on which parameters that are to be differentiated,
+and require a way to declare which parameters should be differentiated.
+These things are handled in a simpler way with JIT compilation,
+where the JIT compiler compiles the necessary float/dual version of a function on-demand.
+This is why differentiable \EB{} codes have been created in Julia (SymBoltz.jl and Bolt.jl) and Jax (DISCO-EB, ABCMB).
+
+\Cref{fig:autodiff} shows how automatic differentiation gives the sensitivity $\pdv{P(a,k;\mathbf{p})}/{p}$ of the matter power spectrum $P(a, k)$.
+It is a reproduction of \TODO{cite DISCO-EB Figure 4} using SymBoltz, in order to show that the two codes are capable of similar differentiable computations.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=1.0\textwidth]{code/Pkz_sensitivity}
+\caption{Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
+This is a recreation of Figure 4 in DISCO-EB \TODO{cite} in SymBoltz, to show that both codes can handle a similar computation.
+Similar figure as in DISCO-EB}
+\label{fig:autodiff}
+\end{figure}
 
 History of EB code development in UiO, e.g. Peter Callinn.
 
