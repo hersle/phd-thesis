@@ -7,6 +7,7 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{mathrsfs} % \mathscr
 
 \usepackage{babel}
 \usepackage{csquotes}
@@ -34,6 +35,10 @@
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
 \newcommand\Mpc{\ensuremath{\mathrm{Mpc}}}
 \newcommand\const{\ensuremath{\mathrm{const}}}
+\newcommand\scrH{\mathscr{H}}
+\newcommand\pprime{{\prime\prime}}
+\newcommand\Hy{\ensuremath{\mathrm{Hy}}} % Hydrogen
+\newcommand\He{\ensuremath{\mathrm{He}}} % Helium
 
 \title{New tools for exploring modified cosmological models}
 %\subtitle{Subtitle}
@@ -169,6 +174,7 @@ The equations of motion follow from the principle of least action:
 varying the action $S$ with respect to the metric $g_{\mu\nu}(x)$ gives the Einstein field equations:
 \begin{equation}
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
+\label{eq:einstein}
 \end{equation}
 Here $G_{\mu\nu} = R_{\mu\nu} - \frac12 g_{\mu\nu} R$ is the Einstein tensor,
 $R_{\mu\nu}$ is the Ricci tensor and $R$ \TODO{tensor notation package} the Ricci scalar.
@@ -179,6 +185,7 @@ It is in this way that \enquote{spacetime tells matter how to move; matter tells
 From the Einstein field equations, it follows that the conservation of energy and momentum
 \begin{equation}
     \nabla_\mu T^{\mu\nu} = 0.
+\label{eq:conservation}
 \end{equation}
 This can be derived as a purely geometrical consequence from the left side of the equations \TODO{ref?}.
 
@@ -193,6 +200,12 @@ The Einstein equations with the FLRW metric gives the first and second Friedmann
 \end{align}
 \end{subequations}
 where $H = \odv{a}/{t}$ is the Hubble function and $\rho = \sum_s \rho_s$ and $P = \sum_s P_s$ are total energy densities and pressures of each species $s$ in the universe.
+
+For individual species, energy-momentum conservation \eqref{eq:conservation} leads to
+\begin{equation}
+\dot{\rho} = -3\scrH (\rho+P) = -3\scrH(1+w)\rho
+\label{eq:bg_cont}
+\end{equation}
 
 \subsection{Dark matter}
 
@@ -362,6 +375,25 @@ Here
 This works because the universe is approximately homogeneous and isotropic.
 This is more complicated, but also holds richer information than the background alone.
 
+\TODO{Berschinger and Ma equations:}
+Perfect fluid with energy-momentum
+\begin{equation}
+T_{\mu\nu} = \text{\TODO{}}
+\label{eq:energy_momentum_fluid}
+\end{equation}
+Energy-momentum conservation
+\begin{equation}
+\nabla_\mu T^{\mu\nu} = 0.
+\label{eq:energy_momentum_conservation}
+\end{equation}
+Non-interacting perfect fluid in the Newtonian gauge:
+\begin{subequations}
+\begin{align}
+\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH(\frac{\delta P}{\delta \rho} - w) \delta, \label{eq:pert_cont} \\
+\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi. \label{eq:pert_euler}
+\end{align}
+\label{eq:pert_fluid}
+\end{subequations}
 
 \section{History of \EB{} codes}
 
@@ -438,6 +470,174 @@ which is no easy task.
 \end{itemize}
 
 \TODO{Add a tree showing evolution/parent history? Not including derivatives.}
+
+\section{Modifications to \EB{} codes}
+
+Over the years, a plethora of modified models have been implemented into \EB{} codes.
+We give a non-exhaustive list of this, in an attempt to illustrate what common modifications are made in \EB{} codes:
+\begin{itemize}
+\item \textbf{$w_0 w_a$ dark energy:}
+One of the most popular modifications to the cosmological constant as dark energy in \LCDM{} is to switch its equation of state from $w = -1$ to
+\cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}
+\begin{equation}
+w(a) = w_0 + w_a (1-a).
+\end{equation}
+With this equation of state, the continuity equation admits a new analytical solution \TODO{}.
+It also means that dark energy receive perturbations, so the continuity and Euler equations \eqref{eq:pert_fluid} that must be integrated numerically in time \cite{putterMeasuringSpeedDark2010}.
+This is the simplest model that probes a time-dependent (dynamical) nature of dark energy, but it adds two additional parameters to the model.
+The Taylor expansion around $a$ in particular is one of several choice: other parameterizations such as $w(z) = w_0 + w_a z$ are also possible, but not as stable because they blow up at early times \cite{linderExploringExpansionHistory2003}.
+
+Note that it is possible to have both $w < -1$ and $w > -1$, but not $w = -1$ exactly.
+\TODO{how to handle phantom crossing? PPF expansion?}
+
+\TODO{cover arbitrary time-dependence in this point?}
+
+\item \textbf{Quintessence (scalar field):}
+Another common model for dark energy is a time-varying scalar field $\phi$ that slowly rolls down a potential $V(\phi)$ \cite{tsujikawaQuintessenceReview2013}.
+Although this class of models was first introduced by \cite{ratraCosmologicalConsequencesRolling1988},
+the term \enquote{quintessence} was later coined by \cite{caldwellCosmologicalImprintEnergy1998}.
+It means \enquote{the fifth essence} in Spanish, and is named in the hope of being the next fundamental contribution to the energy-momentum of \enquote{matter} after baryons, dark matter, photons and neutrinos.
+This is so because they remove $\Lambda$ from the left side of the Einstein equations \eqref{eq:einstein}, and rather incorporate a fifth component into the energy-momentum tensor on the right side.
+
+The scalar field evolves in conformal time according to the Klein-Gordon equation:
+\begin{equation}
+\ddot{\phi} = -2\scrH\dot{\phi} - a^2 V^\prime(\phi)
+\end{equation}
+in a freely specified potential function $V(\phi)$.
+It contributes to the total energy-momentum with energy density, pressure and equation of state
+\begin{equation}
+\rho = \frac12 \dot{\phi}^2 + V(\phi), \quad
+P = \frac12 \dot{\phi}^2 + V(\phi), \quad
+w = \frac{P}{\rho} = \frac{\frac12\dot{\phi}^2 - V(\phi)}{\frac12\dot{\phi}^2 + V(\phi)}.
+\end{equation}
+Note that $-1 \leq w \leq 1$.
+To mimic dark energy and enable the accelerated late-time expansion with $w \lesssim -1$,
+we need $\phi$ to roll slowly in $V(\phi)$ with $\dot\phi \ll \sqrt{V}$.
+
+Perturbations of the scalar field also evolve with the perturbed Klein-Gordon equation:
+\begin{equation}
+\ddot{\delta\phi} = -2 \scrH \dot{\delta\phi} - (k^2 + a^2 V^\pprime) \delta\phi + \dot\phi (\dot{\Psi} + 3\dot{\Phi}) - 2 a^2 V^\prime \Psi.
+\end{equation}
+They contribute energy density and pressure perturbations
+\begin{equation}
+\delta\rho = \frac{1}{a^2}\dot{\phi} \, \dot{\delta\phi} - \frac{1}{a^2}\dot{\phi}^2 \Psi + V^\prime \delta\phi, \quad
+\delta P   = \frac{1}{a^2}\dot{\phi} \, \dot{\delta\phi} - \frac{1}{a^2}\dot{\phi}^2 \Psi - V^\prime \delta\phi.
+\end{equation}
+
+\item \textbf{Early dark energy:}
+Also a scalar field, but has effective fluid description.
+\TODO{also scalar field?}
+\cite{kamionkowskiDarkEnergyString2014}
+\cite{poulinCosmologicalImplicationsUltralight2018}
+\cite{poulinEarlyDarkEnergy2019}
+
+\item \textbf{Dark matter models:} decaying dark matter, self-interacting dark matter, axions, warm/fuzzy dark matter, ...
+\item \textbf{Dark radiation models:}
+\item \textbf{Consistent baryon physics:}
+All standard \EB{} codes treat baryons inconsistently, as pointed out by \cite{pookkillathBaryonPhysicsTight2019} for example.
+The seminal work of \cite[section 5.6]{maCosmologicalPerturbationTheory1995a} (rightfully) treat baryons as a non-relativistic fluid with $\delta P/\delta \rho = w \ll 1$.
+They set $\delta P/\delta \rho = \omega$ in the continuity equation \eqref{eq:pert_cont},
+but inconsistently set $w=\dot{w}=0$ and $\delta P/\delta \rho \neq w$ in the Euler equation \eqref{eq:pert_euler}.
+The $\delta P/\delta \rho$ is preserved only in the Euler equation because it is multiplied by $k^2$ there, and thus important at small scales.
+This is a good approximation for the solution of the equations viewed from a purely numerical perspective,
+but from a physical perspective it is inconsistent and breaks gauge-covariance and energy-momentum conservation \eqref{eq:energy_momentum_conservation}.
+
+Even at the background level, it is common to assume that baryons have $w_b=0$ and evolve as $\rho_b \propto a^{-3}$.
+This assumption is extremely important for the traditional architecture of \EB{} codes,
+because it means that the energy contribution to the Friedmann equation (\enquote{expansion history}) is independent of thermodynamics.
+CLASS, for example, has a rigid structure with $\texttt{input.c} \rightarrow \texttt{background.c} \rightarrow \texttt{thermodynamics.c}$ that \emph{requires} such a decoupling of the \enquote{background} from \enquote{thermodynamics} \cite{lesgourguesCosmicLinearAnisotropy2011d}.
+This rigid structure is made even harder to disentangle by \EB{} codes facilitating substitution of different \enquote{recombination codes} that do not couple to the background.
+
+However, this structure is incomplete because baryons have a nonzero temperature $T > 0$ and a small but nonzero pressure $P > 0$.
+For example, $P = nT$ assuming an ideal gas.
+This makes $w_b \neq 0$ a generally time-dependent function that is coupled to thermodynamical variables like $T_b$ and $X_e$,
+so a fully consistent treatment should really solve the continuity equation
+\begin{equation}
+\dot{\rho}_b = -3\scrH(1+w_b)\rho_b
+\end{equation}
+numerically with a \emph{coupled} \enquote{background} and \enquote{thermodynamics}.
+It seems to me that a fully consistent implementation is not available anywhere.
+Such models are possible to implement in SymBoltz, because the code handles \enquote{background} and \enquote{thermodynamics} as one stage referred to as the background.
+
+The corrections from more consistent treatment has been found to be small \cite{pookkillathBaryonPhysicsTight2019}.
+Nevertheless, in my opinion, \EB{} codes should generally handle the \enquote{background} and \enquote{thermodynamics} as one coupled stage to facilitate study of the consistent coupled equations.
+It might be necessary to revisit this property for alternative models, particularly if they touch baryon physics in the early universe, where baryons are least relativistic and $w_b$ is highest.
+In my opinion, the (de)coupling of the \enquote{background} and \enquote{thermodynamics} should be understood as a model-dependent property in general,
+and \enquote{background evolution} should be understood as the evolution of a coupled \enquote{background} and \enquote{thermodynamics}.
+
+\TODO{\cite{leungRecombinationInducedSoftening2004} also found difference, but \cite{wongCommentRecombinationInduced2006} argued against}
+
+\item \textbf{Recombination models:}
+Baryons and photons interacting through Thomson scattering,
+which is the low-energy limit of Compton scattering where photons scatter off charged particles, most importantly electrons (that are lightest):
+\begin{equation}
+e^- + \gamma \rightarrow e^- + \gamma .
+\label{eq:thomson}
+\end{equation}
+The Thomson scattering rate $\dot\kappa = a n_e \sigma_T$ (with respect to conformal time) depends proportionally on the electron density $n_e$,
+so it depends strongly on how different ions (most importantly ionized Hydrogen and Helium) combine/ionize with electrons:
+\begin{subequations}
+\begin{align}
+\He^{++} + e^- &\leftrightarrow \He^+ + \gamma, \\
+\He^+ + e^-    &\leftrightarrow \He + \gamma, \\
+\He^+ + e^-    &\leftrightarrow \He + \gamma.
+\end{align}
+\end{subequations}
+These interactions must be tracked by evolving differential equations that track the recombination of atoms with electrons into neutral atoms as the universe expands and cools.
+This goes into atomic physics and quickly becomes very complicated: each atom can be in generally infinitely many excited energy levels, and it becomes increasingly slow and complicated to track many levels.
+For example, recombination of an ionized Hydrogen to its ground state is inefficient, because it releases a photon with more energy than the ionization energy, which immediately ionizes a nearby neutral atom.
+Recombination therefore happens to excited states ($n \geq 2$), from which they can decay to other states at rates that depend on the old and new target states, or they be reionized with different energies frmo each state.
+
+These complications make recombination models perhaps the most complicated ingredient of the \LCDM{} model,
+and good recombination models strike a balance between speed and accuracy \cite{CosmoTools18}.
+
+Peebles \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968} and \cite{maCosmologicalPerturbationTheory1995a} (discovered independently)
+consider Hydrogen-only recombination using an effective three-level atom with states 1s, (2s+2p) and the continuum of ionized electrons and protons.
+\begin{equation}
+\dot{x}_\Hy = a C_r \left[ \beta(T_b) (1-x_\Hy) - n_\Hy \alpha^{(2)}(T_b) x_\Hy^2 \right].
+\end{equation}
+Everything starts ionized.
+Electron and proton meet: proportional to $n_e n_p \propto x_e^2$, and recombine to $n \geq 2$ with rate $\alpha_B$ ($n=1$ is ignored because it would immediately reionize, and $n \geq 3$ immediately descend to $n=2$).
+So every useful recombination ends up in $n=2$ (high temperature keeps many atoms in $n=2$).
+This is the rightmost term in brackets.
+
+In the reverse direction, neutral Hydrogen with density $(1-x_\Hy)$ and ionizes at rate $\beta$.
+This is the leftmost term in brackets.
+
+Once an atom is in $n=2$, it can either get reionized (at rate $\beta$),
+or it can fall to $n=1$.
+This probability fraction is modeled by decay rates $2s \rightarrow 1s$ and $2p \rightarrow 1p$ and the $n=2\rightarrow\infty$ ionization rate $\beta$.
+This is the $C_r$ reduction factor.
+
+RECFAST \cite{seagerNewCalculationRecombination1999b,seagerHowExactlyDid2000a,wongHowWellWe2007}
+extend Peebles' approach with additional treatment of Helium through its own Peebles' and Saha equations.
+However, RECFAST is based on running slower but more approximate calculations with $O(100)$-level Hydrogen and Helium atoms,
+and the results are then compressed into Peebles' effective 3-level atom approach by introducing additional fudge factors that multiply the derviatives in order to recover the results of the more expensive computations.
+These fudge factors are tuned under the assumption that the cosmological model is \LCDM{}, and are not trustworthy for extended models.
+
+CosmoRec \cite{chlubaCompleteTreatmentCosmological2010,shawPreciseCosmologicalParameter2011},
+HyRec \cite{ali-haimoudHyRecFastHighly2011a},
+HyRec-2 \cite{leeHYREC2HighlyAccurate2020} (also implemented in differentiable form in HyRex \cite{zhouABCMBPython+JAXPackage2026b}),
+
+RICO emulator \cite{fendtRICONEWAPPROACH2009,fendtRicoAccurateCosmological2009},
+
+Review 1: \cite{huEffectPhysicalAssumptions1995}
+Review 2: \cite{rubino-martinEstimatingImpactRecombination2010}
+
+
+\TODO{perturbed recombination}
+Perturbed effects of recombination: \cite{lewisLinearEffectsPerturbed2007},
+
+\item \textbf{Reionization models:} see CAMB?
+
+\item \textbf{Varying physical constants:} $G_\mathrm{eff}$, $\alpha(z)$, funny $\pi$ April fools paper, ...
+\item \textbf{Modified gravity:} HICLASS, EFTCAMB, ...
+\item \textbf{Interacting models:} generalize to energy/momentum exchange between more species than only baryons and photons, e.g. CDM-DE-baryons; subject of Paper 4 (?)
+\item \textbf{Massive neutrino optimizations:} fluid approximations, alternative treatment to hierarchy (see CLASSIER); different NCDM models? other neutrino models?
+\item \textbf{Non-cold dark matter models:}
+\item \textbf{Primordial perturbations:}
+\item \textbf{Different initial conditions:} adiabatic, isocurvature, ...
+\end{itemize}
 
 \section{The history and development of SymBoltz}
 
@@ -594,7 +794,7 @@ In practice, evaluating the program with dual numbers requires that every single
 This requires a flexible programming language that allows any given function to be compiled with one version for standard floating point input and another version for dual number input,
 which will result different machine code.
 Just-in-time (JIT) compiled languages and frameworks naturally accommodate this requirement, such as Julia (a fully JIT-compiled programming language) and Jax (a JIT framework on top of Python, which is not JIT compiled itself) \TODO{cite}.
-SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \TODO{cite}.
+SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \cite{revelsForwardModeAutomaticDifferentiation2016}.
 \TODO{example product rule and sin-cos derivative?}
 \TODO{To differentiate the whole program, it therefore suffices to overload every elementary function $f_i$ with a method that takes in dual numbers and computes its derivative, and run it as usual}
 
@@ -608,7 +808,7 @@ where the JIT compiler compiles the necessary float/dual version of a function o
 This is why differentiable \EB{} codes have been created in Julia (SymBoltz.jl and Bolt.jl) and Jax (DISCO-EB, ABCMB).
 
 \Cref{fig:autodiff} shows how automatic differentiation gives the sensitivity $\pdv{P(a,k;\mathbf{p})}/{p}$ of the matter power spectrum $P(a, k)$.
-It is a reproduction of \TODO{cite DISCO-EB Figure 4} using SymBoltz, in order to show that the two codes are capable of similar differentiable computations.
+It is a reproduction of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}, but using SymBoltz instead of DISCO-EB in order to show that the two codes are capable of similar differentiable computations.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1.0\textwidth]{code/Pkz_sensitivity}
