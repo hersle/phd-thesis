@@ -675,10 +675,10 @@ For efficiency, this physically principled solution is then compressed into a Pe
 \dot{x}_\He^+ &= C_\He \big[ x_e x_\He^+ n_\Hy \alpha_\He - \beta_\He (f_\He x_\He^+ e^{-\beta E_\He^{2^1 s}}) \big],
 \end{align}
 \end{subequations}
-where $\{C_\Hy, C_\He\}$ are effective Peebles' coefficients and $\{\alpha_\Hy(T_b), \alpha_\He(T_b)\}$ are temperature-dependent recombination rates are fitted to experiemental data:
+where $\{C_\Hy, C_\He\}$ are effective Peebles' coefficients and $\{\alpha_\Hy(T_b), \alpha_\He(T_b)\}$ are temperature-dependent recombination rates that are fitted to experiemental data:
 \begin{subequations}
 \begin{align}
-\alpha_\Hy(T_b) &= F \, 10^{-19} \frac{a t^b}{1 + c t^d} \, \mathrm{m^3 s^{-1}}, \quad (t = T_b / 10^4\,\mathrm{K}) \\
+\alpha_\Hy(T_b) &= F \, 10^{-19} \frac{a \, (T_b/10^4\,\mathrm{K})^b}{1 + c \, (T_b/10^4\,\mathrm{K})^d} \, \mathrm{m^3 s^{-1}}, \\
 \alpha_\He(T_b) &= q \, \Bigg[ \sqrt{\frac{T_b}{T_2}} \bigg( 1 + \sqrt{\frac{T_b}{T_1}} \bigg)^{1+p} \, \bigg( 1 + \sqrt{\frac{T_b}{T_2}} \bigg)^{1-p} \Bigg]  \, \mathrm{m^3 s^{-1}}.
 \end{align}
 \end{subequations}
@@ -701,7 +701,7 @@ but with updated fudge factors and additional physics fitted \TODO{see Hyrec2 pa
 
 \subsubsection{CosmoRec, HyRec and HyRec-2}
 
-\begin{figure}
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.8\textwidth]{media/emla}
 \caption{\label{fig:emla}
@@ -737,7 +737,7 @@ The EMLA is an exact generalization of Peebles' effective three-level model that
 Transitions between the ground state and \enquote{interface states} are handled by solving radiative transfer equations for the intensity distribution $I(\tau, \nu)$ of photons as a function of time $\tau$ and frequency $\nu$.
 This is a performance bottleneck and made Planck continue to use RECFAST in its analysis,
 despite HyRec and Cosmorec offering higher accuracy.
-HyRec-2 \cite{leeHYREC2HighlyAccurate2020} resolves this problem by adopting a correction to the $\mathrm{Ly\alpha}$ escape:
+\textbf{HyRec-2} \cite{leeHYREC2HighlyAccurate2020} resolves this problem by adopting a correction to the $\mathrm{Ly\alpha}$ escape:
 \begin{equation}
 R_{2p\to1s} = \frac{R_\mathrm{Ly\alpha}}{1+\Delta} ,
 \end{equation}
@@ -758,8 +758,21 @@ Not good enough for Planck.
 
 \subsubsection{Perturbed recombination}
 
-\TODO{?}
-Perturbed effects of recombination: \cite{lewisLinearEffectsPerturbed2007},
+The codes above account for recombination only in the background, i.e. as a function of time $\tau$ but not wavenumber $k$.
+However, perturbed effects of recombination should in principle also be accounted for,
+as regions that are overdense in baryons should recombine more frequently.
+This effect has been incorporated by evolving perturbations of the Peebles' equation and baryon temperature equation \TODO{ref}
+\cite{lewisLinearEffectsPerturbed2007}:
+\begin{subequations}
+\begin{align}
+\dot{\delta}_{x_e} &= -a \alpha x_e n_\Hy (\delta_\alpha + \delta_{x_e} + \delta_{n_\Hy}), \\
+\dot{\delta}_{T_b} &= \frac23 \dot{\delta}_c - \frac23 k v_b - \frac{8 a \sigma_T \rho_\gamma x_e}{3 m_e c (1+n_\He/n_\Hy+x_e)} \nonumber \\
+                   &\times \left( \left( 1 - \frac{T_\gamma}{T_b} \right) \left( 4 \Delta T_\gamma + \frac{\Delta x_e}{1 + n_\Hy x_e / (n_\Hy + n_\He)} + \frac{T_\gamma}{T_b} (\Delta {T_b} - \Delta_{T_\gamma} \right) \right) .
+\end{align}
+\end{subequations}
+This couples with all other perturbation variables,
+but the effect is greatest in baryon perturbations at galactic scales
+and is relevant for initial conditions of simulations of large-scale structure at these scales.
 
 \subsection{Reionization models} see CAMB?
 
