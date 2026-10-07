@@ -703,8 +703,15 @@ but with updated fudge factors and additional physics fitted \TODO{see Hyrec2 pa
 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{media/emla2}
-\caption{\label{fig:emla}Effective multi-level atom treatment \cite{ali-haimoudUltrafastEffectiveMultilevel2010}. \TODO{take fig from HyRec paper instead?}}
+\includegraphics[width=0.8\textwidth]{media/emla}
+\caption{\label{fig:emla}
+The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two parts.
+\enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
+\enquote{Interior states} are other excited states that are only indirectly connected to the ground state, and are expensive to solve but cosmology-independent,
+so their effect can be precomputed once and for all.
+It is an exact generalization of Peebles' effective three-level recombination model.
+The figure is reproduced from \cite{ali-haimoudHyRecFastHighly2011a}.
+}
 \end{figure}
 
 \textbf{CosmoRec} \cite{chlubaCompleteTreatmentCosmological2010} and \textbf{HyRec} \cite{ali-haimoudHyRecFastHighly2011a}
