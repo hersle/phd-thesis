@@ -486,10 +486,14 @@ which is no easy task.
 
 \TODO{Add a tree showing evolution/parent history? Not including derivatives.}
 
-\section{Modifications to \EB{} codes}
+\section{Modified models in \EB{} codes}
 
 Over the years, a plethora of modified models have been implemented into \EB{} codes.
-We give a non-exhaustive list of this, in an attempt to illustrate what common modifications are made in \EB{} codes:
+We give a non-exhaustive list of this, in an attempt to illustrate what common modifications are made in \EB{} codes.
+The purpose is not to give an exhaustive list of all modifications ever made,
+but it is to showcase the breadth of the possible modifications and how they affect nearly every \enquote{sector} of the \EB{} equations.
+
+\TODO{see \cite{schonebergH0OlympicsFair2022} for an overview of some different extended models?}
 
 \subsection{$w_0 w_a$ dark energy}
 
@@ -549,7 +553,16 @@ Also a scalar field, but has effective fluid description.
 \cite{poulinCosmologicalImplicationsUltralight2018}
 \cite{poulinEarlyDarkEnergy2019}
 
-\subsection{Dark matter models} decaying dark matter, self-interacting dark matter, axions, warm/fuzzy dark matter, ...
+\subsection{Dark matter models}
+
+\TODO{decaying dark matter, self-interacting dark matter, axions, warm/fuzzy dark matter, ...}
+
+Ultralight axions / fuzzy dark matter: \cite{huColdFuzzyDark2000}.
+axionCAMB \cite{hlozekSearchUltralightAxions2015},
+axiCLASS \cite{poulinCosmologicalImplicationsUltralight2018}
+
+See also interactions sector for interactions of dark matter with baryons, photons, massive neutrinos, ...
+
 \subsection{Dark radiation models}
 \subsection{Consistent baryon physics}
 All standard \EB{} codes treat baryons inconsistently, as pointed out by \cite{pookkillathBaryonPhysicsTight2019} for example.
@@ -587,7 +600,7 @@ and \enquote{background evolution} should be understood as the evolution of a co
 
 \subsection{Recombination models}
 
-Electrons (which are not baryons, but nevertheless called \enquote{baryons} by cosmologists) and photons interact through Thomson scattering, which is the low-energy limit of Compton scattering where photons scatter off charged particles.
+Electrons (which are leptons, but lumped together with \enquote{baryons} by cosmologists) and photons interact through Thomson scattering, which is the low-energy limit of Compton scattering where photons scatter off charged particles.
 The Thomson scattering cross section is $\sigma_T = (8\pi/3) \, ( q^2 / 4\pi\epsilon_0 m c^2 )^2$,
 so scattering is most important for lighter particles, in particular electrons:
 \begin{equation}
@@ -776,10 +789,37 @@ and is relevant for initial conditions of simulations of large-scale structure a
 
 \subsection{Reionization models} see CAMB?
 
-\subsection{Varying physical constants} $G_\mathrm{eff}$, $\alpha(z)$, funny $\pi$ April fools paper, ...
+\subsection{Variation of fundamental constants}
+
+Fundamental physical constants like Newton's constant $G$, the electron mass $m_e$ and the fine-structure constant $\alpha$ are measured to high precision today,
+but a class of extended models have replaced them by corrections that depend on time and sometimes space.
+%there is an open possibility that they (or their effective values) have evolved over time.
+
+A changing electron mass $m_e$ fine-structure constant $\alpha$ modifies recombination.
+%It affects the Thomson scattering rate $\sigma_T = (8\pi/3) \alpha^2 / m_e^2$ \cite{greeneThomsonScatteringOne2023}
+Increasing $\alpha$ or $m_e$ increases the Hydrogen ionization energy $E_\mathrm{ion} = \alpha^2 e c^2 / 2$,
+which moves recombination to higher temperature at an earlier time,
+so the sound horizon at decoupling is shorter
+and the acoustic peaks of the CMB power spectrum is moved to smaller scales at higher $\ell$
+\cite{kaplinghatConstrainingVariationsFineStructure1999,hartNewConstraintsTimedependent2018}.
+This is a viable route to alleviating the $H_0$ tension, for example \cite{sekiguchiEarlyRecombinationSolution2021,schonebergH0OlympicsFair2022}.
+%Thomson scattering $\sigma_T \propto \alpha^2 / m_e^2$ \TODO{?}
+
+A changing gravitational constant $G$ affects the expansion history through the Friedmann equation $H^2 = 8\pi G \rho / 3$,
+and the perturbations through the Poisson equation $\nabla^2 \Phi = 4 \pi G a^2 \delta \rho$.
+For example, a time-independent increase of $G$ leads to increased damping of the CMB power spectrum at high $\ell$ \cite{umezuCosmologicalConstraintsNewtons2005,galliCavendishPLANCKConstraining2009,lamineCosmologicalMeasurementGravitational2025}.
+Several modified gravity theories also lead to effective changes in $G$,
+including Brans-Dicke gravity in particular \TODO{ref somewhere}.
+
+Variation of fundamental constants have been humorously mocked as a primitive way of departing from the \LCDM{} model,
+by considering modifications to the mathematical constant $\pi$ \cite{gammalCircularReasoningSolving2024}.
+
+
 \subsection{Modified gravity} HICLASS, EFTCAMB, ...
 
 \subsection{Interacting models}
+
+\TODO{create one matrix with every species $\times$ every species, and in each cell put a reference that describes the interaction?}
 \TODO{generalize to energy/momentum exchange between more species than only baryons and photons, e.g. CDM-DE-baryons; subject of Paper 4 (?)}
 
 Total energy-momentum conservation \eqref{eq:conservation} is satisfied for most species $a$ by separately conserving
@@ -791,7 +831,29 @@ However, what if we allow for interactions between species that make
 with $Q_{ab} = -Q_{ba}$,
 such that still $\sum_s \nabla_\mu T^{\mu\nu}_s = \sum_{a,b} Q_{ab} = -\sum_{a,b} Q_{ab} = 0$?
 
-\subsection{Massive neutrino optimizations} fluid approximations, alternative treatment to hierarchy (see CLASSIER); different NCDM models? other neutrino models?
+\subsection{Massive neutrinos and non-cold dark matter}
+
+Neutrinos are now fundamental part of the standard models of both particle physics and cosmology \cite{lesgourguesMassiveNeutrinosCosmology2006,neutrinosincosmology}.
+They have a promising observational future with the recent attribution of the Nobel Prize in Physics to the lead of the IceCube experiment, Francis Halzen \cite{NobelPrizePhysics2026}.
+The implementation of massive neutrinos into \EB{} codes are complicated by their nonzero mass and intermediate relativisticness.
+Cannot integrate out the momentum-dependence in their distribution function.
+
+\TODO{summarize initial MB treatment}
+COSMICS used many-point quadrature scheme \cite{maCosmologicalPerturbationTheory1995a}
+
+Some modifications of \EB{} codes deal with finding more efficient ways to deal with the momentum bins and hierarchy.
+CAMB massive neutrino treatment: \cite{lewisEvolutionCosmologicalDark2002}
+CLASS massive neutrino treatment: \cite{lesgourguesCosmicLinearAnisotropy2011f}
+CLASSIER alternative treatment to hierarchy \cite{leeRapidAccurateNumerical2025a,leeEfficientAnalyticApproximation2025a}
+fluid approximations ...
+
+Other modifications have gone to exploring modifications to neutrino physics,
+either through interactions with other species \cite{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017},
+self-interacting neutrinos \cite{kreischNeutrinoPuzzleAnomalies2020},
+decaying neutrinos \cite{chenWeakerAgainMass2022},
+neutrino-dark matter interactions \cite{mosbechFullBoltzmannHierarchy2021},
+...
+
 \subsection{Non-cold dark matter models}
 \subsection{Primordial perturbations}
 \subsection{Different initial conditions} adiabatic, isocurvature, ...
