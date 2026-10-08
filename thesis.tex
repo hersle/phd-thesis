@@ -603,33 +603,50 @@ and \enquote{background evolution} should be understood as the evolution of a co
 
 \TODO{\cite{leungRecombinationInducedSoftening2004} also found difference, but \cite{wongCommentRecombinationInduced2006} argued against}
 
-\subsection{Recombination models}
+\subsection{Recombination models and codes}
 
-Electrons (which are leptons, but lumped together with \enquote{baryons} by cosmologists) and photons interact through Thomson scattering, which is the low-energy limit of Compton scattering where photons scatter off charged particles.
-The Thomson scattering cross section is $\sigma_T = (8\pi/3) \, ( q^2 / 4\pi\epsilon_0 m c^2 )^2$,
-so scattering is most important for lighter particles, in particular electrons:
+In the dense and hot early universe photons scatter off charged particles such as electrons and protons.
+This is called Compton scattering, or Thomson scattering at low energies $h\nu \ll m c^2$.
+The Thomson scattering cross section $\sigma_T = (8\pi/3) \, (\alpha \hbar / m_e c)^2$ depends inversely on mass,
+so electrons are most important:
 \begin{equation}
 e^- + \gamma \longleftrightarrow e^- + \gamma .
 \label{eq:thomson}
 \end{equation}
-The rate of Thomson scattering $\dot\kappa = a n_e \sigma_T$ (with respect to conformal time) is proportional to the electron density $n_e$.
-In turn, the electron density is determined by how different atoms and ions combine and ionize to regulate the number of free electrons.
-Big Bang nucleosynthesis predicts that Hydrogen and Helium make up almost $75\%$ and $25\%$ of the mass of elements in the early universe, so their reactions are most important:
+The Thomson scattering rate $\dot\kappa = a n_e \sigma_T$ (with respect to conformal time) is proportional to the electron density $n_e$.
+\TODO{needed by pert eqs}
+It is regulated by combination and ionization of atoms and ions,
+predominantly $\Hy$ and $\He$ that make up almost $75\%$ and $25\%$ of the mass of elements in the early universe according to Big Bang Nucleosynthesis:
 \begin{equation}
-\He^{++} + e^- \longleftrightarrow \He^+ + \gamma, \quad
+\Hy^+ + e^-    \longleftrightarrow \Hy + \gamma, \quad
 \He^+ + e^-    \longleftrightarrow \He + \gamma, \quad
-\Hy^+ + e^-    \longleftrightarrow \Hy + \gamma.
+\He^{++} + e^- \longleftrightarrow \He^+ + \gamma.
+\label{eq:recombination}
 \end{equation}
-The goal of any recombination code is to model the rate at which these coupled processes occur,
-in order to precisely determine the free electron density $n_e$ and the optical depth $\kappa$ as functions of time.
-This is very complicated, since the rate of combination/ionization of an atom/ion depends on atomic states $(n, l)$ with shell number $n \geq 1$ and angular momentum number $0 \leq l \leq n-1$,
-commonly denoted 1s, 2s, 2p, 3s, 3p, 3d, \ldots (the magnetic number $m$ is ignored).
-While processes in equilibrium have simple solutions in terms of the Saha equation,
-these processes happen out of equilibrium and their time evolution must be simulated.
-Moreover, the processes take place in an expanding spacetime, which dilutes densities over time and redshifts photons so their energy decreases with time.
-This brings in a great deal of complicated interconnected physical processes \cite[see e.g.][for reviews]{huEffectPhysicalAssumptions1995,rubino-martinEstimatingImpactRecombination2010},
-which make recombination models perhaps the most complicated ingredient of the \LCDM{} model.
-A feasible recombination model in an \EB{} code must thus strike a balance between speed and accuracy \cite{CosmoTools18}.
+Recombination codes simulate the rates of these coupled processes
+in order to determine the free electron density $n_e$, optical depth $\kappa$ and \enquote{baryon} (electron) temperature $T_b$ as functions of time.
+This is very complicated since the rates of each process \eqref{eq:recombination}
+depends on the atomic states orbitals $(n, l)$, commonly denoted $1s, 2s, 2p, 3s, 3p, 3d, \ldots$).%
+\footnote{In principle $(n,l,m)$, but the magnetic number $-l \leq m \leq +l$ is ignored. Previously $l$ was not resolved, either.}
+The radiative transfer equation must also be solved for the mean intensity $J(\tau, \nu)$ of photons as a function of both time and frequency,
+which turns the problem from an ODE into a PDE \cite[e.g.][]{seagerHowExactlyDid2000a}.
+The problem is further complicated by taking place in an expanding spacetime and out of equilibrium.
+In principle, one must evolve a large coupled reaction system for the densities $n_i$ of each state $i \in (n ,l)$ for each atomic species $\Hy, \He, \He^+, \ldots$
+\cite[e.g.][]{seagerHowExactlyDid2000a,chlubaCosmologicalHydrogenRecombination2007,grinCosmologicalHydrogenRecombination2010}:
+\begin{equation}
+a^{-3} \odv{(n_i a^3)}{t} = \big[ n_e n_c P_{ci} - n_i P_{ic} \big] + \sum_j \big[ n_j P_{ji} - n_i P_{ij} \big] ,
+\quad i = (n, l) ,
+\label{eq:fullrec}
+\end{equation}
+where $n_c$ is the density of the ionized version of $i$ (e.g. $\Hy^+$ for $\Hy$)
+and $P_{ij}$ give reaction rates between states as functions of all current densities and temperatures.
+This quickly turns into a slow and challenging computational problem:
+the equations are very stiff, and the size of the system scales as $O(n_\text{max}^2)$ and each atomic species needs $n_\text{max} \gtrsim 100$ for accurate results.
+Significant research has been devoted to exploring recombination models,
+identifying additional effects that must be treated to meet ever-growing precision requirements,
+and to find effective models that strike a tighter balance between performance and accuracy and can be solved in milliseconds within \EB{} codes.
+
+%\cite[see e.g.][for reviews]{huEffectPhysicalAssumptions1995,rubino-martinEstimatingImpactRecombination2010},.
 
 \TODO{baryon temperature ODE}
 
@@ -644,84 +661,80 @@ Recombination therefore happens to excited states ($n \geq 2$), from which they 
 
 The basic recombination picture was established independently by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968},
 and is the one implemented in COSMICS \cite{maCosmologicalPerturbationTheory1995a}.
-It is an effective model of Hydrogen in three effective states:
-$n=1$ (1s), $n=2$ (2s and 2p in equilibrium as one effective state) and $n=\infty$ (continuum of ionized atoms).
-Any other excited state $3 \leq n < \infty$ is short-lived and decays to $n=2$ immediately.
-Direct transitions between $1 \leftrightarrow \infty$ have zero net effect,
-as combination directly to the ground state emits a photon with $13.6\,\mathrm{eV}$ or more that immediately reionizes a nearby atom.
-Peebles' equation therefore only describes transitions between $1 \leftrightarrow 2 \leftrightarrow \infty$:
+It is an effective three-state model of Hydrogen:
+the ground state 1s ($n=1$),
+the first excited states 2s and 2p assumed to be in equilibrium ($n=2$),
+and the continuum of ions and electrons ($n=\infty$).
+Other excited states $3 \leq n < \infty$ are assumed to be so short-lived that they immediately decay to $n=2$.
+Let us consider the three paths between $(1, 2, \infty)$.
+
+Direct transitions between $1 \leftrightarrow \infty$ have no net effect and need not be included in the calculation.
+Combination directly to the ground state emits a photon with $E \geq 13.6\,\mathrm{eV}$ that immediately reionizes a nearby atom and cancels the effect.
+Peebles' equation therefore only describes the two transitions $1 \leftrightarrow 2 \leftrightarrow \infty$:
 \begin{equation}
-\dot{x}_\Hy = -a C_r \left[ \alpha^{(2)}(T_b) n_\Hy x_e x_\Hy - \beta(T_b) (1-x_\Hy) \right].
+\dot{x}_\Hy = -a C_r \left[ \alpha^{(2)}(T_b) n_\Hy x_e x_p - \beta(T_\gamma) (1-x_p) \right].
 \label{eq:peebles}
 \end{equation}
-%Everything begins fully ionized with $x_\Hy = 1$ in the hot early universe.
-The left term in brackets describes electrons and protons that meet at $n=\infty$ at a rate proportional to $x_e x_\Hy$, and recombine to $n = 2$ with temperature-dependent rate $\alpha^{(2)}(T_b)$.
-The right term similarly describes neutral Hydrogen with density proportional to $1-x_\Hy$ ionizing from $n=2$ to $n=\infty$ with temperature-dependent rate $\beta(T_b)$.
-The factor in front accounts for the fraction of atoms in $n=2$ that decay to $n=1$ before being reionized:
+%Everything begins fully ionized with $x_p = 1$ in the hot early universe.
+The left term in brackets describes electrons and protons that meet in $n=\infty$ at a rate proportional to $x_e x_p$, and combine to $n=2$ with temperature-dependent rate $\alpha^{(2)}(T_b)$.
+The right term similarly describes neutral \Hy{} with density proportional to $1-x_p$ ionizing from $n=2$ to $n=\infty$ with rate $\beta(T_\gamma)$,
+which is expressed in terms of $\alpha^{(2)}(T_b)$ by a detailed balance argument.
+The prefactor accounts for the fraction of atoms in $n=2$ that decay to $n=1$ before being reionized:
+\TODO{correct?}
 \begin{equation}
 C_r = \frac{\Lambda_{2s\to1s} + \Lambda_{2p\to1s}}{\Lambda_{2s\to1s} + \Lambda_{2p\to1s} + \beta^{(2)}},
 \qquad
 \Lambda_{2p\to1s} = A_{2p\to1s} \, P_\text{esc}.
+\label{eq:peebles_factor}
 \end{equation}
 This can happen in one of two ways.
 First, the decay $2p \to 1s$ is allowed and emits a Lyman-$\alpha$ photon,
-but the photon is likely to reexcite $1s \to 2p$ \emph{unless} it redshifts to lower energy first. % bottlenecks the decay
-This is modeled by the decay rate $A_{2p\to1s}$ and \enquote{escape} probability $P_\text{esc}$.
+but the photon is likely to reexcite $1s \to 2p$ in a nearby atom \emph{unless} it first redshifts to lower energy.
+This is modeled by the decay rate $A_{2p\to1s}$ and \enquote{escape} probability $P_\text{esc}$ with the Sobolev approximation,
+which depends on $\scrH$ and cosmology and avoids solving the radiative transfer equations.
 Second, the decay $2s \to 1s$ is forbidden with one emitted photon because it violates the $\Delta l = \pm 1$ selection rule,
-but is allowed through a slower decay at rate $\Lambda_{2s\to1s}$ that emits two photons, both with lower energy that cannot be reabsorbed by nearby atoms.
+but occurs at rate $\Lambda_{2s\to1s}$ through two-photon emission, neither of which can be reabsorbed by nearby atoms.
 
 \subsubsection{RECFAST}
 
-\cite{seagerNewCalculationRecombination1999b} refines Peebles' treatment by calibrating a more accurate and detailed numerical simulation to a Peebles-like effective model.
-They first perform a much more detailed calculation of a non-effective model that explicitly evolves a coupled system of reactions between $\{\Hy, \Hy^+, \He, \He^+, \He^{++}, e^-, \Hy^-, \Hy_2, \Hy_2^+\}$
-(\TODO{see e.g. RecSparse?}):
+RECFAST \cite{seagerNewCalculationRecombination1999b} was for a long time the standard recombination code.
+It refines Peebles' model by first simulating a full and expensive recombination problem \eqref{eq:fullrec} of $\Hy$, $\Hy^+$, $\He$, $\He^+$, $\He^{++}$, $e^-$, $\Hy^-$, $\Hy_2$ and $\Hy_2^+$ with 609 coupled ODEs.
+\TODO{reword so it doesnt sound like 609 eqs are solved every time}
+It is then compressed into Peebles-like equations \eqref{eq:peebles} for both $\He$ and $\He^+$ in addition to $\Hy$,
+but with a recombination coefficient $\alpha_\Hy$ that is fudged by an arbitrary and unphysical \enquote{fudge factor} $F$
+that is tuned to bring the results of the compressed model as close as possible to the full simulation.
 \begin{equation}
-a^3 \odv{(n_i a^3)}{t} = \big[ n_e n_c P_{ci} - n_i P_{ic} \big] + \sum_j \big[ n_j P_{ji} - n_i P_{ij} \big] .
-\label{eq:fullrec}
+\alpha_\Hy(T_b)
+\quad \to \quad 
+F\cdot\alpha_\Hy(T_b)
+\quad \text{with} \quad
+F = 1.14 . \\
 \end{equation}
-Here $n_i$ is the density of one of the species in a given quantum state $n$ (angular momenta $l$ are not distinguished),
-$n_c$ is the density of the corresponding ionized \enquote{continuum} particle
-and $n_e$ is still the electron density.
-Note that there is no $C_r$ factor in front, as that is an artifact of Peebles' effective model.
-This results in an extremely stiff system of 609 coupled ODEs that is much more demanding to integrate than Peebles' equation,
-and too slow to be integrated into an \EB{} code \cite{seagerHowExactlyDid2000a}.
+This combines the accuracy of the multi-level computation with the speed of Peebles' equation,
+but the fitting assumes a \LCDM{}-like model with particular parameter values.
+This makes RECFAST unsafe to use with modified cosmological models.
 
-For efficiency, this physically principled solution is then compressed into a Peebles-like effective 3-level model that includes $\He$ and $\He^+$ (but not $\He^{++}$) in addition to $\Hy$:
-\begin{subequations}
-\begin{align}
-\dot{x}_\Hy^+ &= C_\Hy \big[ x_e x_\Hy^+ n_\Hy \alpha_\Hy - \beta_\Hy (1-x_\Hy^+) e^{-\beta E_\Hy^{2s}} \big], \\
-\dot{x}_\He^+ &= C_\He \big[ x_e x_\He^+ n_\Hy \alpha_\He - \beta_\He (f_\He x_\He^+ e^{-\beta E_\He^{2^1 s}}) \big],
-\end{align}
-\end{subequations}
-where $\{C_\Hy, C_\He\}$ are effective Peebles' coefficients and $\{\alpha_\Hy(T_b), \alpha_\He(T_b)\}$ are temperature-dependent recombination rates that are fitted to experiemental data:
-\begin{subequations}
-\begin{align}
-\alpha_\Hy(T_b) &= F \, 10^{-19} \frac{a \, (T_b/10^4\,\mathrm{K})^b}{1 + c \, (T_b/10^4\,\mathrm{K})^d} \, \mathrm{m^3 s^{-1}}, \\
-\alpha_\He(T_b) &= q \, \Bigg[ \sqrt{\frac{T_b}{T_2}} \bigg( 1 + \sqrt{\frac{T_b}{T_1}} \bigg)^{1+p} \, \bigg( 1 + \sqrt{\frac{T_b}{T_2}} \bigg)^{1-p} \Bigg]  \, \mathrm{m^3 s^{-1}}.
-\end{align}
-\end{subequations}
-Most (in)famously, the Hydrogen recombination artificially sped up by fudging it with the \enquote{fudge factor} $F = 1.14$.
-It is determined in order to make the effective model approximately match the more principled multi-level computation,
-and is what puts the \enquote{FAST} in \enquote{RECFAST}.
-Later it has been found that Helium recombination can take place through both singlet and triplet states of Helium \cite{wongHowWellWe2007},
-and the multi-level calculation has been refined by distinguishing the angular momentum substates $l$ (i.e. $(n, l)$).
-To keep track with future advances, RECFAST has continually readjusted and introduced more fudge factors to closely fit more accurate computations.
-This has made RECFAST a quite \enquote{dirty} recombination model, and the fitting is done against the \LCDM{} model so it is generally unsafe to use RECFAST with modified cosmological models.
-\TODO{Planck used RECFAST despite HyRec and CosmoRec being introduced, but readjusted its fudge factors}
+Since the original version, RECFAST has been updated several times with more fitting functions and fudge factors to account for additional effects that have been found to be important.
+For example, non-negligible effects have been found from \He{} recombination taking place through distinct singlet and triplet states,
+and by resolving both $(n,l)$ in multi-level simulations (instead of just $n$).
+\cite{wongHowWellWe2007,rubino-martinEstimatingImpactRecombination2010,chlubaRadiativeTransferEffects2012a,collaborationPlanck2013Results2014}.
+The increasingly unsatisfactory ad-hoc nature of RECFAST motivated more physically principled recombination codes (below).
 
-Despite more accurate recombination codes being developed (see below),
-RECFAST remained the recombination model used in the Planck analysis \TODO{ref Planck parameters} due to speed,
-but with updated fudge factors and additional physics fitted \TODO{see Hyrec2 paper (?)}.
+%Despite these newer codes being introduced in the following years (see below),
+%RECFAST remained the recombination model used in the Planck analysis.
+%However, it was further modified with additional fitting functions and fudge factors
+%to take new helium corrections into account and finer simulations of the multi-level problem
 
 %RICO emulator \cite{fendtRICONEWAPPROACH2009,fendtRicoAccurateCosmological2009}
 %was introduced because the full computations were too time-consuming.
 %Gives $x_e(t, \mathbf{p})$ as a function of cosmological parameters.
+%\TODO{Rico generalizes to emulation over parameter space?}
 
 \subsubsection{CosmoRec, HyRec and HyRec-2}
 
-\begin{figure}[ht]
+\begin{figure}[t!]
 \centering
-\includegraphics[width=0.8\textwidth]{media/emla}
+\includegraphics[width=0.6\textwidth]{media/emla}
 \caption{\label{fig:emla}
 The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two parts.
 \enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
@@ -732,47 +745,59 @@ The figure is reproduced from \cite{ali-haimoudHyRecFastHighly2011a}.
 }
 \end{figure}
 
-\textbf{CosmoRec} \cite{chlubaCompleteTreatmentCosmological2010} and \textbf{HyRec} \cite{ali-haimoudHyRecFastHighly2011a}
-are newer recombination codes that replace the fudge factors of Hydrogen with more principled physical treatments.
-They are based on a new method called the effective multi-level atom (EMLA) \cite{ali-haimoudUltrafastEffectiveMultilevel2010}:
+CosmoRec \cite{chlubaCompleteTreatmentCosmological2010} and HyRec \cite{ali-haimoudHyRecFastHighly2011a}
+are newer and more physically principled recombination codes that avoid the fudge factors of RECFAST.
+They are both based on a new method called the effective multi-level atom (EMLA) \cite{ali-haimoudUltrafastEffectiveMultilevel2010}.
+As shown in \cref{fig:emla}, it separates all excited $(n, l)$ states into two categories:
+a small set of \enquote{interface states} $i$ that are directly connected to the ground state with radiative transitions,
+and complementary \enquote{interior states} that are only indirectly connected to it.
+
+The central result of the EMLA is that instead of evolving ODEs for all states in the full recombination system \eqref{eq:fullrec},
+the effect of the \enquote{interior states} can be accounted for \emph{exactly} (under some reasonable assumptions) by effective combination and ionization coefficients $A_i(T_b, T_\gamma)$ and $B_i(T_\gamma)$ to each of the \enquote{interface states}.
+These coefficients depend only on the baryon and the photon temperatures and \emph{not} on cosmology,
+so they can be precomputed once and for all cosmologies with a many-level computation and tabulated.
+The problem then reduces to tracking only a small set of interface states and interpolating $A_i$ and $B_i$ in one or two variables,
+and the remaining set of equations for the interface states that must be solved per cosmology are small:
 \begin{equation}
 \dot{x}_e = -\sum_i \big( n_\Hy x_e^2 A_i(T_b, T_\gamma) - x_i B_i(T_\gamma) \big), \qquad i \in \{2s, 2p, \ldots\} .
+\label{eq:hyrec}
 \end{equation}
-As shown in \cref{fig:emla}, it separates all excited $(n, l)$ states into two categories:
-a small set of \enquote{interface states} $i$ that are directly connected to the ground state with a radiative transition,
-and the complementary \enquote{interior states} that are indirectly connected to the ground state.
-The central result of the EMLA is that instead of evolving ODEs for the full explicit recombination system \eqref{eq:fullrec},
-the effect of the \enquote{interior states} can be accounted for by effective combination and ionization coefficients $A_i(T_b, T_\gamma)$ and $B_i(T_\gamma)$ to each of the \enquote{interface states}
-that are cosmology-independent and depend only on the baryon and photon temperatures.
-These effective functions can be precomputed once and for all cosmologies with a many-level computation.
-The problem then reduces to tracking only a small set of interface states and interpolating $A_i$ and $B_i$,
-and only a small system of ODEs must be evolved.
-In practice it suffices to keep track of only the four levels $\{1s, 2s, 2p, \infty\}$.
-The EMLA is an exact generalization of Peebles' effective three-level model that accurately takes into account the effect of all states.
+\TODO{appears closed; explain that $x_i$ found from radiative transfer}
+In practice it suffices to keep track of at most a handful of levels $\{1s, 2s, 2p, 3s, 3p, 3d, 4s, 4p, 4d, \infty\}$ instead of thousands of $(n, l)$ states,
+so the size and number of the differential equations to solve is comparable in magnitude to RECFAST.
+%In some sense, the EMLA is a definitive and elegant exact generalization of Peebles' original three-level atom.
+%This elegantly ends the recombination problem by circling back to the original treatments and solving them exactly.
+
+%The EMLA is an exact generalization of Peebles' effective three-level model that accurately takes into account the effect of all states.
+%\TODO{?}
+%\TODO{have shown to reduce exactly to Peebles/RECFAST?}
 %Cosmology needs only $x_e$, and cosmology enters only through transitions to the ground state (Ly alpha escape?).
 %Other interior states only interact with the thermal photon background and do not suffer cosmological effects.
 
-Transitions between the ground state and \enquote{interface states} are handled by solving radiative transfer equations for the intensity distribution $I(\tau, \nu)$ of photons as a function of time $\tau$ and frequency $\nu$.
-This is a performance bottleneck and made Planck continue to use RECFAST in its analysis,
-despite HyRec and Cosmorec offering higher accuracy.
-\textbf{HyRec-2} \cite{leeHYREC2HighlyAccurate2020} resolves this problem by adopting a correction to the $\mathrm{Ly\alpha}$ escape:
+While HyRec and CosmoRec both use the very efficient EMLA,
+they differ mostly in how they solve the radiation transfer problem.
+The codes treat this by solving for the full photon intensity distribution $J(\tau, \nu)$
+instead of using the Peebles factor \eqref{eq:peebles_factor} with the Sobolev approximation.
+This remains the performance bottleneck in the problem, and makes HyRec and CosmoRec slower than RECFAST.
+HyRec-2 alleviates this problem by fitting a function $\Delta$ around the Sobolev approximation
 \begin{equation}
-R_{2p\to1s} = \frac{R_\mathrm{Ly\alpha}}{1+\Delta} ,
+R_{2p\to1s} = \frac{R_\mathrm{Ly\alpha}}{1+\Delta} .
 \end{equation}
-where $\Delta(\tau; \omega_b, \omega_c, N_\mathrm{eff})$ is a first-order Taylor expansion through the Planck 2018 best-fit parameters
+Here $\Delta(\tau; \omega_b, \omega_c, N_\mathrm{eff})$ is a first-order Taylor expansion through the Planck 2018 best-fit parameters
 that makes $\dot{x}_e$ match exactly for those particular parameters.
-This sacrifices some generality, but makes speeds up HyRec-2 so it solves recombination both faster and more accurately than RECFAST.
-Today CLASS, CAMB and SymBoltz all offer both RECFAST and HyRec-2 as recombination models.
-This ends the summary of the current state of recombination models.
+This is a much less severe form of the fudge factors in RECFAST and sacrifices some generality,
+but at the end of the day it makes HyRec-2 both faster and more accurate than RECFAST.
+
+Using the original RECFAST over HyRec and CosmoRec can give $1\%$-$3\%$-$4\%$ error in $x_e$ and up to $4\%$ error in $C_l$ at high $l \approx 3000$,
+which in turn noticeably biases extracted parameters from Planck \cite{shawPreciseCosmologicalParameter2011}.
+The latest RECFAST with updated fudge factors and fit functions resolve this problem,
+but the fit to a \LCDM{} remains less safe for extended models than with HyRec and CosmoRec.
+HyRec-2 is now the standard recombination code in CLASS,
+while CAMB can optionally be compiled for it but still defaults to RECFAST recalibrated against HyRec and CosmoRec.
+SymBoltz also offers both RECFAST and HyRec-2.
 
 %\TODO{this exactly generalizes ...} the effective recombination coefficient $\alpha_B$ to $2 \leq n < \infty$ in Peebles' equation \eqref{eq:peebles}
 %\TODO{rename $\alpha^{(2)} \to \alpha_B$ in Peebles eq.?}
-
-\TODO{?}
-The modifications yield up to $3\%$ change relative change in the free electron density
-and up to $4\%$ change in CMB spectra at $l \approx 3000$ for temperature and polarization,
-which in turn biases extracted parameters \cite{shawPreciseCosmologicalParameter2011}.
-Not good enough for Planck.
 
 \subsubsection{Perturbed recombination}
 
@@ -889,7 +914,7 @@ Scattering \newline \cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBar
 $\boldsymbol{\nu}$ & &
 See \cref{sec:neutrinos} &
 Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021} &
-Majoron, decay \newline \cite{escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022a} &
+Majoron, decay \newline \cite{escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
 Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006} \\ \midrule%\cmidrule{4-6}
 \textbf{DM} & & & &
 Scattering, decay \newline \cite{lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,leeCosmologicalEvolutionDecaying2026} &
@@ -952,6 +977,8 @@ there are three major aspects I tried to improve with the design of SymBoltz.
 I will discuss these in the upcoming sections.
 
 \subsubsection{Symbolic-numeric interface for easy model specification}
+
+\TODO{how can we accomodate modifications such as all the ones in the modifications section with a uniform interface. show what features the symbolic interface has after recent updates to symboltz. shooting, backwards, split bg/pt, auto-spline, auto-observed, ...}
 
 To modify the equations of the cosmological model,
 one must generally edit the code in many different places.
