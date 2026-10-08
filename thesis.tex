@@ -819,19 +819,88 @@ by considering modifications to the mathematical constant $\pi$ \cite{gammalCirc
 
 \subsection{Interacting models}
 
-\TODO{create one matrix with every species $\times$ every species, and in each cell put a reference that describes the interaction?}
-\TODO{generalize to energy/momentum exchange between more species than only baryons and photons, e.g. CDM-DE-baryons; subject of Paper 4 (?)}
-
-Total energy-momentum conservation \eqref{eq:conservation} is satisfied for most species $a$ by separately conserving
-$\nabla_\mu T^{\mu\nu}_a = 0$ (apart from baryons and photons).
-However, what if we allow for interactions between species that make
+All species in the standard \LCDM{} model indirectly with each other through gravity,
+but only baryons and photons interact directly through Thomson scattering.
+Total energy-momentum conservation \eqref{eq:conservation} is satisfied
+by separately conserving $\nabla_\mu T^{\mu\nu}_a = 0$ for noninteracting species.
+Interacting models lift this assumption and allows for a nonzero flow $Q_{ab}$ between pairs $(a,b)$ of species:
 \begin{equation}
 \nabla_\mu T^{\mu\nu}_{a} = Q_a = \sum_b Q_{ab}
+\quad \text{with} \quad
+Q_{ab} = -Q_{ba} .
 \end{equation}
-with $Q_{ab} = -Q_{ba}$,
-such that still $\sum_s \nabla_\mu T^{\mu\nu}_s = \sum_{a,b} Q_{ab} = -\sum_{a,b} Q_{ab} = 0$?
+The antisymmetric flow ensures that the total is conserved: $\sum_s \nabla_\mu T^{\mu\nu}_s = \sum_{a,b} Q_{ab} = -\sum_{a,b} Q_{ab} = 0$.
+\Cref{tab:interactions} shows examples of such interactions that have been implemented in modified \EB{} codes.
+
+Such models lead to modification of the background (including thermodynamics) and perturbation equations.
+For example, it may modify the continuity equations in the background to
+\begin{equation}
+\dot{\rho}_a = -3\scrH\,(1+w_a)\rho_a + Q_a.
+\end{equation}
+They no longer have analytical solutions $\rho \propto a^{-3(1+w_a)}$ with constant $w_a$ for arbitrary $Q_a$,
+so they must instead integrated numerically.
+If the model is to parameterized in the conventional way by their present densities $\Omega_{a0}$,
+this makes it necessary to either integrate the background backwards in time (from $a=1$ to $a \ll 1$)
+or use the shooting method to determine the initial conditions that give the desired parameters.
+
+The perturbation equations must also be modified \cite[e.g.][appendix A]{figuerueloDarkMatterbaryonsElastic2026}:
+\begin{subequations}
+\begin{align}
+\delta_b &= -\theta_b + +3 \dot{\Psi}, \\
+\theta_b &= -\scrH \theta_c + k^2 \Phi + c_s^2 k^2 \delta_b + \dot{\kappa} \frac{4 \rho_\gamma}{3 \rho_b} (\theta_\gamma - \theta_b) + \frac{\gamma}{a^2} (\rho_c - \rho_b) , \\
+\delta_c &= -\theta_c + 3 \dot{\Psi}, \\
+\theta_b &= -\scrH \delta_c + k^2 \Phi - \frac{\gamma}{a^2} \frac{\rho_b}{\rho_c} (\theta_c - \theta_b) .
+\end{align}
+\end{subequations}
+Such modifications frequently touch the approximation schemes in \EB{} codes.
+This makes it necessary to modify the TCA \cite[e.g.][]{wilkinsonUsingCMBAngular2014,chenCosmicMicrowaveBackground2002}
+or to derive new TCAs \cite[e.g.][]{archidiaconoConstrainingDarkMatter2019}.
+
+These factors complicate the implementation of interacting models.
+
+\TODO{bridge to Paper 4}
+
+\begin{table}[t]
+\begin{center}
+\small % TODO: \normalsize?
+\setlength{\tabcolsep}{2pt}
+\def\arraystretch{1.3}
+\newcolumntype{P}{>{\raggedright\arraybackslash}p{0.175\textwidth}}
+\begin{tabular}{lPPPPP}
+\toprule
+ & \textbf{b} & $\boldsymbol{\nu}$ & \textbf{DM} & \textbf{DR} & \textbf{DE} \\
+\midrule
+$\boldsymbol{\gamma}$ &
+Scattering, recombination \newline \cite{maCosmologicalPerturbationTheory1995a,seagerNewCalculationRecombination1999b} &
+-- &
+Scattering \newline \cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018} &
+-- &
+Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022} \\ \midrule%\cmidrule{2-6}
+\textbf{b} & &
+-- &
+Scattering \newline \cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,figuerueloDarkMatterbaryonsElastic2026} &
+-- &
+Scattering \newline \cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBaryonsdark2020a} \\ \midrule%\cmidrule{3-6}
+$\boldsymbol{\nu}$ & &
+See \cref{sec:neutrinos} &
+Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021} &
+Majoron, decay \newline \cite{escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022a} &
+Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006} \\ \midrule%\cmidrule{4-6}
+\textbf{DM} & & & &
+Scattering, decay \newline \cite{lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,leeCosmologicalEvolutionDecaying2026} &
+Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021} \\ \bottomrule
+\end{tabular}
+\end{center}
+\caption{%
+Examples of interactions that have been implemented in \EB{} codes between pairs of species:
+photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
+Only baryon--photon interactions are part of the standard \LCDM{} model.
+}
+\label{tab:interactions}
+\end{table}
 
 \subsection{Massive neutrinos and non-cold dark matter}
+\label{sec:neutrinos}
 
 Neutrinos are now fundamental part of the standard models of both particle physics and cosmology \cite{lesgourguesMassiveNeutrinosCosmology2006,neutrinosincosmology}.
 They have a promising observational future with the recent attribution of the Nobel Prize in Physics to the lead of the IceCube experiment, Francis Halzen \cite{NobelPrizePhysics2026}.
