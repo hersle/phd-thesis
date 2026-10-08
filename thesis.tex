@@ -15,6 +15,7 @@
 \usepackage{textcomp}
 \usepackage{bookmark}
 
+\usepackage{array}[=v2.6] % v2.6 relaxes compilation warning % TODO update Fedora Latex packages instead
 \usepackage[table]{xcolor} % color tables
 \usepackage{booktabs}
 
@@ -29,6 +30,9 @@
 
 \usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
+
+\usepackage{microtype} % better line breaking (avoids overfull lines)
+\raggedbottom % do not stretch pages vertically (avoids underfull pages)
 
 \newcommand\diff{\mathrm{d}}
 \newcommand\ini{\mathrm{ini}}
@@ -299,7 +303,7 @@ particularly related to the simplicity of specifying models, avoiding complicati
 
 \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 
-\subsection{Nonlinear $N$-body simulation codes}
+\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
 
 $N$-body simulations model the matter distribution in the universe with particles,
 and evolve them forward in time with gravitational forces.
@@ -493,9 +497,9 @@ We give a non-exhaustive list of this, in an attempt to illustrate what common m
 The purpose is not to give an exhaustive list of all modifications ever made,
 but it is to showcase the breadth of the possible modifications and how they affect nearly every \enquote{sector} of the \EB{} equations.
 
-\TODO{see \cite{schonebergH0OlympicsFair2022} for an overview of some different extended models?}
+\TODO{see \cite{valentinoRealmHubbleTension2021,abdallaCosmologyIntertwinedReview2022,schonebergH0OlympicsFair2022} for an overview of some different extended models?}
 
-\subsection{$w_0 w_a$ dark energy}
+\subsection{\texorpdfstring{$w_0 w_a$}{w0wa} dark energy}
 
 One of the most popular modifications to the cosmological constant as dark energy in \LCDM{} is to switch its equation of state from $w = -1$ to
 \cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}
@@ -564,6 +568,7 @@ axiCLASS \cite{poulinCosmologicalImplicationsUltralight2018}
 See also interactions sector for interactions of dark matter with baryons, photons, massive neutrinos, ...
 
 \subsection{Dark radiation models}
+Self-interacting (fluid-like) dark radiation: \href{https://arxiv.org/abs/1703.10732}{1703.10732}, \href{https://arxiv.org/abs/2111.00014}{2111.00014}.
 \subsection{Consistent baryon physics}
 All standard \EB{} codes treat baryons inconsistently, as pointed out by \cite{pookkillathBaryonPhysicsTight2019} for example.
 The seminal work of \cite[section 5.6]{maCosmologicalPerturbationTheory1995a} (rightfully) treat baryons as a non-relativistic fluid with $\delta P/\delta \rho = w \ll 1$.
@@ -891,7 +896,7 @@ Scattering, decay \newline \cite{lesgourguesEvidenceDarkMatter2016,archidiaconoC
 Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021} \\ \bottomrule
 \end{tabular}
 \end{center}
-\caption{%
+\caption[Examples of interactions that have been implemented in \EB{} codes between pairs of species.]{%
 Examples of interactions that have been implemented in \EB{} codes between pairs of species:
 photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
 Only baryon--photon interactions are part of the standard \LCDM{} model.
@@ -1185,8 +1190,8 @@ Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. 
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{%
-Characteristics of SymBoltz compared to other Einstein--Boltzmann codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
+\caption[Characteristics of SymBoltz compared to other \EB{} codes.]{%
+Characteristics of SymBoltz compared to other \EB{} codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
 AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
 ${}^1$Development appears to have ceased.
 ${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
