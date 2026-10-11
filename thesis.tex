@@ -12,6 +12,7 @@
 \usepackage{babel}
 \usepackage{csquotes}
 \usepackage{graphicx}
+\usepackage{eso-pic} % for adding background pictures, e.g. the SymBoltz logo with \AddToShipoutPictureFG
 \usepackage{textcomp}
 \usepackage{bookmark}
 
@@ -333,6 +334,7 @@ A wide number of emulators have been created for emulating CMB predictions from 
 
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
+\AddToShipoutPictureFG*{\AtTextUpperLeft{\put(\LenToUnit{\textwidth},0){\makebox[0pt][r]{\raisebox{-\height}{\begin{tabular}{@{}c@{}}\href{https://github.com/hersle/SymBoltz.jl}{\includegraphics[width=0.28\textwidth]{media/symboltz_logo}} \\ \scriptsize\sffamily\href{https://github.com/hersle/SymBoltz.jl}{github.com/hersle/SymBoltz.jl}\end{tabular}}}}}} % put SymBoltz logo in top-right corner of the chapter start page without affecting spacing (similarly to e.g. https://arxiv.org/pdf/1909.01828)
 
 The cosmological principle in \cref{sec:principle} is not exact, and the background equations in \cref{chap:back} are not sufficient for describing the universe.
 The real universe is homogeneous and isotropic only in a statistical sense when averaged over sufficiently large scales \TODO{figure?}.
@@ -548,13 +550,6 @@ Two approaches:
 2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
 
 \TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.2\textwidth]{media/symboltz_logo}
-\caption{SymBoltz is available from \url{https://github.com/hersle/SymBoltz.jl}.}
-\label{fig:symboltz-logo}
-\end{figure}
 
 \begin{table}[htbp]
 \begin{center}
