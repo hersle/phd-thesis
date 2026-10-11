@@ -1,6 +1,12 @@
 \documentclass[USenglish, thumbmarks]{uiophdthesis} % https://www.uio.no/english/about/designmanual/profile-in-use/latex/
 \usepackage[utf8]{inputenc}
 
+% silence warning due to xcolor with [table] option using new version of array package,
+% which requests a newer latex kernel version than the one installed on my system
+% TODO: remove when Fedora Latex packages are updated
+\usepackage{silence}
+\WarningFilter{latex}{You have requested release}
+
 \usepackage[T1]{url}
 \urlstyle{same} % no special font (template default is sf)
 \usepackage[hidelinks, hypertexnames=false]{hyperref}
@@ -33,12 +39,6 @@
 
 \usepackage{microtype} % better line breaking (avoids overfull lines)
 \raggedbottom % do not stretch pages vertically (avoids underfull pages)
-
-% silence warning due to xcolor with [table] option using new version of array package,
-% which requests a newer latex kernel version than the one installed on my system
-% TODO: remove when Fedora Latex packages are updated
-\usepackage{silence}
-\WarningFilter{latex}{You have requested release}
 
 \newcommand\diff{\mathrm{d}}
 \newcommand\ini{\mathrm{ini}}
