@@ -590,6 +590,7 @@ ${}^6$Sparsity found numerically and changes with approximations.
 \end{table}
 
 \section{Modified models in \EB{} codes}
+\label{sec:modifications}
 
 Over the years, a plethora of modified models have been implemented into \EB{} codes.
 We give a non-exhaustive list of this, in an attempt to illustrate what common modifications are made in \EB{} codes.
@@ -1020,7 +1021,7 @@ are modified \EB{} codes that target theoretically principled models of modifie
 For example, the equations in hi\_class modify the background schematically in the following way:
 \begin{subequations}
 \begin{align}
-0 &= C(H) = C_3 H^3 + C_2 H^2 + C_1 H + C_0 , \quad (C_i = C_i(H, \phi, \dot{\phi})) \label{eq:hifried1} \\
+0 &= C(H) = C_3 H^3 + C_2 H^2 + C_1 H + C_0 , \label{eq:hifried1} \\
 \dot{H} &= \dot{H}(H, \phi, \dot{\phi}), \label{eq:hifried2} \\
 \ddot{\phi} &= \ddot{\phi}(H, \phi, \dot{\phi}) . \label{eq:hikg}
 \end{align}%
@@ -1050,8 +1051,9 @@ such as the Einstein equations, where a subset of equations must be chosen to in
 as not all choices of $H_0$ (treated as a free parameter), $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ integrate such that $H(\tau_0)$ takes the value $H_0$.
 \end{itemize}
 
-\TODO{continue here}
-Perturbations for $V_X = a \delta\phi/\dot\phi$:
+The perturbation equations are also modified \cite{belliniMaximalFreedomMinimum2014a}.
+The Einstein equations for $\Phi$ and $\Psi$ remain linear,
+and one additional equation must be integrated for the perturbations $V_X = a \delta\phi/\dot\phi$ of the scalar field:
 \begin{equation}
 \ddot{V}_X + \nu \scrH \dot{V}_X + (a^2 \mu^2 + c_s^2 k^2) V_X = S,
 \end{equation}
@@ -1275,6 +1277,42 @@ The equations are then automatically split into subsystems of coupled equations 
 such as the background, thermodynamics and perturbations.
 Then numerical code for solving the ODE is generated.
 
+Symbolic-numeric interface should provide one uniform interface for users to modify the code.
+Framework written in a generic way that accommodates a vast majority of extensions,
+such as the ones in \cref{sec:modifications},
+with simple and straightforward modifications.
+
+\begin{itemize}
+\item All background, thermodynamics and perturbation equations, variables, parameters, initial conditions and so on should be specified as one single system.
+It should not be necessary to jump between source files for the background, thermodynamics, recombination code and perturbations; and between different functions inside each such file.
+Automatically split in stages, and set up splines to interpolate between them.
+Modification should be as simple as possible.
+
+\item Efficient numerical code is generated, both for the ODE function $f$ and its Jacobian.
+Analytical and sparse Jacobian is important for approximation-freeness.
+
+\item Unknown and observed equations are automatically handled and distinguished.
+
+\item Derivative expansions of unknown variables are handled automatically.
+
+\item Interpolation is handled automatically of any variable, whether observed or analytical.
+
+\item Initialization.
+For example hi\_class constraint example.
+
+\item Can escape symbolic interface to call external functions,
+for example to interpolate input from other programs.
+
+\item Shooting is specified symbolically.
+Can use autodiff.
+
+\item Equations can be specified to integrate either forwards in time (default) or backwards in time.
+\end{itemize}
+
+Not a homemade implementation,
+but using ModelingToolkit,
+to which many contributions have been done.
+
 \subsection{Lack of approximation schemes}
 
 \TODO{}
@@ -1310,6 +1348,12 @@ This is very well illustrated by the following figure: \TODO{CLASS figure}.
 Approximation schemes are also less necessary in the time of emulators.
 
 Traditional \EB{}, in particular CAMB and CLASS, contain several approximation schemes
+
+\subsubsection{Explicit integration with approximations}
+\TODO{}
+
+\subsubsection{Implicit integration without approximations}
+\TODO{}
 
 \subsection{Differentiable output}
 
