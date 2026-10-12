@@ -25,6 +25,9 @@
 \usepackage[table]{xcolor} % color tables
 \usepackage{booktabs}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, backgrounds}
+
 \usepackage[nospace]{varioref}
 \usepackage{cleveref}
 \crefname{part}{paper}{papers} % use \cref{paper:...} to refer to \uiopaper's as "Paper I" etc.
@@ -428,6 +431,119 @@ Non-interacting perfect fluid in the Newtonian gauge:
 
 \section{History of \EB{} codes}
 
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+    x=0.35cm, y=-0.7cm, % 1 unit = 1 year horizontally and 1 row vertically (downwards)
+    life/.style={line width=2.5pt, shorten <=-1.25pt}, % extend by half the bar thickness, so the start bar is centered on its date
+    alive/.style={{Bar[width=8pt]}-{Triangle[length=5pt, width=8pt]}}, % open end: development continues
+    dead/.style={{Bar[width=8pt]}-{Bar[width=8pt]}, shorten >=-1.25pt}, % closed end: development stopped
+    paper/.style={circle, draw, fill=white, line width=1pt, inner sep=0pt, minimum size=6pt},
+    lineage/.style={line width=1pt},
+]
+    % years are offset by 1995 to keep coordinates small
+    \def\present{2027} % approximate thesis publication
+    \def\ncodes{10} % number of codes (rows) below
+
+    % year axis
+    \foreach \yr in {1990,1995,...,2025} {
+        \draw (\yr-1995, \ncodes+0.6) -- ++(0, 0.25) node[below, font=\small] {\yr};
+    }
+    \foreach \yr in {1989,...,2027} {
+        \pgfmathparse{int(mod(\yr, 5))}
+        \ifnum\pgfmathresult=0 \else \draw (\yr-1995, \ncodes+0.6) -- ++(0, 0.12); \fi % skip major ticks
+    }
+    \draw[dashed] (\present-1995, 0.4) -- (\present-1995, \ncodes+0.6) node[pos=0, above, font=\small] {today};
+    \draw[->] (1989-1995, \ncodes+0.6) -- (2028-1995, \ncodes+0.6);
+
+    % code homepages that the code names link to (stored as keys, since URLs contain slashes)
+    \pgfkeyssetvalue{/codeurl/cosmics}{https://web.archive.org/web/20040202035953/http://arcturus.mit.edu/cosmics/}
+    \pgfkeyssetvalue{/codeurl/cmbfast}{https://web.archive.org/web/20070202231316/http://www.cmbfast.org/}
+    \pgfkeyssetvalue{/codeurl/camb}{https://github.com/cmbant/CAMB}
+    \pgfkeyssetvalue{/codeurl/cmbeasy}{https://web.archive.org/web/20080105133830/http://cmbeasy.org/}
+    \pgfkeyssetvalue{/codeurl/class}{https://github.com/lesgourg/class_public}
+    \pgfkeyssetvalue{/codeurl/pycosmo}{https://pypi.org/project/PyCosmo/}
+    \pgfkeyssetvalue{/codeurl/bolt}{https://github.com/xzackli/Bolt.jl}
+    \pgfkeyssetvalue{/codeurl/discoeb}{https://github.com/ohahn/DISCO-EB}
+    \pgfkeyssetvalue{/codeurl/symboltz}{https://github.com/hersle/SymBoltz.jl}
+    \pgfkeyssetvalue{/codeurl/abcmb}{https://github.com/TonyZhou729/ABCMB}
+
+    % codes (one row each, in order): node name/label/first trace/first paper/last trace/still developed?
+    % (fractional years; first and last traces are first preprint, commit or release and last commit or release; - means no paper)
+    \def\nopaper{-}
+    \foreach \code/\name/\first/\paper/\last/\isalive [count=\row] in {
+        % COSMICS start: https://arxiv.org/abs/astro-ph/9506070
+        % COSMICS end: https://web.archive.org/web/20040202035953/http://arcturus.mit.edu/cosmics/
+        cosmics/COSMICS/1995.44/1995.94/2003.47/0,
+        % CMBFAST start: https://arxiv.org/abs/astro-ph/9603033
+        % CMBFAST end: https://web.archive.org/web/20070202231316fw_/http://cfa-www.harvard.edu/~mzaldarr/CMBFAST/cmbfast.html
+        cmbfast/CMBFAST/1996.18/1996.79/2003.92/0,
+        % CAMB start: https://arxiv.org/abs/astro-ph/9911177
+        % CAMB end: https://github.com/cmbant/CAMB/commit/56a95f78fdd72709c5af6b668141ec0c617777c3
+        camb/CAMB/1999.86/2000.62/2026.73/1,
+        % CMBEASY start: https://arxiv.org/abs/astro-ph/0302138
+        % CMBEASY end: https://web.archive.org/web/20080105133830/http://cmbeasy.org/
+        cmbeasy/CMBEASY/2003.10/2005.79/2006.91/0,
+        % CLASS start: https://github.com/lesgourg/class_public/commit/553fc4be52021fa58981853c86828f26839e59f4
+        % CLASS end: https://github.com/lesgourg/class_public/commit/814ce59c380a5cccd0bed1747a384ff7bfc1f9cf
+        class/CLASS/2010.22/2011.54/2026.76/1,
+        % PyCosmo start: https://arxiv.org/abs/1708.05177
+        % PyCosmo end: https://pypi.org/project/PyCosmo/2.3.2/
+        pycosmo/PyCosmo/2017.62/2018.79/2026.75/1,
+        % Bolt start: https://github.com/xzackli/Bolt.jl/commit/6f106083e585627a182aff1154823d67e4acc494
+        % Bolt end: https://github.com/xzackli/Bolt.jl/commit/674271b1f78801319b07f2b8db9802c08c68e749
+        bolt/Bolt/2021.02/-/2024.62/0,
+        % DISCO-EB start: https://github.com/ohahn/DISCO-EB/commit/6a7672ce7c9b0d3a87dfde499309bed6ffeaae27
+        % DISCO-EB end: https://github.com/ohahn/DISCO-EB/commit/3aa88d203f00411edcf9985b1abd6d387acd7494
+        discoeb/DISCO-EB/2023.39/2024.45/2025.79/1,
+        % SymBoltz start: https://github.com/hersle/SymBoltz.jl/commit/e1fd21eca61aeb27017cab058a728b4c9e0dee49
+        % SymBoltz end: https://github.com/hersle/SymBoltz.jl/commit/04388aceb4f9a5aa52ebded58486ede57b787924
+        symboltz/SymBoltz/2024.06/2026.20/2026.77/1,
+        % ABCMB start: https://github.com/TonyZhou729/ABCMB/commit/63837f859140265fb52343aa7adf00ede37414a5
+        % ABCMB end: https://github.com/TonyZhou729/ABCMB/commit/508a15e1b3afe85692d2edd39da26c0d9a926eac
+        abcmb/ABCMB/2025.76/2026.62/2026.75/1%
+    } {
+        % round all dates down to the year they lie in
+        \pgfmathsetmacro\first{floor(\first)}
+        \pgfmathsetmacro\last{floor(\last)}
+        \ifx\paper\nopaper \else \pgfmathsetmacro\paper{floor(\paper)} \fi
+        \ifnum\isalive=1 \def\status{alive} \let\stop\present \else \def\status{dead} \let\stop\last \fi % active lines extend to the present
+        \node[anchor=east, inner sep=1.5pt, font=\small] at ([xshift=-5pt]\first-1995, \row) {\href{\pgfkeysvalueof{/codeurl/\code}}{\name}};
+        \draw[life, \status] (\first-1995, \row) coordinate (\code) -- (\stop-1995, \row) coordinate (\code-end);
+        \ifx\paper\nopaper \else \node[paper] at (\paper-1995, \row) {}; \fi
+    }
+
+    % which codes grew out of which (branch from parent line down to start of child line)
+    % (on the background layer, so it passes under any lines it crosses)
+    \begin{scope}[on background layer]
+        \foreach \parent/\child in {cosmics/cmbfast, cmbfast/camb, cmbfast/cmbeasy} {
+            \draw[lineage] (\parent -| \child) -- (\child);
+        }
+        % white halo around lines that branches pass under, to leave a gap at the crossing
+        % (not around parents, as it would also cut their branches where they leave the line)
+        \foreach \code in {camb} {
+            \draw[white, line width=2.5pt+2*1.5pt] (\code) -- (\code-end);
+        }
+    \end{scope}
+
+    % legend (in the empty lower left corner, with its bottom aligned to the bottom of the last code's start bar)
+    \matrix[draw, fill=white, inner sep=4pt, row sep={0.5cm,between origins}, column sep=6pt, matrix anchor=south west, font=\small,
+            entry/.style={anchor=west, inner sep=0pt, text height=1.5ex, text depth=0.25ex}]
+            at ([yshift=-4pt] 1990-1995, \ncodes) {
+        \draw[life, alive] (-0.3cm, 0) -- (0.3cm+1.25pt, 0); & \node[entry] {actively developed}; \\ % arrow tip ends at the path end, while bars stick out 1.25pt
+        \draw[life, dead] (-0.3cm, 0) -- (0.3cm, 0); & \node[entry] {abandoned}; \\
+        \node[paper] at (0, 0) {}; & \node[entry] {published paper}; \\
+        \draw[lineage] (0, -0.2cm) -- (0, 0.2cm); & \node[entry] {descends from}; \\
+    };
+\end{tikzpicture}
+\caption{%
+Development history of \EB{} codes at the time of writing,
+including the time at which development started and ended (estimated from paper preprints and version control history), and the time of publication of its first research paper.
+\TODO{add explicit sources for every start/end/publication date?}
+}
+\label{fig:codes}
+\end{figure}
+
 \begin{itemize}
 \item \textbf{COSMICS} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
 is the code that accompanied the seminal paper that gave a complete and systematic treatment of linear cosmological perturbation theory in both the Newtonian and synchronous gauge with general relativity, cold dark matter, massless neutrinos, massive neutrions, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}
@@ -479,13 +595,7 @@ This has become a popular framework for extending numpy library in Python to dif
 The code is released as the first part of the DISCO-DJ I+II project \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026},
 which is the first differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation.
 At the time of writing, the code is focused at structure formation, features a highly simplified recombination treatment and does not compute CMB observables.
-
-%\item \textbf{ABCMB:}
-%Python and Jax.
-
-%\item \textbf{nanoCMB:}
-%Python.
-%Very minimal.
+\TODO{ABCMB is similar in many ways}
 
 \item \textbf{SymBoltz} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 is the first \EB{} code that is both symbolic-numeric, approximation-free and differentiable.
@@ -499,8 +609,6 @@ but makes this compatible with both the symbolic-numeric interface and the impli
 which is no easy task.
 
 \end{itemize}
-
-\TODO{Add a tree showing evolution/parent history? Not including derivatives.}
 
 \section{Structure of \EB{} codes}
 \subsection{Numerical methods in \EB{} codes}
