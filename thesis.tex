@@ -693,6 +693,7 @@ ${}^3$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd orde
 ${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ (see \url{https://arxiv.org/abs/1708.05177} eq. (21)).
 ${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
 ${}^6$Sparsity found numerically and changes with approximations.
+ABCMB is not included, but has very similar properties to DISCO-EB.
 }
 \label{tab:boltzmann-comparison}
 \end{table}
@@ -1122,9 +1123,8 @@ The CMB source function \TODO{ref} also needs $\dot\Psi$, but the perturbation O
 so here it can be computed either by expanding the derivative or by evaluating the derivative numerically using splines.
 This is not necessary in standard implementations of \LCDM{}, which evolve a differential equation for $\dot\Phi$.
 
-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014},
-hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a} and
-mochi\_class \cite{cataneoMochiclassModellingOptimisation2024}
+EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014} and
+hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a}
 are modified \EB{} codes that target theoretically principled models of modified gravity.
 For example, the equations in hi\_class modify the background schematically in the following way:
 \begin{subequations}
@@ -1159,28 +1159,34 @@ such as the Einstein equations, where a subset of equations must be chosen to in
 as not all choices of $H_0$ (treated as a free parameter), $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ integrate such that $H(\tau_0)$ takes the value $H_0$.
 \end{itemize}
 
-The perturbation equations are also modified \cite{belliniMaximalFreedomMinimum2014a}.
-The Einstein equations for $\Phi$ and $\Psi$ remain linear,
-and one additional equation must be integrated for the perturbations $V_X = a \delta\phi/\dot\phi$ of the scalar field:
+The gravitational perturbation equations are also modified \cite[][section 3.4]{belliniMaximalFreedomMinimum2014a}.
+An additional second order ODE must be integrated for perturbations $\delta\phi$ of the scalar field:
 \begin{equation}
-\ddot{V}_X + \nu \scrH \dot{V}_X + (a^2 \mu^2 + c_s^2 k^2) V_X = S,
+\ddot{v}_X + \nu \scrH \dot{v}_X + (a^2 \mu^2 + c_s^2 k^2) v_X = S, \qquad
+v_X = a\,\frac{\delta\phi}{\dot\phi} .
+\label{eq:hiptkg}
 \end{equation}
-The Einstein equations for $h$ and $\eta$ (in the synchronous gauge) are also modified with additional terms involving the modified background and $V_X$,
-but remain ODEs for $\dot{h}$, $\dot{\eta}$, $\ddot{h}$ and $\dot\xi$
-\cite[e.g. appendix A.2 in][]{zumalacarreguiHiclassHorndeskiCosmic2017a}.
-Involve $\alpha$ functions,
-which in turn are determined from the Horndeski Lagrangian.
-\begin{subequations}
-\begin{align}
-\text{TODO{???}}
-\end{align}
-\end{subequations}
+The structure of the Einstein equations remains similar as in \LCDM{},
+with a linear differential equation for $\dot\Phi$ and a linear algebraic equation for $\Psi$ \cite[][equation 3.17 and 3.19]{belliniMaximalFreedomMinimum2014a},
+but with additional source terms from $v_X$ and $\dot{v}_X$ (in the Newtonian gauge; hi\_class implements the synchronous gauge).
+The coefficients depend on background quantities, including the \enquote{alpha functions} $\{\alpha_B, \alpha_K, \alpha_M, \alpha_T, M^2\}$ that encode a given Horndeski theory through its $G$-functions $G_i$ that appear in its action or Lagrangian.
+which in turn are determined from the Horndeski Lagrangian \TODO{write out?}.
 
-\TODO{what does mochi\_class do differently? choice of basis?}
+In particular, hi\_class also introduces its own quasi-static approximation scheme (QSA)
+\cite[][section 5]{belliniHiclassBackgroundEvolution2020a}:
+\begin{displayquote}
+Models with large mass have very high oscillation frequencies, and consequently Eq. (5.1) [our \eqref{eq:hiptkg}] has to be integrated with very small step sizes.
+This can cause the code to slow down and potentially to crash when the integration step size becomes smaller than machine precision.
+[\ldots]
+The idea of the QS approximation is that there is a degree of freedom which can react on a timescale much faster than any other in the system.
+\end{displayquote}
+This is a manifestation of stiffness in the equations,
+where different time scales appear simultaneously and make the equations challenging to solve numerically.
+It must be remedied with either approximation schemes or implicit integrators (more in this in \cref{sec:approx}).
 
-\TODO{give Brans-Dicke as an example}
+\TODO{give Brans-Dicke explicitly as an example?}
 
-Code comparison of MG \EB{} codes \cite{belliniComparisonEinsteinBoltzmannSolvers2018a}.
+Several \EB{} codes for modified gravity have been compared and found to produce errors no larger than $1\%$ on observables for a range of theories \cite{belliniComparisonEinsteinBoltzmannSolvers2018a}.
 
 \subsection{Interacting models}
 \label{sec:interactions}
@@ -1422,6 +1428,7 @@ but using ModelingToolkit,
 to which many contributions have been done.
 
 \subsection{Lack of approximation schemes}
+\label{sec:approx}
 
 \TODO{}
 Everything in physical modeling involves some type of approximations,
@@ -1578,6 +1585,8 @@ This is a recreation of Figure 4 in DISCO-EB \TODO{cite} in SymBoltz, to show th
 Similar figure as in DISCO-EB}
 \label{fig:autodiff}
 \end{figure}
+
+\TODO{viability of MCMCs in SymBoltz? 1) can run run directly with no approximations, or 2) can run with no approx in model-building stage, and automatically create emulator using a streamlined interface. could also work with gradient-based MCMCs.}
 
 
 \chapter{The nonlinear part}
