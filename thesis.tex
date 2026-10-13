@@ -537,7 +537,7 @@ Non-interacting perfect fluid in the Newtonian gauge:
     };
 \end{tikzpicture}
 \caption{%
-Development history of \EB{} codes at the time of writing,
+Development history of \EB{} codes (excluding modified versions for modified models) at the time of writing,
 including the time at which development started and ended (estimated from paper preprints and version control history), and the time of publication of its first research paper.
 \TODO{add explicit sources for every start/end/publication date?}
 }
@@ -1094,13 +1094,17 @@ Variation of fundamental constants have been humorously mocked as a primitive wa
 by considering modifications to the mathematical constant $\pi$ \cite{gammalCircularReasoningSolving2024}.
 
 
-\subsection{Modified gravity}
+\subsection{Modified gravity and effective field theory}
+
+\TODO{figure with \url{https://www.tessabaker.space/images/map_slide_v2.pdf}?}
+
+\subsubsection{Phenomenologically based}
 
 MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
 MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstraintsSubhorizon2022}
 take a phenomenological approach to modified gravity.
-They modify the constraint equations for the metric potentials in GR (where $\mu=\eta=1$)
-with an effective \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$:
+They modify the Einstein equations for the metric potentials $\Phi$ and $\Psi$ in GR (where $\mu=\eta=1$ below)
+with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$:
 \begin{subequations}
 \begin{align}
 k^2\Psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
@@ -1109,24 +1113,36 @@ k^2\big(\Phi - \gamma(a,k) \Psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \la
 \label{eq:mg}%
 \end{subequations}
 Without shear stress $\sigma = 0$,
-this becomes $k^2 \Psi = -4\pi\mu a^2 \rho \Delta$ and $\Phi = \gamma \Psi$.
-These are common approximations in $N$-body simulations in the late universe, for example.
-But in \EB{} codes it is necessary to account for shear stress,
-which is significant for photons and neutrinos in the early universe.
+this becomes $k^2 \Psi = -4\pi\mu a^2 \rho \Delta$ and $\Phi = \gamma \Psi$,
+which are common approximations in $N$-body simulations in the late universe, for example.
+But in \EB{} codes it is necessary to account for the shear stress of photons and neutrinos in the early universe.
 
-Equations \eqref{eq:mg} are not plug-and-play replacements in \EB{} codes.
+Equations \eqref{eq:mg} are not plug-and-play replacements in \EB{} codes.
 The continuity equations \eqref{eq:pert_cont} require $\dot\Phi$,
 which is directly available in standard \LCDM{} implementations that evolve a differential equation for $\dot\Phi$.
 Modified gravity codes must instead obtain $\dot\Phi$ by differentiating equations \eqref{eq:mg},
-which results in long expressions \cite[e.g.][which explains this for the synchronous gauge]{zuccaMGCAMBMassiveNeutrinos2019}.
-The CMB source function \TODO{ref} also needs $\dot\Psi$, but the perturbation ODEs are independent of it;
-so here it can be computed either by expanding the derivative or by evaluating the derivative numerically using splines.
-This is not necessary in standard implementations of \LCDM{}, which evolve a differential equation for $\dot\Phi$.
+which results in long expressions \cite[e.g.][in the synchronous gauge]{zuccaMGCAMBMassiveNeutrinos2019}.
+Similarly, the line-of-sight integral for the CMB source function \TODO{ref} needs $\dot\Psi$.
+This can be computed either by expanding the derivative or by evaluating the derivative numerically with splines after integrating the perturbations.
 
-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014} and
+\subsubsection{Theoretically based}
+
+$\mathcal{H}$-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014} \TODO{cite \url{https://arxiv.org/abs/2603.01662}} and
 hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a}
-are modified \EB{} codes that target theoretically principled models of modified gravity.
-For example, the equations in hi\_class modify the background schematically in the following way:
+implement theoretically principled models of modified gravity and effective field theory (EFT).
+This is generally a very large space of models.
+
+In particular, both codes support Horndeski theories of gravity.
+This is the most general class of theories with second order equations of motion
+from a metric tensor $g_{\mu\nu}$ and scalar field $\phi$ as degrees of freedom.
+Any Horndeski theory is specified by four free functions
+of $\phi$ and the kinetic term $X = -(\partial_\mu \phi)^2/2$:
+\begin{equation}
+G_2(\phi, X), \quad G_3(\phi, X), \quad G_4(\phi, X), \quad G_5(\phi, X) .
+\label{eq:horndeski}
+\end{equation}
+
+The background gravity equations are schematically modified as \cite[e.g.][]{belliniHiclassBackgroundEvolution2020a}:
 \begin{subequations}
 \begin{align}
 0 &= C(H) = C_3 H^3 + C_2 H^2 + C_1 H + C_0 , \label{eq:hifried1} \\
@@ -1135,58 +1151,78 @@ For example, the equations in hi\_class modify the background schematically in t
 \end{align}%
 \label{eq:hibg}%
 \end{subequations}
-The 1st Friedmann equation \eqref{eq:hifried1} is turned into a cubic constraint equation in the Hubble function $H(\tau)$ which cannot be solved explicitly for $H$.
+The 1st Friedmann equation \eqref{eq:hifried1} turns into a cubic constraint equation for the Hubble function $H(\tau)$,
+which is impractical to solve explicitly for $H$.
 The 2nd Friedmann (acceleration) equation \eqref{eq:hifried2} remains a first order ODE for $H(\tau)$ (or second order for $a(\tau)$).
+The Klein-Gordon equation \eqref{eq:hikg} is a new second order ODE for the scalar field.
 These equations are solved differently than in \LCDM{},
-where the 1st equation \eqref{eq:fried1} is in the form $C_2 H^2 + C_0 = 0$ and is usually integrated directly as $H = +\sqrt{-C_0/C_2}$ without needing the acceleration equation.
-Instead, equations \eqref{eq:hibg} are solved as ODEs for \eqref{eq:hifried2} and \eqref{eq:hikg} with two nuances:
+where the constraint \eqref{eq:fried1} has the form $C_2 H^2 + C_0 = 0$ and is usually integrated directly as $H = +\sqrt{-C_0/C_2}$ without using the acceleration equation.
+Instead, equations \eqref{eq:hifried2} and \eqref{eq:hikg} are integrated as ODEs, but with a few nuances:
 \begin{itemize}
 \item The initial condition for $H(\tau_\ini)$ is found by solving the constraint equation \eqref{eq:hifried1} with a nonlinear root solver (e.g. a Newton method).
+Initial conditions for $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ are set freely or with predetermined expressions on a model-by-model basis.
 \item The constraint \eqref{eq:hifried1} is accounted for over time by constraint dampening:
 \begin{equation}
 \dot{H} \to \dot{H} - a \gamma_H \cdot \sign(C^\prime(H)) \cdot C(H), \quad (a \gamma_H > 0).
 \end{equation}
-The ODE for $H$ receives an extra term that leaves it unchanged when $C(H) = 0$.
-But when $C(H) \neq 0$ is violated, it \enquote{pushes} $H$ back in the direction where the constraint is better satisfied.
-It is necessary because integrating \eqref{eq:hifried2} alone pays no attention to the constraint,
+An extra term proportional to the violation of the constraint $C(H)$ is added to the ODE for $H$.
+It is unchanged when $C(H) = 0$; but when $C(H) \neq 0$ is violated, the ODE \enquote{pushes} $H$ back in the direction where the constraint is better satisfied.
+This technique is necessary because integrating \eqref{eq:hifried2} alone pays no attention to the constraint,
 so deviations from it grow over time.
 It is common with overdetermined systems that have more equations than variables,
 such as the Einstein equations, where a subset of equations must be chosen to integrate with numerical methods.
-\TODO{happens even with GR}
-\TODO{analogy: particle moving in a potential $V = C$}
-\item Initial conditions for $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ are set freely or with predetermined expressions on a model-by-model basis.
 \item One parameter or initial condition must usually be found with the shooting method,
 as not all choices of $H_0$ (treated as a free parameter), $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ integrate such that $H(\tau_0)$ takes the value $H_0$.
 \end{itemize}
 
-The gravitational perturbation equations are also modified \cite[][section 3.4]{belliniMaximalFreedomMinimum2014a}.
-An additional second order ODE must be integrated for perturbations $\delta\phi$ of the scalar field:
-\begin{equation}
-\ddot{v}_X + \nu \scrH \dot{v}_X + (a^2 \mu^2 + c_s^2 k^2) v_X = S, \qquad
-v_X = a\,\frac{\delta\phi}{\dot\phi} .
-\label{eq:hiptkg}
-\end{equation}
-The structure of the Einstein equations remains similar as in \LCDM{},
-with a linear differential equation for $\dot\Phi$ and a linear algebraic equation for $\Psi$ \cite[][equation 3.17 and 3.19]{belliniMaximalFreedomMinimum2014a},
-but with additional source terms from $v_X$ and $\dot{v}_X$ (in the Newtonian gauge; hi\_class implements the synchronous gauge).
-The coefficients depend on background quantities, including the \enquote{alpha functions} $\{\alpha_B, \alpha_K, \alpha_M, \alpha_T, M^2\}$ that encode a given Horndeski theory through its $G$-functions $G_i$ that appear in its action or Lagrangian.
-which in turn are determined from the Horndeski Lagrangian \TODO{write out?}.
+The gravitational perturbation equations are also modified.
+They can be arranged schematically as four redundant Einstein equations
+and one perturbed Klein-Gordon equation for the metric potentials $\Phi$ and $\Psi$
+and the scalar field perturbation $v_X = -a\,\delta\phi / \dot{\phi}$
+\cite{belliniMaximalFreedomMinimum2014a}:
+\begin{subequations}
+\begin{align}
+A_1 \dot{\Phi} + A_2 \dot{v}_X + A_3 \Phi + A_4 \Psi + A_5 v_X &= A, && (G_{00}) \label{eq:hipt1} \\
+B_1 \dot{\Phi} + B_2 \dot{v}_X + B_3 \Psi + B_4 v_X &= B, && (G_{0i}) \label{eq:hipt2} \\
+C_1 \Phi + C_2 \Psi + C_3 v_X &= C, && (G_{ij}) \label{eq:hipt3} \\
+D_1 \ddot{\Phi} + D_2 \ddot{v}_X + D_3 \dot{\Phi} + D_4 \dot{\Psi} + D_5 \dot{v}_X + D_6 \Psi + D_7 v_X &= D, && (G_{ii}) \label{eq:hipt4} \\
+E_1 \ddot{\Phi} + E_2 \ddot{v}_X + E_3 \dot{\Phi} + E_4 \dot{\Psi} + E_5 \dot{v}_X + E_6 \Phi + E_7 \Psi + E_8 v_X &= 0 , && (\delta\phi) \label{eq:hipt5}
+\end{align}
+\end{subequations}
+where the right sides $A$-$D$ are energy-momentum contributions from matter,
+and the left side coefficients $A_1$-$E_8$ depend on the background,
+in particular through four time-dependent functions $\alpha_K$, $\alpha_B$, $\alpha_T$ and $\alpha_M$
+that are uniquely determined from $G_i$ evaluated on the background.
+Some coefficients also have factors of $k^2$.
 
-In particular, hi\_class also introduces its own quasi-static approximation scheme (QSA)
-\cite[][section 5]{belliniHiclassBackgroundEvolution2020a}:
+These overdetermined equations can be solved in the following way:
+a second order ODE for $\ddot{v}_X$ by eliminating $\ddot{\Phi}$ from \eqref{eq:hipt4} and \eqref{eq:hipt5};
+a first order ODE for $\dot\Phi$ from either \eqref{eq:hipt1} or \eqref{eq:hipt2};
+and an algebraic equation for $\Psi$ from \eqref{eq:hipt3}.
+This also needs $\dot{\Psi}$, which can be found by differentiating the $\Psi$ expression once.
+This is similar in principle to \LCDM{} apart from the addition of the scalar field equation,
+but much more convoluted as the coefficients have quite long expressions.
+
+In particular, the modifications introduce additional stiffness into the perturbation ODEs,
+and hi\_class introduces its own quasi-static approximation scheme (QSA) on top of several other approximation schemes in CLASS
+for evolving the $\ddot{v}_X$ ODE \cite[][section 5]{belliniHiclassBackgroundEvolution2020a}:
 \begin{displayquote}
-Models with large mass have very high oscillation frequencies, and consequently Eq. (5.1) [our \eqref{eq:hiptkg}] has to be integrated with very small step sizes.
+Models with large mass have very high oscillation frequencies, and consequently Eq. (5.1) has to be integrated with very small step sizes.
 This can cause the code to slow down and potentially to crash when the integration step size becomes smaller than machine precision.
 [\ldots]
 The idea of the QS approximation is that there is a degree of freedom which can react on a timescale much faster than any other in the system.
 \end{displayquote}
-This is a manifestation of stiffness in the equations,
-where different time scales appear simultaneously and make the equations challenging to solve numerically.
-It must be remedied with either approximation schemes or implicit integrators (more in this in \cref{sec:approx}).
 
-\TODO{give Brans-Dicke explicitly as an example?}
+Although the word is not used in the hi\_class papers, this is a manifestation of stiffness in the equations
+where different time scales simultaneously appear in the equations and make them challenging to solve numerically.
+Instead of complicating the equations with approximation schemes, it can be handled with implicit ODE solvers (see \cref{sec:approx}).
 
-Several \EB{} codes for modified gravity have been compared and found to produce errors no larger than $1\%$ on observables for a range of theories \cite{belliniComparisonEinsteinBoltzmannSolvers2018a}.
+Several \EB{} codes for modified gravity have been compared and found to produce errors no larger than $1\%$ on observables for a range of popular theories,
+such as Jordan-Brans-Dicke gravity, $f(R)$ gravity and covariant Galileons (each of which corresponds to particular $G_i$) \cite{belliniComparisonEinsteinBoltzmannSolvers2018a}.
+
+\subsubsection{Example: Brans-Dicke}
+
+\TODO{give Brans-Dicke explicitly as an explicit example?}
 
 \subsection{Interacting models}
 \label{sec:interactions}
