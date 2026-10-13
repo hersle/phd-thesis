@@ -214,7 +214,8 @@ The Einstein equations with the FLRW metric gives the first and second Friedmann
 \begin{align}
     H^2 = \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
     \dot{H} + H^2 = - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3}, \label{eq:fried2}
-\end{align}
+\end{align}%
+\label{eq:fried}%
 \end{subequations}
 where $H = \odv{a}/{t}$ is the Hubble function and $\rho = \sum_s \rho_s$ and $P = \sum_s P_s$ are total energy densities and pressures of each species $s$ in the universe.
 
@@ -344,21 +345,101 @@ A wide number of emulators have been created for emulating CMB predictions from 
 \label{chap:lin}
 \AddToShipoutPictureFG*{\AtTextUpperLeft{\put(\LenToUnit{\textwidth},0){\makebox[0pt][r]{\raisebox{-\height}{\begin{tabular}{@{}c@{}}\href{https://github.com/hersle/SymBoltz.jl}{\includegraphics[width=0.28\textwidth]{media/symboltz_logo}} \\ \scriptsize\sffamily\href{https://github.com/hersle/SymBoltz.jl}{github.com/hersle/SymBoltz.jl}\end{tabular}}}}}} % put SymBoltz logo in top-right corner of the chapter start page without affecting spacing (similarly to e.g. https://arxiv.org/pdf/1909.01828)
 
-The cosmological principle in \cref{sec:principle} is not exact, and the background equations in \cref{chap:back} are not sufficient for describing the universe.
-The real universe is homogeneous and isotropic only in a statistical sense when averaged over sufficiently large scales \TODO{figure?}.
-Cosmological perturbation theory is a systematic theoretical framework for studying the evolution of the universe and the growth of structure order-by-order in perturbation theory.
-This makes it possible to formulate equations analytically, but the equations usually reduce to ordinary differential equations (ODEs) that must be solved numerically.
-This is a challenging task carried out by \EB{} codes, like CAMB and CLASS, which are computationally demanding and often complicated.
-Yet they need to be fast to be run in MCMC chains and simple to modify with alternative cosmological models.
+The universe is homogeneous and isotropic only in an approximate and statistical sense,
+when it is averaged over sufficiently large scales \TODO{figure of LSS survey?}.
+Cosmological perturbation theory is a systematic theoretical framework for studying the evolution of the universe and the growth of structure
+using perturbation theory around a perfectly homogeneous and isotropic background universe.
+It makes it possible to formulate analytical equations for describing the universe,
+which take the form of ordinary differential equations (ODEs) are solved numerically
+by \EB{} codes, of which CAMB and CLASS are best known.
+This is very challenging because the equations are long, large and stiff;
+yet they need to be fast to be run in MCMC chains,
+and simple to modify with alternative cosmological models.
 
-To this end, \cref{paper:symboltz} in this thesis introduces a new \EB{} solver called SymBoltz.
-\Cref{paper:chebyshev} shows how different properties of SymBoltz opens the door to new interpolation schemes.
-\Cref{paper:bransdicke} shows a class of interacting cosmological models implemented in SymBoltz.
+To this end,
+the majority of my work has been invested in developing a new \EB{} solver named SymBoltz.
+\Cref{paper:symboltz} in this thesis describes the initial implementation of SymBoltz;
+including how it is made easier for users to modify the equations through a mixed symbolic-numeric interface,
+handle stiffness with implicit ODE solvers instead of deriving complicated approximations of the equations,
+and support new numerical methods such as automatic differentiation for obtaining accurate gradients of its output.
+\Cref{paper:chebyshev} shows how the lack of approximation schemes
+also opens the door to more efficient interpolation schemes,
+which are very important to reduce the work done inside these codes,
+by taking advantage of the smoothness of its approximation-free output.
+\Cref{paper:interactions} shows how a class of interacting cosmological models are implemented in SymBoltz,
+in a way that is simpler and involves less work for users than in CAMB and CLASS
+due to both the symbolic-numeric interface and the lack of approximation schemes.
+
+In this chapter, I briefly introduce cosmological perturbation theory
+and the structure and computations of \EB{} codes.
+I then review the historical development of existing \EB{} codes,
+and provide a overview of how they have been widely modified to implement many different extended cosmological models.
+This motivates the ideas behind the design of SymBoltz,
+which I reiterate in this thesis (from a broader perspective than in the paper) together with improvements that have been made since the initial implementation.
+I close with the current status of SymBoltz and an outlook to how it may be used in the future.
 
 \section{Cosmological perturbation theory}
 
-Correct formulation is subtle.
-Gauge choices, ...
+\TODO{proposed structure:}
+\begin{enumerate}
+\item Setup: perturbations around FLRW, conformal time,
+state that we go to Fourier space, use the SVT decomposition and the conformal Newtonian gauge.
+\EB{} codes solve Einstein equations coupled to Boltzmann equations.
+\item Einstein equations: perturbed FLRW metric, GR gravity, give perturbed Einstein equations (overdetermined)
+\item Energy-momentum tensor:
+three regimes: fluid, l-hierarchy or l and q hierarchy.
+\item initial conditions.
+\item give a simplified full EB system, e.g. background + thermo + metric + CDM + baryons + photons (without neutrinos
+\end{enumerate}
+
+Correct formulation of CPT is subtle.
+Scalars in SVT decomposition.
+Perturbation around FLRW.
+Choose Newtonian gauge (instead of synchronous gauge).
+\begin{equation}
+\diff{s}^2 = -a^2(\tau) (1+2\Psi)\diff{\tau}^2 + a^2(\tau) (1-2\Phi) (\diff{x}^2 + \diff{y}^2 + \diff{z}^2)
+\end{equation}
+
+Einstein equations give the Friedmann equations \eqref{eq:fried} to 0th order, and to 1st order:
+\begin{subequations}
+\begin{align}
+k^2 \Phi + 3\scrH(\dot{\Phi} + \scrH \Psi) &= -4\pi a^2 \delta\rho, \\
+k^2 (\dot\phi + \scrH \Psi) &= 4\pi a^2 (\rho+P)\theta, \\
+\ddot{\Phi} + \scrH (\dot{\Psi}+2\dot{\Phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \Psi + \frac{k^2}{3} (\Phi-\Psi) &= 4\pi a^2 \delta P , \\
+k^2 (\Phi-\Psi) &= 12 \pi a^2 (\rho+P)\sigma, \\
+\end{align}
+\end{subequations}
+(assuming perfect fluid for the energy-momentum tensor)
+
+Energy-momentum conservation:
+
+\TODO{Berschinger and Ma equations:}
+Perfect fluid with energy-momentum
+\begin{equation}
+T_{\mu\nu} = \text{\TODO{}}
+\label{eq:energy_momentum_fluid}
+\end{equation}
+Energy-momentum conservation
+\begin{equation}
+\nabla_\mu T^{\mu\nu} = 0.
+\label{eq:energy_momentum_conservation}
+\end{equation}
+Non-interacting perfect fluid in the Newtonian gauge:
+\begin{subequations}
+\begin{align}
+\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH(\frac{\delta P}{\delta \rho} - w) \delta, \label{eq:pert_cont} \\
+\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi. \label{eq:pert_euler}
+\end{align}
+\label{eq:pert_fluid}
+\end{subequations}
+
+Boltzmann equation gives
+
+1. Fluid ($\delta$, $\theta$). Defined by EOS $P = w \rho$ and $\delta P$ and $\sigma$.
+
+2. $l$-hierarchy
+
+3. $(l,q)$-hierarchy
 
 Assuming the universe is \emph{almost} homogeneous and isotropic,
 we may do \emph{cosmological perturbation theory} around a perfectly homogeneous and isotropic universe \cite{maCosmologicalPerturbationTheory1995a}.
@@ -409,25 +490,7 @@ Here
 This works because the universe is approximately homogeneous and isotropic.
 This is more complicated, but also holds richer information than the background alone.
 
-\TODO{Berschinger and Ma equations:}
-Perfect fluid with energy-momentum
-\begin{equation}
-T_{\mu\nu} = \text{\TODO{}}
-\label{eq:energy_momentum_fluid}
-\end{equation}
-Energy-momentum conservation
-\begin{equation}
-\nabla_\mu T^{\mu\nu} = 0.
-\label{eq:energy_momentum_conservation}
-\end{equation}
-Non-interacting perfect fluid in the Newtonian gauge:
-\begin{subequations}
-\begin{align}
-\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH(\frac{\delta P}{\delta \rho} - w) \delta, \label{eq:pert_cont} \\
-\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi. \label{eq:pert_euler}
-\end{align}
-\label{eq:pert_fluid}
-\end{subequations}
+\section{Structure of \EB{} codes}
 
 \section{History of \EB{} codes}
 
@@ -1723,6 +1786,14 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 ]{Chebyshev interpolation in Einstein–Boltzmann codes}
 \label{paper:chebyshev}
 \uioincludepdf{paper3.pdf}
+
+\uiopaper[%compact,
+    authors={David Figueruelo Hernán\and Herman Sletmoen},
+    published={\TODO{put on arxiv}},
+    info={Preprint on \TODO{arxiv}},
+]{\TODO{Interactions paper}}
+\label{paper:interactions}
+%\uioincludepdf{paper4.pdf}
 
 \backmatter{}
 \printbibliography{}
