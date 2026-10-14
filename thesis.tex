@@ -435,6 +435,30 @@ Non-interacting perfect fluid in the Newtonian gauge:
 
 Boltzmann equation gives
 
+Boltzmann equation $Df/d\tau$ becomes for $F(\tau, k, q, \mu)$:
+\begin{equation}
+\pdv{F}{\tau} + i \frac{q}{\epsilon} k \mu F + \odv{\log f_0}{\log q}(\dot{\Phi} - i\frac{q}{\epsilon} k \mu \Psi) = \frac{1}{f_0} \pdv{f}{\tau}_C
+\end{equation}
+where $\mu = \cos \hat{k} \cdot \hat{n}$ between Fourier wavenumber and momentum.
+Then expand in Legendre multipoles:
+\begin{equation}
+F(\tau, k, q, \mu) = \sum_{l=0}^\infty (-i)^l (2l+1) F_l(\tau, k, q) P_l(\mu)
+\end{equation}
+Insert to get:
+\begin{align}
+\dot{F_l} &= \ldots, \\
+\end{align}
+Integrate momentum moments to get energy-momentum contributions:
+\begin{align}
+\rho &= \int \diff{q} \ldots, \\
+\delta\rho &= \int \diff{q} \ldots,
+\end{align}
+
+Massless case: integrate out $q$ to get $F_l$ equations.
+
+Fluid case:
+take moments with $q^2 \epsilon f_0$ (for $l=0$) and $q^3 f_0$ (for $l=1$).
+
 1. Fluid ($\delta$, $\theta$). Defined by EOS $P = w \rho$ and $\delta P$ and $\sigma$.
 
 2. $l$-hierarchy
