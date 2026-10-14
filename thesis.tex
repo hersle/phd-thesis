@@ -507,50 +507,119 @@ It leaves time derivatives intact and turns spatial gradients into multiplicatio
 \end{equation}
 In this way, only derivatives with respect to time are left.
 
-\subsection{Einstein equations}
+\section{\EB{} equations}
 
-Einstein equations give the Friedmann equations \eqref{eq:fried} to 0th order, and to 1st order:
+The linearized \EB{} equations describes gravity (Einstein equations) sourced by energy-momentum from a set of \enquote{matter} ingredients (Boltzmann equations).
+With the metric \eqref{eq:flrw_perturbed} in the Newtonian gauge,
+we are in a position to attack this problem.
+
+\subsection{Einstein equations}
+\label{sec:einstein}
+
+The Einstein equations are
+\begin{equation}
+G_{\mu\nu} = 8\pi T_{\mu\nu}.
+\label{eq:einstein}
+\end{equation}
+On the left side, the Einstein tensor $G_{\mu\nu} = R_{\mu\nu} - \frac12 R g_{\mu\nu}$
+is made from the Ricci scalar $R = R^\mu_\mu$ and Ricci tensor $R_{\mu\nu} = R^{\rho}_{\mu\rho\nu}$,
+which is constructed from the Riemann tensor $R^{\rho}_{\sigma\mu\nu}$,
+which in turn is constructed from the Christoffel symbols $\Gamma^{\alpha}_{\beta\gamma}$
+and ultimately from the spacetime metric $g_{\mu\nu}$.
+On the right side, the energy-momentum tensor $T_{\mu\nu}$ describes the \enquote{matter content} of the universe.
+It describes how energy and momentum describes the geometry of spacetime.
+
+Inserting the perturbed spacetime metric \eqref{eq:flrw_perturbed} for scalar perturbations in the Newtonian gauge,
+and computing up to 1st order in perturbation theory, we obtain
+the Friedmann equations \eqref{eq:fried} to 0th order,
+and four overdetermined linear perturbation equations for the metric potentials $\Phi$ and $\Psi$:
 \begin{subequations}
 \begin{align}
-k^2 \Phi + 3\scrH(\dot{\Phi} + \scrH \Psi) &= -4\pi a^2 \delta\rho, \\
-k^2 (\dot\phi + \scrH \Psi) &= 4\pi a^2 (\rho+P)\theta, \\
-\ddot{\Phi} + \scrH (\dot{\Psi}+2\dot{\Phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \Psi + \frac{k^2}{3} (\Phi-\Psi) &= 4\pi a^2 \delta P , \\
-k^2 (\Phi-\Psi) &= 12 \pi a^2 (\rho+P)\sigma, \\
+k^2 \Phi + 3\scrH(\dot{\Phi} + \scrH \Psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
+k^2 (\dot\phi + \scrH \Psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
+\ddot{\Phi} + \scrH (\dot{\Psi}+2\dot{\Phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \Psi + \frac{k^2}{3} (\Phi-\Psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
+k^2 (\Phi-\Psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
 \end{align}
 \end{subequations}
-(assuming perfect fluid for the energy-momentum tensor)
+These are four overdetermined equations for the two metric potentials $\Phi$ and $\Psi$.
+It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\Phi}$
+and determine $\Psi$ algebraically from the constraint \eqref{eq:pertein4}.
+The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ (see \cref{sec:boltzmann})
+\cite[equation 25]{maCosmologicalPerturbationTheory1995a}.
 
-Energy-momentum conservation:
-
-\TODO{Berschinger and Ma equations:}
-Perfect fluid with energy-momentum
+\TODO{Energy-momentum tensor definition?}
 \begin{equation}
 T_{\mu\nu} = \text{\TODO{}}
 \label{eq:energy_momentum_fluid}
 \end{equation}
-Energy-momentum conservation
+
+The Bianchi identity states that $\nabla_\mu G^{\mu\nu} = 0$,
+and follows from purely geometrical considerations.
+It immediately follows from the Einstein equation \eqref{eq:einstein} that the total energy-momentum tensor is conserved:
 \begin{equation}
 \nabla_\mu T^{\mu\nu} = 0.
 \label{eq:energy_momentum_conservation}
 \end{equation}
-Non-interacting perfect fluid in the Newtonian gauge:
+With the energy-momentum tensor \eqref{eq:energy_momentum_fluid},
+this leads to the continuity and Euler equations for the total energy-momentum content
+(here $w = P/\rho$):
 \begin{subequations}
+\label{eq:pert_fluid} % TODO: move all labels in subequations before align
 \begin{align}
-\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH(\frac{\delta P}{\delta \rho} - w) \delta, \label{eq:pert_cont} \\
+\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
 \dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi. \label{eq:pert_euler}
 \end{align}
-\label{eq:pert_fluid}
 \end{subequations}
+This describes the evolution only of the total energy-momentum contributions.
+However, the \emph{matter content} contains contributions from several different species,
+each of which are described by the Boltzmann equation.
 
 \subsection{Boltzmann equation}
+\label{sec:boltzmann}
 
-Three ways to treat a physical ingredient.
+The total energy-momentum content $T_{\mu\nu} = \sum_s T_{\mu\nu}^s$ is described as a sum of contributions from several species $s$:
+\begin{equation}
+\label{eq:totalT}
+\begin{aligned}
+\rho &= \sum_s \rho_s, \qquad &
+\delta\rho &= \sum_s \delta\rho_s, \qquad &
+(\rho+P)\theta &= \sum_s (\rho_s+P_s)\theta_s, \\
+P &= \sum_s P_s, \qquad &
+\delta P &= \sum_s \delta P_s, \qquad &
+(\rho+P)\sigma &= \sum_s (\rho_s+P_s)\sigma_s .
+\end{aligned}
+\end{equation}
+These are the only quantities that the Einstein equations respond to.
+This equation may appears obvious, but it makes clear that $\theta_s$ and $\sigma_s$ are \emph{not} additive quantities;
+it is only their products with $\rho_s+P_s$ that are.
+\TODO{role of each in the Einstein equations}
+
+There are three main ways to model the energy-momentum contributions \eqref{eq:totalT} for a species $s$,
+all of which can be understood from phase space.
+
+All of them can be understood by assuming a distribution function in phase space (positions and momenta)
+(+ for fermions with Fermi-Dirac; - for bosons with Bose-Einstein):
+\begin{equation}
+f = f_0 [1 + \Psi(\tau, x_i, q, \hat{n})], \qquad
+f_0(\epsilon) = \frac{g_s}{e^{\epsilon / k_B T_0} \pm 1}, \qquad
+\epsilon = \sqrt{q^2 + m^2}
+\label{eq:distribution_function}
+\end{equation}
+$g_s$ is degeneracy factor, $\Psi$ is perturbation to distribution function .
+
+The evolution of the distribution in phase space is given by the Boltzmann equation.
+Consider the movement along a trajectory $f(\tau, x(\tau), q(\tau))$ in phase space:
+\begin{equation}
+\odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x} \pdv{x}{\tau} + \pdv{f}{q} \pdv{q}{\tau} = C[f] .
+\label{eq:boltzmann}
+\end{equation}
 
 \subsubsection{Hierarchy with multipoles and momenta}
 
 Boltzmann equation $Df/d\tau$ becomes is linearized for $\calF(\tau, k, q, \mu)$:
 \begin{equation}
 \pdv{F}{\tau} + i \frac{q}{\epsilon} k \mu F + \odv{\log f_0}{\log q}(\dot{\Phi} - i\frac{q}{\epsilon} k \mu \Psi) = \frac{1}{f_0} \pdv{f}{\tau}_C
+\label{eq:boltzmann_linear}
 \end{equation}
 where $\mu = \cos \hat{k} \cdot \hat{n}$ between Fourier wavenumber and momentum.
 Then expand in Legendre multipoles:
