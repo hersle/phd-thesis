@@ -596,33 +596,52 @@ it is only their products with $\rho_s+P_s$ that are.
 
 There are three main ways to model the energy-momentum contributions \eqref{eq:totalT} for a species $s$,
 all of which can be understood from phase space.
+I find it instructive and elegant to go through them in a top-down manner, in contrast to the bottom-up manner often encountered in the literature.
 
-All of them can be understood by assuming a distribution function in phase space (positions and momenta)
-(+ for fermions with Fermi-Dirac; - for bosons with Bose-Einstein):
+We use statistical mechanics and consider the distribution function of each species in phase space of positions $\mathbf{x}$ and momenta $\mathbf{p}$,
+with degeneracy factor $g_s$ and $\pm$ for bosons/fermions:
+\TODO{a lot of subtleties in the derivation; focus on the high level idea}
 \begin{equation}
-f = f_0 [1 + \Psi(\tau, x_i, q, \hat{n})], \qquad
-f_0(\epsilon) = \frac{g_s}{e^{\epsilon / k_B T_0} \pm 1}, \qquad
-\epsilon = \sqrt{q^2 + m^2}
-\label{eq:distribution_function}
+f = f_0 [1 + \Psi(\tau, \mathbf{x}, \mathbf{q})], \qquad
+f_0(\epsilon) = \frac{g_s}{e^{\epsilon / T_0} \pm 1}, \qquad
+\epsilon = \sqrt{q^2 + m^2} .
+\label{eq:distribution}
 \end{equation}
-$g_s$ is degeneracy factor, $\Psi$ is perturbation to distribution function .
+Here $f_0$ is the unperturbed distribution function (in a FLRW universe),
+and $\Psi$ are perturbations to it as a function of time $\tau$, 3-position $\mathbf{x}$ and momentum $\mathbf{q}$.
 
 The evolution of the distribution in phase space is given by the Boltzmann equation.
-Consider the movement along a trajectory $f(\tau, x(\tau), q(\tau))$ in phase space:
+Consider the movement along a trajectory $f(\tau, \mathbf{x}(\tau), \mathbf{q}(\tau))$ in phase space:
 \begin{equation}
 \odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x} \pdv{x}{\tau} + \pdv{f}{q} \pdv{q}{\tau} = C[f] .
 \label{eq:boltzmann}
 \end{equation}
+We keep track of time $\tau$ explicitly.
+The collision term $C[f]$ says how the density of particles at each point in phase space
+is modified due to interactions (\enquote{collisions}) with other species (or self-interactions)
+as a functional of the distribution functions for all the interacting species.
+It vanishes for non-interacting species (\enquote{collisionless}).
+\TODO{example for same-place collision of $1+2 \leftrightarrow 3+4$ with momentum and energy conservation? see Dodelson}
+\TODO{decide on $\calF$ vs $\Psi$ notation; and $\phi$ vs $\Phi$ etc. Just stick to Ma \& Bertschinger?}
 
 \subsubsection{Hierarchy with multipoles and momenta}
 
-Boltzmann equation $Df/d\tau$ becomes is linearized for $\calF(\tau, k, q, \mu)$:
+\TODO{relies on $f_0(\epsilon) = f_0(q)$, which is valid for species that are relativistic at decoupling?}
+
+We can linearize the Boltzmann equation \eqref{eq:boltzmann}.
+Inserting the full distribution function \eqref{eq:distribution},
+using the geodesic equation to express $\pdv{q}/{\tau}$,
+collecting terms to first order and going to Fourier space gives:
 \begin{equation}
-\pdv{F}{\tau} + i \frac{q}{\epsilon} k \mu F + \odv{\log f_0}{\log q}(\dot{\Phi} - i\frac{q}{\epsilon} k \mu \Psi) = \frac{1}{f_0} \pdv{f}{\tau}_C
+\pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\Phi} - i k \mu \frac{q}{\epsilon} \psi \right) = \frac{1}{f_0} \pdv{f}{\tau}_C
 \label{eq:boltzmann_linear}
 \end{equation}
-where $\mu = \cos \hat{k} \cdot \hat{n}$ between Fourier wavenumber and momentum.
-Then expand in Legendre multipoles:
+Here $\mu = \cos \hat{\mathbf{k}} \cdot \hat{\mathbf{q}}$ is the direction between the Fourier wavenumber $\mathbf{k}$ and the momentum $\mathbf{p}$,
+so we can redefine $\Psi(\tau, k, q, \mu)$ as a function of their magnitudes and $\mu$.
+
+Next, we want to get rid of the dependence on $\mu$,
+both to express the energy-momentum contribution and to make the equations easier to solve.
+Expand in Legendre multipoles:
 \begin{equation}
 F(\tau, k, q, \mu) = \sum_{l=0}^\infty (-i)^l (2l+1) F_l(\tau, k, q) P_l(\mu)
 \end{equation}
