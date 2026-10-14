@@ -52,6 +52,7 @@
 \newcommand\Mpc{\ensuremath{\mathrm{Mpc}}}
 \newcommand\const{\ensuremath{\mathrm{const}}}
 \newcommand\scrH{\mathscr{H}}
+\newcommand\calF{\mathcal{F}}
 \newcommand\pprime{{\prime\prime}}
 \newcommand\Hy{\ensuremath{\mathrm{H}}} % Hydrogen
 \newcommand\He{\ensuremath{\mathrm{He}}} % Helium
@@ -400,6 +401,8 @@ Choose Newtonian gauge (instead of synchronous gauge).
 \diff{s}^2 = -a^2(\tau) (1+2\Psi)\diff{\tau}^2 + a^2(\tau) (1-2\Phi) (\diff{x}^2 + \diff{y}^2 + \diff{z}^2)
 \end{equation}
 
+\subsection{Einstein equations}
+
 Einstein equations give the Friedmann equations \eqref{eq:fried} to 0th order, and to 1st order:
 \begin{subequations}
 \begin{align}
@@ -433,9 +436,13 @@ Non-interacting perfect fluid in the Newtonian gauge:
 \label{eq:pert_fluid}
 \end{subequations}
 
-Boltzmann equation gives
+\subsection{Boltzmann equation}
 
-Boltzmann equation $Df/d\tau$ becomes for $F(\tau, k, q, \mu)$:
+Three ways to treat a physical ingredient.
+
+\subsubsection{Hierarchy with multipoles and momenta}
+
+Boltzmann equation $Df/d\tau$ becomes is linearized for $\calF(\tau, k, q, \mu)$:
 \begin{equation}
 \pdv{F}{\tau} + i \frac{q}{\epsilon} k \mu F + \odv{\log f_0}{\log q}(\dot{\Phi} - i\frac{q}{\epsilon} k \mu \Psi) = \frac{1}{f_0} \pdv{f}{\tau}_C
 \end{equation}
@@ -445,16 +452,43 @@ Then expand in Legendre multipoles:
 F(\tau, k, q, \mu) = \sum_{l=0}^\infty (-i)^l (2l+1) F_l(\tau, k, q) P_l(\mu)
 \end{equation}
 Insert to get:
+\TODO{collision terms?}
+\begin{subequations}
 \begin{align}
-\dot{F_l} &= \ldots, \\
+\dot{\calF}_0 &= -k \frac{q}{\epsilon} \calF_1 - \dot{\Phi}\,\odv{\log f_0}{\log q} , \\
+\dot{\calF}_1 &= \frac{k}{3} \frac{q}{\epsilon} (\calF_0 - 2\calF_2) - \frac{k}{3} \frac{\epsilon}{q} \Psi \odv{\log f_0}{\log q} , \\
+\dot{\calF}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}(l \calF_{l-1} - (l+1) \calF_{l+1}) ,
+\label{eq:hierarchy_ql}%
 \end{align}
+\end{subequations}
 Integrate momentum moments to get energy-momentum contributions:
+\begin{subequations}
 \begin{align}
-\rho &= \int \diff{q} \ldots, \\
-\delta\rho &= \int \diff{q} \ldots,
-\end{align}
+\rho &= 4\pi a^{-4} \int \diff{q}\,q^2 \epsilon f_0(q), \\
+P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q), \\
+\delta\rho &= 4\pi a^{-4} \int \diff{q}\,q^2 \epsilon f_0(q) \calF_0, \\
+\delta P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q) \calF_0, \\
+(\rho + P)\theta &= 4\pi k a^{-4} \int \diff{q}\,q^2 q f_0(q) \calF_1, \\
+(\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q) \calF_2,
+\end{align}%
+\end{subequations}
 
-Massless case: integrate out $q$ to get $F_l$ equations.
+\subsubsection{Hierarchy with multipoles}
+
+Massless/relativistic case:
+$\epsilon = q$,
+integrate both sides over $4\pi \int \diff{q} q^3 f_0$
+and use that $\rho a^4$ is constant to get
+\begin{subequations}
+\begin{align}
+\dot{F}_0 &= -k F_1 + 4 \dot{\Phi} , \\
+\dot{F}_1 &= \frac{k}{3} (F_0 - 2 F_2 + 4\Psi) , \\
+\dot{F}_l &= \frac{k}{2l+1} (l F_{l-1} - (l+1) F_{l+1}) , \quad (l \geq 2)
+\end{align}%
+\label{eq:hierarchy_l}%
+\end{subequations}
+
+\subsubsection{Fluid treatment}
 
 Fluid case:
 take moments with $q^2 \epsilon f_0$ (for $l=0$) and $q^3 f_0$ (for $l=1$).
