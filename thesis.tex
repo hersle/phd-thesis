@@ -168,6 +168,7 @@ the 3D spatial universe looks \emph{almost} the same in every direction (isotrop
 This allows to write down a simplified metric function $g_{\mu\nu}(x)$:
 \begin{equation}
     \diff{s}^2 = -\diff{\tau}^2 + a(\tau)^2 \left( \frac{\diff{r}}{1-Kr^2} + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
+\label{eq:flrw}
 \end{equation}
 This is called the Friedmann--Lemaître--Robertson--Walker (FLRW) metric,
 named after four people whose works established it.
@@ -356,6 +357,7 @@ by \EB{} codes, of which CAMB and CLASS are best known.
 This is very challenging because the equations are long, large and stiff;
 yet they need to be fast to be run in MCMC chains,
 and simple to modify with alternative cosmological models.
+\TODO{more complicated, but richer information than the background alone.}
 
 To this end,
 the majority of my work has been invested in developing a new \EB{} solver named SymBoltz.
@@ -381,25 +383,129 @@ I close with the current status of SymBoltz and an outlook to how it may be used
 
 \section{Cosmological perturbation theory}
 
-\TODO{proposed structure:}
-\begin{enumerate}
-\item Setup: perturbations around FLRW, conformal time,
-state that we go to Fourier space, use the SVT decomposition and the conformal Newtonian gauge.
-\EB{} codes solve Einstein equations coupled to Boltzmann equations.
-\item Einstein equations: perturbed FLRW metric, GR gravity, give perturbed Einstein equations (overdetermined)
-\item Energy-momentum tensor:
-three regimes: fluid, l-hierarchy or l and q hierarchy.
-\item initial conditions.
-\item give a simplified full EB system, e.g. background + thermo + metric + CDM + baryons + photons (without neutrinos
-\end{enumerate}
-
-Correct formulation of CPT is subtle.
-Scalars in SVT decomposition.
-Perturbation around FLRW.
-Choose Newtonian gauge (instead of synchronous gauge).
+The idea of cosmological perturbation theory is to assume that the universe is \emph{almost} homogeneous and isotropic,
+and to consider perturbations around a perfectly homogeneous and isotropic FLRW metric \eqref{eq:flrw}.
+In linear perturbation theory \cite{maCosmologicalPerturbationTheory1995a},
+every quantity of interest is expanded into a background term (0th order) and linear perturbation term (1st order), such as the metric and energy-momentum tensor:
 \begin{equation}
-\diff{s}^2 = -a^2(\tau) (1+2\Psi)\diff{\tau}^2 + a^2(\tau) (1-2\Phi) (\diff{x}^2 + \diff{y}^2 + \diff{z}^2)
+    g_{\mu\nu} = \bar{g}_{\mu\nu} + h_{\mu\nu} ,
+    \qquad
+    T_{\mu\nu} = \bar{T}_{\mu\nu} + \delta T_{\mu\nu} ,
+    \qquad
+    (h_{\mu\nu} \ll \bar{g}_{\mu\nu}, \, \delta T_{\mu\nu} \ll \bar{T}_{\mu\nu}) .
 \end{equation}
+
+Before we write down any particular theory and equations,
+we will summarize a few subtle and general considerations that make up the general framework around cosmological perturbation theory.
+
+\subsection{Scalar-vector-tensor decomposition}
+
+By definition, $h_{\mu\nu}$ is a $4 \times 4$ tensor perturbation to the metric and thus has 10 independent components.
+\TODO{similar to Helmholtz decomposition}
+It is a good idea to split $h_{\mu\nu}$ into the scalar $h_{00}$, 3-vector $h_{0i}$ and symmetric 3-tensor $h_{ij}$ (this is \emph{not} the final SVT decomposition),
+and in turn decompose each of them into scalars, vectors and tensors \cite[e.g.][]{baumannNotes,bertschingerCosmologicalPerturbationTheory2000}:
+\begin{subequations}
+\begin{align}
+h_{00} &= A , \\
+h_{0i} &= \partial_i B + B_i, \\
+h_{ij} &= 2 C \delta_{ij} + 2 \big( \partial_i \partial_j - \tfrac13 \delta_{ij} \nabla^2 \big) E + \big( \partial_i E_j + \partial_j E_i \big) + 2 E_{ij} ,
+\end{align}
+\end{subequations}
+where $A$-$D$ are scalars,
+$B_i$ and $E_i$ are vectors that have the two constraints to $\partial_i B_i = \partial_i E_i = 0$,
+and $E_{ij}$ is a tensor that has the four constraints $\partial^i E_{ij} = E^i_i = 0$.
+This decomposes the 10 independent $h_{\mu\nu}$ components into
+$4$ \enquote{scalar} degrees of freedom $\{A,B,C,D\}$,
+$4=6-2$ vector degrees of freedom $\{B_i, E_i\}$,
+and $2=6-4$ tensor degrees of freedom $\{E_{ij}\}$.
+
+The crucial point of this decomposition is that the Einstein equations for scalar, vector and tensor perturbations are independent at linear order.
+This makes them easier to reason about physically and separates their numerical solutions.
+
+Scalar perturbations are related to physical densities and determines the CMB temperature and E-mode polarization power spectra and the growth of structure.
+Vector perturbations are related to vorticity in the fluid and decay as the universe evolves.
+Tensor perturbations are related to B-mode polarization and source gravitational waves.
+\TODO{source}
+We will here consider only scalar perturbations, that are most important and the only mode currently implemented in SymBoltz.
+
+\subsection{Gauge freedom}
+
+Another concern is that the laws of physics should not depend on our choice of spacetime coordinates $x^\mu$,
+which are just mathematical labels.
+Consider an infinitesimal coordinate transformation, which also leads to a change in the perturbed metric:
+\begin{equation}
+x^\mu \to x^\mu + \xi^\mu(x)
+\qquad \implies \qquad
+h_{\mu\nu} \to h_{\mu\nu} - L(\xi) \bar{g}_{\mu\nu} .
+\label{eq:coordinate_transformation}
+\end{equation}
+Through the four degrees of freedom in $\xi^\mu(x)$, we have the power to arbitrarily change $h_{\mu\nu}$.
+This means that 4 of 10 degrees of freedom are \enquote{gauge} degrees of freedom due to our arbitrary labeling of spacetime coordinates,
+while there are only 6 physical degrees of freedom.
+
+To see how this affects each of the scalar-vector-tensor sectors, we can decompose $\xi^\mu$ in the same way.
+We set $x^0 = T$ and $x^i = \partial_i L + L_i$ with two scalars $T$ and $L$ and a 3-vector $L_i$ constrained to $\partial_i L_i = 0$.
+It can be shown that this leads to the following change in the scalar-vector-tensor parts \cite[e.g.][]{baumannNotes}:
+\begin{equation}
+\begin{alignedat}{3}
+% TODO: how to get 3 perfectly spaced columns while preserving 1 eq number?
+A &\to A - T' - \scrH T, \qquad\qquad &
+B_i &\to B_i - L_i', \qquad \qquad&
+E_{ij} &\to E_{ij}, \\
+B &\to B + T - L', \qquad\qquad&
+E_i &\to E_i - L_i, \qquad\qquad& \\
+C &\to C - \scrH T - \tfrac13\nabla^2 L, \qquad\qquad & & \\
+D &\to D - L, \qquad & &
+\end{alignedat}
+\label{eq:gauge}
+\end{equation}
+The point is that the scalars $T$ and $L$ influence only the scalars $A$-$D$,
+the vector $L_i$ influence only the vectors $B_i$ and $E_i$,
+and the nonexistent tensorial part of the coordinate change leaves the tensor $E_{ij}$ unchanged.
+The scalars $T,L$ take away two scalar degrees of freedom,
+and the 3-vector $L_i$ with one constraint takes away two vector degrees of freedom.
+This leaves 2 scalar, 2 vector and 2 tensor degrees of freedom.
+
+From here we have two options.
+The first option is to seek gauge-invariant variables that do not change with the gauge transformation \eqref{eq:coordinate_transformation},
+such as the \enquote{Bardeen potentials} $\Phi$ and $\Psi$.
+The second option is to use our freedom in choosing $T$ and $L$ to fix a gauge by imposing some additional conditions.
+
+We will do the second and work with scalar perturbations in the conformal Newtonian gauge, where we can set $B = E = 0$, which is also the one implemented in SymBoltz.
+Another option is the synchronous gauge, where $A = B = 0$, which is the default gauge in CAMB and CLASS (CLASS also supports the Newtonian gauge).
+Ultimately, perturbations in one gauge can be related to another by transformation \eqref{eq:gauge},
+and cosmological observables are built from gauge-independent variables (that can be computed from gauge-dependent variables at the end of the computation).
+
+Finally, this means we can write the metric as:
+\begin{equation}
+\diff{s}^2 = -a^2(\tau) (1+2\Psi(\tau, \mathbf{x}))\diff{\tau}^2 + a^2(\tau) (1-2\Phi(\tau, \mathbf{x})) \diff{\mathbf{x}}^2 .
+\label{eq:flrw_perturbed}
+\end{equation}
+
+\subsection{Fourier space}
+
+Cosmological theories do not predict the universe exactly in position space $(\tau, \mathbf{x})$.
+Instead, they predict statistical properties of observables that are computed in Fourier space, such as matter and CMB power spectra.
+The last step is therefore to transform a perturbation $\delta f(\tau, \mathbf{x})$ from position-space to Fourier-space $\delta f(\tau, \mathbf{k})$:
+\TODO{a macro for $\delta\!f$ with less space?}
+\begin{subequations}
+\begin{align}
+\delta f(\tau, \mathbf{k}) = \int \diff{^3 x} \, e^{-i \mathbf{k} \cdot \mathbf{x}} \delta f(\tau, \mathbf{x}), \label{eq:r2f} \\
+\delta f(\tau, \mathbf{x}) = \int \frac{\diff{^3 k}}{(2\pi)^3} \, e^{+i \mathbf{k} \cdot \mathbf{x}} \delta f(\tau, \mathbf{k}). \label{eq:f2r}
+\end{align}
+\end{subequations}
+
+A computational advantage of going to Fourier space is that partial differential equations (PDEs) in $(\tau, \mathbf{x})$
+become ordinary differential equations (ODEs) in $\tau$ that evolve independently per $\mathbf{k}$.
+This happens because every term in every linearly perturbed equation has exactly one perturbed factor $\delta f(\tau, \mathbf{x})$ by construction,
+which may be multiplied by a $\tau$-dependent factor and is acted upon by time derivatives $\pdv{}/{\tau}$ and spatial gradient $\pdv{}/{x_i}$.
+The Fourier transformation \eqref{eq:r2f} therefore inserts exactly one $\mathbf{k}$-integral in every term that does not mix different $\mathbf{k}$.
+It leaves time derivatives intact and turns spatial gradients into multiplications:
+\begin{equation}
+\pdv{f(\tau, \mathbf{x})}{\tau} \to \pdv{f(\tau, \mathbf{k})}{\tau} , \qquad
+\pdv{f(\tau, \mathbf{x})}{x_i} \to (i k_i) \cdot f(\tau, \mathbf{k}) .
+\end{equation}
+In this way, only derivatives with respect to time are left.
 
 \subsection{Einstein equations}
 
@@ -471,6 +577,7 @@ P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q), \\
 (\rho + P)\theta &= 4\pi k a^{-4} \int \diff{q}\,q^2 q f_0(q) \calF_1, \\
 (\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q) \calF_2,
 \end{align}%
+\label{eq:energy_momentum_integrals}%
 \end{subequations}
 
 \subsubsection{Hierarchy with multipoles}
@@ -478,7 +585,12 @@ P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 \frac{q^2}{\epsilon} f_0(q), \\
 Massless/relativistic case:
 $\epsilon = q$,
 integrate both sides over $4\pi \int \diff{q} q^3 f_0$
-and use that $\rho a^4$ is constant to get
+and use that $\rho a^4$ is constant
+and integration by parts
+\begin{equation}
+\int \diff{q} \, q^3 f_0 \odv{\log f_0}{\log q} = \int \diff{q} \, q^4 \odv{f_0}{q} = -4 \int \diff{q} \, q^3 f_0
+\end{equation}
+to get
 \begin{subequations}
 \begin{align}
 \dot{F}_0 &= -k F_1 + 4 \dot{\Phi} , \\
@@ -490,8 +602,10 @@ and use that $\rho a^4$ is constant to get
 
 \subsubsection{Fluid treatment}
 
-Fluid case:
-take moments with $q^2 \epsilon f_0$ (for $l=0$) and $q^3 f_0$ (for $l=1$).
+Alternatively, an ingredient can be treated a fluid where the energy-momentum conservation equations \eqref{eq:pert_fluid} hold not only for the total,
+but also for each individual species.
+Thus, a fluid is defined by an equation of state $P = w \rho$, $\delta P / \delta \rho$ and $\sigma$.
+It effectively truncates at $l = 1$.
 
 1. Fluid ($\delta$, $\theta$). Defined by EOS $P = w \rho$ and $\delta P$ and $\sigma$.
 
@@ -499,54 +613,13 @@ take moments with $q^2 \epsilon f_0$ (for $l=0$) and $q^3 f_0$ (for $l=1$).
 
 3. $(l,q)$-hierarchy
 
-Assuming the universe is \emph{almost} homogeneous and isotropic,
-we may do \emph{cosmological perturbation theory} around a perfectly homogeneous and isotropic universe \cite{maCosmologicalPerturbationTheory1995a}.
-Of particular interest is the first-order corrections to the background that comes from linear perturbation theory:
-\begin{equation}
-    g_{\mu\nu} = \bar{g}_{\mu\nu} + h_{\mu\nu},
-\end{equation}
-where $\bar{g}_\mu\nu$ is the background metric from \cref{chap:back}
-and $h_{\mu\nu}$ are the linear corrections to it.
+\subsection{Initial conditions}
 
-A few mathematical properties are important for setting up the framework around cosmological perturbation theory:
-\begin{itemize}
-\item
-Particularly at linear order, perturbaiton theory is much simpler in Fourier space $\vec{k}$ than in position space $\vec{x}$.
-A general quantity $f(t, \vec{x})$ is transformed to Fourier space and back to position space with
-\begin{subequations}
-\begin{align}
-    f(t, \vec{k}) &= \int \diff{^3 x} \, e^{i \vec{k} \cdot \vec{x}} f(t, \vec{x}), \\
-    f(t, \vec{x}) &= \int \frac{\diff{^3 k}}{(2\pi)^3} \, e^{-i \vec{k} \cdot \vec{x}} f(t, \vec{k}),
-\end{align}
-\end{subequations}
-At linear order, any equation must by definition be in the general form $F(t, \vec{x}) = \sum_i c_i(t) \delta f_i(t, \vec{x}) = 0$,
-with $\delta f_i(t, \vec{x})$ containing derivatives in both space and time.
-Going to Fourier space, the equation becomes $F(t, \vec{k}) = \sum_i c_i(t) \delta f_i(t, \vec{k}) = 0$,
-which holds \emph{indepdendently per wavenumber} $k$.
-where all spatial derivatives are transformed into products with $(-i \vec{k}) f$.
-Thus, going to Fourier space decouples the linear PDEs in $(t, \vec{x})$ into ODEs in $t$ for \emph{independent} $\vec{k}$.
+\TODO{separate section?}
 
-\item
-Due to the rotational symmetry in 3-space of the background FLRW metric,
-any tensor perturbation (including the metric perturbation) be decomposed into independent scalar-vector-tensor contributions.
-This is similar to in electromagnetism, where an electric and magnetic field can be decomposed into
+\subsection{Full Einstein-Boltzmann system}
 
-An important result is that the metric perturbation $h_{\mu\nu}$ can be decomposed with the scalar-vector-tensor decomposition \cite{bertschingerCosmologicalPerturbationTheory2000}
-
-Under 3-space $\vec{x}$, we have scalar $h_{00}$, vector $h_{0i}$ and tensor $h_{ij}$.
-Set $h_{00} = 2A$.
-Set $h_{0i} = -\pdv{B}{x^i}$
-
-Here we will only consider scalar perturbations,
-which are most important for the cosmic microwave background and structure formation.
-
-\item
-Gauge choice.
-Here
-\end{itemize}
-
-This works because the universe is approximately homogeneous and isotropic.
-This is more complicated, but also holds richer information than the background alone.
+\TODO{give a simplified full EB system, e.g. background + thermo + metric + CDM + baryons + photons (without neutrinos)}
 
 \section{Structure of \EB{} codes}
 
