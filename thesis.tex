@@ -1173,9 +1173,15 @@ such as EFTCAMB (for effective field theory) and MGCAMB (for select modified gra
 
 \TODO{continue here}
 \item \textbf{CLASS}\footnote{\url{https://github.com/lesgourg/class_public/}} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f}
-is the other most established code in use today, and is the first major independent code that is not from the same branch as CAMB.
-It is written in C and C++, and has a wrapper for use in Python.
-It has been extended into a plethora of modified codes: hi\_class, MGCLASS, CLASSIER, CLASS-PT, SONG.
+is the second most established code in use today alongside CAMB.
+It is the first major code that is not from the COSMICS branch (see \cref{fig:codes}),
+and functioned as an independent cross-check of CAMB for the Planck experiment.
+It is written in C, and also provides a wrapper for use with Python.
+More modular and flexible; more structured than CAMB and CMBFAST.
+Highly tunable approximation schemes and precision parameters; more fine-grained control than CAMB.
+Implicit integrator.
+Compared to CAMB; good agreement \TODO{cite agreement paper}.
+It is the code that has most extensions (?): hi\_class, MGCLASS, CLASSIER, CLASS-PT, SONG.
 
 \item \textbf{PyCosmo}\footnote{\url{https://pypi.org/project/PyCosmo}} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021}
 is a third independent code and the first to be primarily written in Python,
