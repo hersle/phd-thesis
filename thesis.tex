@@ -400,8 +400,9 @@ we will summarize a few subtle and general considerations that make up the gener
 
 \subsection{Scalar-vector-tensor decomposition}
 
+\TODO{analogy to Helmholtz decomposition}
+
 By definition, $h_{\mu\nu}$ is a $4 \times 4$ tensor perturbation to the metric and thus has 10 independent components.
-\TODO{similar to Helmholtz decomposition}
 It is a good idea to split $h_{\mu\nu}$ into the scalar $h_{00}$, 3-vector $h_{0i}$ and symmetric 3-tensor $h_{ij}$ (this is \emph{not} the final SVT decomposition),
 and in turn decompose each of them into scalars, vectors and tensors \cite[e.g.][]{baumannNotes,bertschingerCosmologicalPerturbationTheory2000}:
 \begin{subequations}
@@ -421,6 +422,7 @@ and $2=6-4$ tensor degrees of freedom $\{E_{ij}\}$.
 
 The crucial point of this decomposition is that the Einstein equations for scalar, vector and tensor perturbations are independent at linear order.
 This makes them easier to reason about physically and separates their numerical solutions.
+Without the decomposition, we would be solving for all 10 components together in a way that unnecessarily couples the scalar, vector and tensor parts.
 
 Scalar perturbations are related to physical densities and determines the CMB temperature and E-mode polarization power spectra and the growth of structure.
 Vector perturbations are related to vorticity in the fluid and decay as the universe evolves.
@@ -601,46 +603,51 @@ I outline the three different primary ways to model the energy-momentum contribu
 I go through them in a top-down manner, from most complicated to simplest, in contrast to the bottom-up presentation often given in the literature.
 I find this elegant and instructive, because it makes it possible to understand everything in terms of distribution functions.
 
-We use statistical mechanics and consider the distribution function of each species in phase space of positions $\mathbf{x}$ and momenta $\mathbf{q}$:
 \TODO{a lot of subtleties in the derivation; focus on the high level idea}
-\TODO{distinction $p$ vs $q$?}
+\TODO{distinction $p$ vs $q$? $p$ is physical momentum and decays with $1/a$ for noninteracting species in the background. $q=ap$ is comoving momentum and is constant in background.}
+
+We use statistical mechanics and consider the distribution function $f(\tau, \mathbf{x}, \mathbf{q})$ of each species in phase space of positions $\mathbf{x}$ and momenta $\mathbf{q}$
+(we choose to keep track of time $\tau$ as an explicit argument).
+We can write the full distribution function as a background $f_0$ term plus a perturbed term $f_0 \, \Psi$:
 \begin{equation}
-f = f_0 [1 + \Psi(\tau, \mathbf{x}, \mathbf{q})], \qquad
-f_0(\epsilon) = \frac{g}{e^{\epsilon / T_0} \pm 1}, \qquad
-\epsilon = \sqrt{q^2 + m^2} .
+f(\tau, \mathbf{x}, \mathbf{q}) = f_0(q) [1 + \Psi(\tau, \mathbf{x}, \mathbf{q})] .
 \label{eq:distribution}
 \end{equation}
-Here we assume that every species is either bosons ($+$) or fermions ($-$) and with degeneracy factor $g$.
-The unperturbed distribution function (in a FLRW universe) is $f_0$,
-and $\Psi$ is its linear perturbation.
-We keep track of time $\tau$ explicitly.
-
-The evolution of the distribution function in phase space is given by the Boltzmann equation,
-for the total time derivative along a trajectory $(\tau, \mathbf{x}(\tau), \mathbf{q}(\tau)$ in phase space:
+Its evolution in phase space is given by the Boltzmann equation.
+For the total time derivative along a trajectory $(\tau, \mathbf{x}(\tau), \mathbf{q}(\tau))$ in phase space, it says:
 \begin{equation}
-\odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x} \pdv{x}{\tau} + \pdv{f}{q} \pdv{q}{\tau} = C[f] .
+\odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x} \odv{x}{\tau} + \pdv{f}{q} \odv{q}{\tau} = C[f] .
 \label{eq:boltzmann}
 \end{equation}
 The collision term $C[f]$ says how the density of particles at each point in phase space
 is modified due to interactions (\enquote{collisions}) with other species (or self-interactions).
 The argument means that it is a functional of the distribution functions of all the interacting species.
 It vanishes for non-interacting species (\enquote{collisionless}).
-\TODO{example for same-place collision of $1+2 \leftrightarrow 3+4$ with momentum and energy conservation? see Dodelson. then easy to include Thomson scattering later?}
+
+At this stage we do not need to know anything about $f_0(q)$,
+other than that it is a function only of $q$.
+This is because the geodesic equation in the background shows that $q=a p$ is constant,
+so $\odv{q}/{\tau} = 0$, $\pdv{f_0}/{\tau} = 0$ and thus $f_0(\tau, \mathbf{q}, \mathbf{x}) = f_0(q)$.
+
+Energy $E = \epsilon / a$ with
+\begin{equation}
+\epsilon = \sqrt{q^2 + a^2 m^2} .
+\end{equation}
+
+\TODO{example $C[f]$ for same-place collision of $1+2 \leftrightarrow 3+4$ with momentum and energy conservation? see Dodelson. then easy to include Thomson scattering later?}
 \TODO{decide on $\calF$ vs $\Psi$ notation; and $\phi$ vs $\Phi$ etc. Just stick to Ma \& Bertschinger?}
 
 \subsubsection{Hierarchy with multipoles and momenta}
 
-\TODO{relies on $f_0(\epsilon) = f_0(q)$, which is valid for species that are relativistic at decoupling?}
-
 We can linearize the Boltzmann equation \eqref{eq:boltzmann}.
 Inserting the full distribution function \eqref{eq:distribution},
-using the geodesic equation to express $\pdv{q}/{\tau}$,
+using the geodesic equation to express $\odv{q}/{\tau}$,
 collecting terms to first order and going to Fourier space gives:
 \begin{equation}
 \pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\Phi} - i k \mu \frac{q}{\epsilon} \psi \right) = \frac{1}{f_0} \pdv{f}{\tau}_C .
 \label{eq:boltzmann_linear}
 \end{equation}
-Here $\mu = \cos \hat{\mathbf{k}} \cdot \hat{\mathbf{q}}$ is the direction between the wavenumber $\mathbf{k}$ and momentum $\mathbf{p}$,
+Here $\mu = \cos \hat{\mathbf{k}} \cdot \hat{\mathbf{q}}$ is the direction between the wavenumber $\mathbf{k}$ and momentum $\mathbf{q}$,
 so we can now redefine $\Psi(\tau, k, q, \mu)$ as a function of their magnitudes and $\mu$.
 Due to this azimuthal symmetry,
 it is natural to expand the $\mu$-dependence into Legendre polynomials $P_l(\mu)$:
@@ -686,7 +693,7 @@ but they are coupled to higher $l$ through the hierarchy \eqref{eq:hierarchy_ql}
 
 \subsubsection{Hierarchy with multipoles}
 
-For species that are relativistic with $q \gg m$,
+For species that are relativistic with $q \gg am$,
 we can analytically integrate out the $q$-dependence of $\Psi$
 to obtain a simpler and smaller set of equations.
 Define the momentum-averaged distribution function multipoles
@@ -710,28 +717,49 @@ Also note that $P/\rho = \delta P/\delta\rho = 1/3$ with $\epsilon = q$.
 
 \subsubsection{Fluid treatment}
 
-A coarser way to model a species is to assume it evolves as a \enquote{fluid}.
-This assumes that the species' energy-momentum contribution in \eqref{eq:totalT}
-evolves in the same way as the total energy-momentum,
-following the continuity and Euler equations \eqref{eq:pert_fluid}.
-This was derived from the Einstein equations.
+The simplest way to model a species is to describe it as a \enquote{fluid}.
+A fluid is a species whose individual energy-momentum contribution in \eqref{eq:totalT}
+evolves in the same way as the total conservation equations \eqref{eq:pert_fluid}.
+In the literature, this is commonly explained from the Einstein equations.
 
-These equations can also be found from the Boltzmann equation \eqref{eq:boltzmann}.
-Start with the general hierarchy equations \eqref{eq:hierarchy_ql} for $l=0$ and $l=1$.
-Integrate the $l=0$ equation over $\int \diff{q}\,q^2 f_0 \, \epsilon$,
-use integration by parts on the term with $\odv{\log f_0}{\log q}$ term,
-and recognize the energy-momentum integrals \eqref{eq:energy_momentum_integrals}.
-Similarly, integrate the $l=1$ equation over $\int \diff{q}\,q^2 f_0 q$.
-This ultimately gives the same equations.
+On the other hand, it is equally possible and more principled to derive their evolution from the Boltzmann equation \eqref{eq:boltzmann}.
+Starting with the general $(q,l)$-hierarchy \eqref{eq:hierarchy_ql},
+integrate the $l=0$ equation over $\int \diff{q}\,q^2 f_0 \, \epsilon$,
+use $\dot{\epsilon} = \scrH a^2 m^2 / \epsilon = \scrH (\epsilon - q^2 / \epsilon)$,
+integrate the term with $\odv{\log f_0}/{\log q}$ by parts,
+and collect terms with the right sides of expressions \eqref{eq:energy_momentum_integrals}
+This gives the continuity equation:
+\begin{subequations}
+\begin{equation}
+\dot{\delta} = -(1+w)(\theta-3\dot{\Phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
+\end{equation}
+Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
+\begin{equation}
+\dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi .
+\end{equation}
+One can continue even with the $l=2$ equation
+integrated over $\int \diff{q} \, q^2 f_0 \, q^2 / \epsilon$
+to get a differential equation for the shear
+\cite[e.g.][]{nascimentoGeneralizedBoltzmannHierarchy2021,lesgourguesCosmicLinearAnisotropy2011f}:
+\begin{equation}
+\begin{aligned}
+\dot\sigma &= -\scrH\,(2-3w)\,\sigma - \frac{\dot w}{1+w}\,\sigma \\
+&+ \frac{8\pi\,a^{-4}}{\rho+ P}\left[
+\frac{\scrH}{3}\int\!\diff{q}\,q^2 f_0\,\frac{q^4}{\epsilon^3}\,\Psi_2
++ \frac{k}{15}\int\!\diff{q}\,q^2 f_0\,\frac{q^3}{\epsilon^2}\big(2\Psi_1 - 3\Psi_3\big)
+\right] .
+\end{aligned}
+\end{equation}
+\end{subequations}
 
-The fluid approximation can thus be understood
-by integrating out $q$ of the $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}
-and truncating it at $l \geq 2$.
-Unlike the hierarchies,
-the fluid equations do not close by themselves.
-They need some $\delta P$ (usually $\delta P = c_s^2 \delta \rho$ with $c_s^2 = w$)
-and $\sigma$ (usually $\sigma = 0$).
-The fluid approximation works well for cold dark matter and baryons, for example.
+A \enquote{fluid} refers to any species where the $q$-dependence is integrated out,
+and where only $\delta$, $\theta$ and $\sigma$ are necessary (i.e. the hierarchy is cut off $l \geq 3$).
+For perfect fluids one sets $\sigma=0$ and cuts off $l \geq 2$,
+while viscous (imperfect) fluids keep $\sigma \neq 0$ and must find a way to cut off $l \geq 3$.
+The fluid equations do not close on their own,
+and must be specified with
+additional equations of state for $w = P/\rho$ and $c_s^2 = \delta P / \delta\rho$.
+%The fluid approximation works well for cold dark matter and baryons, for example.
 Its validity is discussed by \cite{shojiMassiveNeutrinosCosmology2010}.
 
 \subsection{Initial conditions}
@@ -1624,6 +1652,8 @@ Only baryon--photon interactions are part of the standard \LCDM{} model.
 
 \subsection{Massive neutrinos and non-cold dark matter}
 \label{sec:neutrinos}
+
+\TODO{generalized boltzmann hierarchies \cite{nascimentoGeneralizedBoltzmannHierarchy2021}}
 
 The implementation of massive neutrinos in \EB{} codes is complicated by their generally nonzero mass.
 It is necessary to solve for perturbations $\Psi$ to their phase-space distribution function (in Fourier space)
