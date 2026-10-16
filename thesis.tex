@@ -56,6 +56,7 @@
 \newcommand\pprime{{\prime\prime}}
 \newcommand\Hy{\ensuremath{\mathrm{H}}} % Hydrogen
 \newcommand\He{\ensuremath{\mathrm{He}}} % Helium
+\newcommand\lmax{{\ensuremath{l_\mathrm{max}}}}
 \DeclareMathOperator{\sign}{sign} % sign function
 
 \title{New tools for exploring modified cosmological models}
@@ -193,7 +194,6 @@ The equations of motion follow from the principle of least action:
 varying the action $S$ with respect to the metric $g_{\mu\nu}(x)$ gives the Einstein field equations:
 \begin{equation}
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
-\label{eq:einstein}
 \end{equation}
 Here $G_{\mu\nu} = R_{\mu\nu} - \frac12 g_{\mu\nu} R$ is the Einstein tensor,
 $R_{\mu\nu}$ is the Ricci tensor and $R$ \TODO{tensor notation package} the Ricci scalar.
@@ -485,6 +485,7 @@ Finally, this means we can write the metric as:
 \end{equation}
 
 \subsection{Fourier space}
+\label{sec:fourier}
 
 Cosmological theories do not predict the universe exactly in position space $(\tau, \mathbf{x})$.
 Instead, they predict statistical properties of observables that are computed in Fourier space, such as matter and CMB power spectra.
@@ -653,16 +654,17 @@ Due to this azimuthal symmetry,
 it is natural to expand the $\mu$-dependence into Legendre polynomials $P_l(\mu)$:
 \begin{equation}
 \Psi(\tau, k, q, \mu) = \sum_{l=0}^\infty (-i)^l (2l+1) \Psi_l(\tau, k, q) P_l(\mu) .
+\label{eq:decompose_legendre}
 \end{equation}
 Inserting this into the linearized Boltzmann equation \eqref{eq:boltzmann_linear}
 and using that $\mu P_l(\mu) = (l P_{l-1}(\mu) + (l+1) P_{l+1}(\mu)) / (2l+1)$,
 we obtain the following \enquote{hierarchy} for the evolution of each multipole $\Psi_l(\tau, k, q)$:
 \begin{subequations}
+\label{eq:hierarchy_ql}
 \begin{align}
 \dot{\Psi}_0 &= -k \frac{q}{\epsilon} \Psi_1 - \dot{\Phi}\,\odv{\log f_0}{\log q} , \\
 \dot{\Psi}_1 &= \frac{k}{3} \frac{q}{\epsilon} (\Psi_0 - 2\Psi_2) - \frac{k}{3} \frac{\epsilon}{q} \psi \odv{\log f_0}{\log q} , \\
 \dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}(l \Psi_{l-1} - (l+1) \Psi_{l+1}) \qquad\quad (l \geq 2) .
-\label{eq:hierarchy_ql}%
 \end{align}
 Note that the multipole expansion couples $l$ to only $l \pm 1$,
 and that there is one differential equation for every $q$.
@@ -730,12 +732,15 @@ integrate the term with $\odv{\log f_0}/{\log q}$ by parts,
 and collect terms with the right sides of expressions \eqref{eq:energy_momentum_integrals}
 This gives the continuity equation:
 \begin{subequations}
+\label{eq:fluid}
 \begin{equation}
 \dot{\delta} = -(1+w)(\theta-3\dot{\Phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
+\label{eq:fluid_continuity}
 \end{equation}
 Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
 \begin{equation}
 \dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi .
+\label{eq:fluid_euler}
 \end{equation}
 One can continue even with the $l=2$ equation
 integrated over $\int \diff{q} \, q^2 f_0 \, q^2 / \epsilon$
@@ -749,6 +754,7 @@ to get a differential equation for the shear
 + \frac{k}{15}\int\!\diff{q}\,q^2 f_0\,\frac{q^3}{\epsilon^2}\big(2\Psi_1 - 3\Psi_3\big)
 \right] .
 \end{aligned}
+\label{eq:fluid_shear}
 \end{equation}
 \end{subequations}
 
@@ -762,17 +768,314 @@ additional equations of state for $w = P/\rho$ and $c_s^2 = \delta P / \delta\rh
 %The fluid approximation works well for cold dark matter and baryons, for example.
 Its validity is discussed by \cite{shojiMassiveNeutrinosCosmology2010}.
 
-\subsection{Initial conditions}
+\subsection{Fully coupled \EB{} system}
 
-\TODO{separate section?}
+The basic treatment of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
+However, there are several nuances in the treatment of each species that would be too lengthy to include in this thesis,
+for example related to baryon-photon interactions.
+Ultimately, what I wish to highlight is that
+the \LCDM{} model results in a very large system of ODEs and algebraic relations that must be evolved in time \cite[e.g.][]{maCosmologicalPerturbationTheory1995a,sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}:
 
-\subsection{Full Einstein-Boltzmann system}
+\begin{subequations}
+\label{eq:eb}
 
-\TODO{give a simplified full EB system, e.g. background + thermo + metric + CDM + baryons + photons (without neutrinos)}
+\subsubsection{Gravity (\texorpdfstring{$G$}{G})}
+Gravity is described by General Relativity with the Einstein equations in \cref{sec:einstein},
+sourced by the total background energy density $\rho$, perturbed energy density $\delta\rho$ and shear $(\rho+P)\sigma$:
+\begin{equation}
+\label{eq:eb_gravity}
+\begin{aligned}
+\dot{a}(\tau) &= a^2 \sqrt{\tfrac{8\pi}{3} \rho} , \\
+\rho(\tau) &= \rho_b + \rho_c + \rho_\gamma + \rho_\nu + \rho_h + \rho_\Lambda , \\
+\dot{\phi}(\tau, k) &= -\scrH \psi - \frac{k^2}{3\scrH}\phi - \frac{4\pi a^2}{3\scrH}\delta\rho , \\
+\psi(\tau, k) &= \phi - \frac{12\pi a^2}{k^2} (\rho+P)\sigma , \\
+\delta\rho(\tau, k) &= \delta\rho_b + \delta\rho_c + \delta\rho_\gamma + \delta\rho_\nu + \delta\rho_h , \\
+\sigma(\tau, k) &= \frac{(\rho_\gamma+P_\gamma)\sigma_\gamma + (\rho_\nu+P_\nu)\sigma_\nu + (\rho_h+P_h)\sigma_h}{\rho+P} .
+\end{aligned}
+\end{equation}
 
-\section{Structure of \EB{} codes}
+\subsubsection{Baryons (\texorpdfstring{$b$}{b})}
 
-\section{History of \EB{} codes}
+Baryons are modeled as a fluid \eqref{eq:fluid} in the non-relativistic limit $am \gg q$,
+which makes $P$, $\delta P$ and $\sigma$ small.
+It is usually modeled with $w=0$ in the background and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
+but $c_s^2 = \delta P/\delta \rho \neq 0$ in the Euler equation \eqref{eq:pert_euler} because it is multiplied by $k^2$ (see \cref{sec:modify_baryons}).
+In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
+which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ that follow from recombination and reionization physics (see \cref{sec:modify_recombination}):
+\begin{equation}
+\label{eq:eb_baryons}
+\begin{aligned}
+\dot{T}_b(\tau) &= -2\scrH T_b + \frac{8 \sigma_T a \rho_\gamma}{3 m_e} \frac{x_e}{1+f_\mathrm{He}+x_e} (T_\gamma - T_b) , \\
+\dot{x}_e(\tau) &= \dot{x}_e(a, H, T_b, T_\gamma, \ldots) , \\
+\dot{\kappa}(\tau) &= a\, x_e\, n_H\, \sigma_T , \\
+\dot{\delta}_b(\tau, k) &= -\theta_b + 3\dot{\phi} , \\
+\dot{\theta}_b(\tau, k) &= -\scrH \theta_b + c_s^2 k^2 \delta_b + k^2 \psi + \frac{4\rho_\gamma}{3\rho_b} \dot\kappa (\theta_\gamma - \theta_b) , \\
+\delta\rho_b(\tau, k) &= \rho_b \delta_b .
+\end{aligned}
+\end{equation}
+Here $\dot{x}_e(a, H, T_b, T_\gamma, \ldots)$ is used to sweep all recombination and reionization physics under the rug for a simplified treatment.
+Behind it lies a large system of additional equations that ultimately describe the evolution of the free electron fraction.
+
+\subsubsection{Cold dark matter (\texorpdfstring{$c$}{c})}
+
+Cold dark matter is modeled as a non-interacting and pressureless perfect (non-viscous) fluid \eqref{eq:fluid} with $P = \delta P = \sigma = 0$:
+\begin{equation}
+\label{eq:eb_cold_dark_matter}
+\begin{aligned}
+\dot{\delta}_c(\tau, k) &= -\theta_c + 3\dot{\phi} , \\
+\dot{\theta}_c(\tau, k) &= -\scrH \theta_c + k^2 \psi , \\
+\delta\rho_c(\tau, k) &= \rho_c \delta_c .
+\end{aligned}
+\end{equation}
+
+\subsubsection{Photons (\texorpdfstring{$\gamma$}{gamma})}
+
+Photons are massless and thus modeled as a relativistic $l$-hierarchy \eqref{eq:hierarchy_l} (with $w=\delta P/\delta\rho=1/3$).
+Taking their polarization into account results in the evolution of two such hierarchies $F_l$ and $G_l$ \cite[section 5.5][]{maCosmologicalPerturbationTheory1995a},
+and their interactions with baryons adds terms proportional to $\dot\kappa$ to the hierarchies.
+Furthermore, the hierarchies are cut off at $l = \lmax$ not with $F_\lmax = 0$,
+but by assuming an approximate analytical solution $F_\ell \propto j_l(k\tau)$:
+\begin{equation}
+\label{eq:eb_photons}
+\begin{aligned}
+\dot{F}_0(\tau, k) &= -k F_1 + 4\dot{\phi} , \\
+\dot{F}_1(\tau, k) &= \frac{k}{3}(F_0 - 2F_2) + \frac{4k}{3}\psi + \dot\kappa \left(\frac{4\theta_b}{3k} - F_1\right) , \\
+\dot{F}_l(\tau, k) &= \frac{k}{2l+1}\big(l F_{l-1} - (l+1) F_{l+1}\big) - \dot\kappa \big(F_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
+\dot{F}_{\lmax}(\tau, k) &= k F_{\lmax-1} - \frac{\lmax+1}{\tau} F_{\lmax} - \dot\kappa F_{\lmax} , \\
+\dot{G}_0(\tau, k) &= -k G_1 - \dot\kappa \big(G_0 - \tfrac{1}{2}\Pi\big) , \\
+\dot{G}_1(\tau, k) &= \frac{k}{3}(G_0 - 2G_2) - \dot\kappa\, G_1 , \\
+\dot{G}_l(\tau, k) &= \frac{k}{2l+1}\big(l G_{l-1} - (l+1) G_{l+1}\big) - \dot\kappa \big(G_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
+\dot{G}_{\lmax}(\tau, k) &= k G_{\lmax-1} - \frac{\lmax+1}{\tau} G_{\lmax} - \dot\kappa G_{\lmax} , \\
+\Pi(\tau, k) &= F_2 + G_0 + G_2 , \\
+\delta\rho_\gamma(\tau, k) &= \rho_\gamma F_0 , \\
+\sigma_\gamma(\tau, k) &= \tfrac{1}{2} F_2 .
+\end{aligned}
+\end{equation}
+
+\subsubsection{Massless neutrinos (\texorpdfstring{$\nu$}{nu})}
+
+Massless neutrinos are also modeled as a relativistic $l$-hierarchy \eqref{eq:hierarchy_l} (with $w=\delta P/\delta\rho=1/3$),
+but have no interactions:
+\begin{equation}
+\label{eq:eb_massless_neutrinos}
+\begin{aligned}
+\dot{N}_0(\tau, k) &= -k N_1 + 4\dot{\phi} , \\
+\dot{N}_1(\tau, k) &= \frac{k}{3}(N_0 - 2N_2) + \frac{4k}{3}\psi , \\
+\dot{N}_l(\tau, k) &= \frac{k}{2l+1}\big(l N_{l-1} - (l+1) N_{l+1}\big) , \\
+\dot{N}_{\lmax}(\tau, k) &= k N_{\lmax-1} - \frac{\lmax+1}{\tau} N_{\lmax} , \\
+\delta\rho_\nu(\tau, k) &= \rho_\nu N_0 , \\
+\sigma_\nu(\tau, k) &= \tfrac{1}{2} N_2 .
+\end{aligned}
+\end{equation}
+
+\subsubsection{Massive neutrinos (\texorpdfstring{$h$}{h})}
+
+Massive neutrinos are modeled as a full $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}.
+It is cut off at some $\lmax$ in a similar way as the photons and massless neutrinos.
+Since $q$ is not integrated out in the energy-momentum contributions \eqref{eq:energy_momentum_integrals},
+the $q$-dependence of $\Psi_l$ under the integral must also be evolved.
+The idea is to assume a numerical quadrature scheme $I[g(x)] = \int \diff{q}\,q^2 f_0(q) g(x) \approx \sum_{i=1}^{N_q} W_i \, g(q_i)$
+to reduce the problem to the evolution of a finite number of $q_i$ points and to evaluate these integrals.
+Only one hierarchy is needed if only one or several degenerate neutrino masses are considered (which is most common),
+but the hierarchy must generally be duplicated per mass.
+Thus, massive neutrinos contribute with $N_m \times N_l \times N_q$ perturbation ODEs!
+This significantly increases the size of the ODE system:
+\begin{equation}
+\label{eq:eb_massive_neutrinos}
+\begin{aligned}
+\rho_h(\tau) &= 4\pi a^{-4} \sum_i W_i\, \epsilon_i , \\
+P_h(\tau) &= \frac{4\pi}{3} a^{-4} \sum_i W_i \frac{q_i^2}{\epsilon_i} , \\
+\dot{\Psi}_{0,i}(\tau, k) &= -k \frac{q_i}{\epsilon_i} \Psi_{1,i} - \dot{\phi} \left(\odv{\log f_0}{\log q}\right)_i , \\
+\dot{\Psi}_{1,i}(\tau, k) &= \frac{k}{3} \frac{q_i}{\epsilon_i} (\Psi_{0,i} - 2\Psi_{2,i}) - \frac{k}{3} \frac{\epsilon_i}{q_i} \psi \left(\odv{\log f_0}{\log q}\right)_i , \\
+\dot{\Psi}_{l,i}(\tau, k) &= \frac{k}{2l+1} \frac{q_i}{\epsilon_i} \big(l \Psi_{l-1,i} - (l+1) \Psi_{l+1,i}\big) , \\
+\dot{\Psi}_{\lmax,i}(\tau, k) &= k \frac{q_i}{\epsilon_i} \Psi_{\lmax-1,i} - \frac{\lmax+1}{\tau} \Psi_{\lmax,i} , \\
+\delta\rho_h(\tau, k) &= 4\pi a^{-4} \sum_i W_i\, \epsilon_i \Psi_{0,i} , \\
+\sigma_h(\tau, k) &= \frac{1}{\rho_h+P_h} \frac{8\pi}{3} a^{-4} \sum_i W_i \frac{q_i^2}{\epsilon_i} \Psi_{2,i} .
+\end{aligned}
+\end{equation}
+
+\subsubsection{Cosmological constant (\texorpdfstring{$\Lambda$}{Lambda})}
+
+The cosmological constant $\Lambda$ is really an additional term $\Lambda g_{\mu\nu}$ on the left side of the Einstein equations \eqref{eq:einstein}.
+We may think of it equivalently as a fluid \eqref{eq:fluid} with $w=-1$ in the background and no perturbations (the perturbations would be ill-defined with $1+w=0$ anyway).
+
+\end{subequations}
+
+\subsubsection{Initial conditions}
+
+\TODO{discuss ICs very briefly here?}
+
+\section{\EB{} codes}
+
+\subsection{Structure of \EB{} codes}
+
+\TODO{incorporate ODEs, interpolation, quadrature in the description here. These are nontrivial numerical details.}
+
+The core task of any \EB{} code is to solve the \EB{} equations \eqref{eq:eb}.
+Afterwards, a range of post-processing steps may or may not be performed,
+in order to compute observables such as distances, matter power spectra and CMB power spectra:
+
+\begin{enumerate}
+\item \textbf{Background ODEs} are integrated in $\tau$ for quantities $f(\tau)$ that depend only on $\tau$ (i.e. to 0th order in cosmological perturbation theory).
+This only has to be performed once if all parameters directly determine the initial conditions (i.e. an initial value problem (IVP)).
+In some cases, the parameters instead determine an mixed set of initial and final conditions (i.e. a boundary value problem (BVP)),
+and the \textbf{shooting method} is wrapped around the background solve to determine the correct initial conditions that produce the desired final conditions.
+For many models (but not in general), the background ODEs decouple into several blocks that can be solved sequentially,
+such as the expansion history for $\scrH(\tau)$ followed by thermodynamics for $x_e(\tau)$ and $\kappa(\tau)$.
+The background ODE is usually quite small with 1-10 ODE variables,
+but can be highly stiff due to the recombination and baryon thermodynamics.
+
+\item \textbf{Perturbation ODEs} are integrated in $\tau$ for quantities $f(\tau, k)$ that depend both on time $\tau$ and the wavenumber $k$ (i.e. to 1st order in cosmological perturbation theory).
+The perturbations must usually be integrated for 100s-1000s of $k$-modes to resolve the $k$-dependence.
+Importantly, linear perturbations in Fourier space are independent (see \cref{sec:fourier}),
+so the same ODE system can be evolved independently for each $k$ and thus be parallelized (instead of solving for all $k$-modes together in one 100-1000$\times$ larger ODE).
+The perturbation system for each $k$ usually consists of 10-100s of equations if only photons and massless neutrinos are included (with $\lmax \lesssim 10\text{-}100$),
+and 100s-1000s of equations if massive neutrinos are also included (with similar $\lmax$ and $N_q \lesssim 3\text{-}10$ and $N_m \lesssim 3$ for massive neutrinos).
+The equations are not only large, but also highly stiff, which makes them complicated to solve numerically (see \cref{sec:approx}).
+This is usually the most expensive part of the computation.
+
+\item \textbf{Line-of-sight integrals} are solved for photon multipoles.
+The CMB power spectrum needs the photon hierarchy $F_l(\tau_0,k)$ to very high $l \lesssim 3000$,
+but evolving the perturbation ODEs with $\lmax \lesssim 3000$ is extremely expensive.
+It is much more efficient to compute them from an integral solution,
+where the photon multipoles are found by an integral solution
+\cite{zaldarriagaAnalyticApproachPolarization1995,seljakLineSightApproach1996}:
+\begin{equation}
+\Delta_l^A(\tau_0, k) = \int_{\tau_0}^{\tau_i} \diff{\tau}\,S^A(\tau,k)\,j_l(k(\tau_0-\tau)) ,
+\label{eq:los}
+\end{equation}
+where the source function $S(\tau, k)$ depends only on $l \leq 2$.
+Thus, the perturbation ODEs can be evolved with a small $\lmax$ that is good enough to give an accurate $S(\tau,k)$,
+and then the integrals can be evaluated quickly to get the multipoles $F_l(\tau_0, k)$ for many $(k, l)$.
+
+\iffalse
+Photon before multipole expansion:
+\TODO{$\mu^n$ or $P_n(\mu)$?}
+\TODO{ideally ref back to $\dot{F}$ equation in Boltzmann equation section}
+\begin{equation}
+\dot{F}(\tau,k,\mu) + \big(i k \mu + \dot{\kappa}(\tau)\big) F(\tau,k,\mu) = S(\tau, k) = S_0 + \mu S_1 + \mu^2 S_2
+\end{equation}
+Integrating factor $I(\tau) = \int \diff{\tau'} (i k \mu + \dot{\kappa}(\tau')$.
+Left side can be written as $e^{-I(\tau)} \odv{}{\tau} \big( F(\tau,k) e^{I(\tau)} \big)$.
+Get
+\begin{equation}
+e^{-I(\tau)} \cdot \odv{}{\tau} \left( e^{I(\tau)} F(\tau,k,\mu) \right) = S(\tau, k)
+\end{equation}
+so
+\begin{equation}
+F(\tau, k, \mu) = e^{I(\tau)} \int \diff{\tau} \, e^{-I(\tau)} S(\tau, k)
+\end{equation}
+Then decompose \eqref{eq:decompose_legendre}:
+Plane wave expansion:
+\begin{equation}
+e^{ik(\tau_0-\tau)} = (2l+1) i^l j_l(k(\tau_0-\tau)) P_l(\mu)
+\end{equation}
+Parallelizes.
+Also projection to $l$.
+Similar for polarization.
+\fi
+
+\item \textbf{Power spectra}:
+Matter power spectrum $P(k)$ is output directly from the solutions to the perturbation ODEs.
+CMB power spectrum must integrate the line-of-sight transfer functions over $k$:
+\begin{equation}
+C_l^{AB} \propto \int \diff{k}\,P_0(k)\,k^2\,\Delta_l^A(k)\,\Delta_l^B(k) .
+\label{eq:Cl}
+\end{equation}
+\end{enumerate}
+
+Further steps can include \enquote{boosting} in order to incorporate nonlinear effects,
+which must come from an external source, such as halo modeling or $N$-body simulations.
+I emphasize, however, that the core of the \EB{} remains the integration of the background, perturbations and line-of-sight integrals.
+
+Interpolation.
+
+\subsection{Numerical methods in \EB{} codes}
+
+As a computational physicist,
+a significant source of my interest in \EB{} codes come from their combination of a surprising number of numerical methods and algorithms:
+\begin{itemize}
+\item \textbf{Ordinary differential equations (ODEs):}
+The most fundamental part of any \EB{} codes is the solution of ODEs in time $t$
+\begin{equation}
+    \frac{\diff u}{\diff t} = f(u, t, p),
+    \quad
+    u(t_\ini) = u_\ini.
+\end{equation}
+for the solution $u(t)$ of the background and perturbation equations $f(u, t, p)$ with initial conditions $u_\ini$ and parameters $p$.
+The background (including thermodynamics\footnote{Many places the thermodynamics is not considered part of the background.}) typically features only 1-10 coupled equations,
+while the perturbations feature 10s or 100s of coupled equations that must be solved repeatedly for 100s to 1000s of different values of the perturbation wavenumber $k \in p$.
+Solving the equations is made even more challenging because they are \textbf{stiff} due to several different timescales coexisting in the same equations.
+Standard explicit ODE methods,
+such as the well-known Euler, RK4 and Dormand--Prince methods,
+fail catastrophically at solving stiff ODEs by taking tiny step sizes and diverging with huge errors.
+Some \EB{} codes remove the stiffness in the equations by approximating them with different versions in different regimes,
+which makes the use of explicit solvers possible, but makes highly model-dependent statements that make it much more difficult to modify the model.
+Instead of approximating the equations, one can solve the full stiff equations with implicit ODE solvers,
+such as lesser-known BDF, Radau and Rosenbrock methods,
+which are much more computationally demanding, harder to implement efficiently and has performance characteristics that depend much more on the equations than for explicit methods.
+
+\item \textbf{Quadrature (numerical integration):}
+With the introduction of the line-of-sight integration method by \cite{seljakLineSightApproach1996},
+\EB{} codes switched to evaluating $\ell$-dependent photon multipoles from ODEs to integrals
+\begin{equation}
+    I(a, b) = \int_a^b f(t) \, \diff t.
+\end{equation}
+Every integral can be reduced to a one-dimensional ODE and thus solved with an ODE solver,
+but most ODEs cannot be reformulated to integral equations.
+Quadrature methods are methods designed specifically for evaluating full integrals without obtaining the cumulative solution at intermediate time points.
+
+\item \textbf{Linear algebra:}
+\item \textbf{Interpolation:}
+\item \textbf{Symbolic computation:}
+\item \textbf{Special functions:}
+\item \textbf{Nonlinear equation solving:}
+\item \textbf{Differentiation:}
+\item \textbf{Parallellization:}
+\end{itemize}
+
+Want to combine this into one cohesive package.
+Two approaches:
+1. physical approximations with traditional numerical algorithms,
+2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
+
+\TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
+
+\begin{table}[htbp]
+\begin{center}
+\small
+\setlength{\tabcolsep}{2pt}
+\def\arraystretch{1.5}
+\begin{tabular}{lllllll}
+\toprule
+ & CAMB & CLASS & PyCosmo & DISCO-EB & Bolt${}^1$ & SymBoltz \\
+\midrule
+Best implicit solver   & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
+Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Solver order (stable)  & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
+Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
+Jacobian method        & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
+Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub.  spl.       & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption[Characteristics of SymBoltz compared to other \EB{} codes.]{%
+Characteristics of SymBoltz compared to other \EB{} codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
+AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
+${}^1$Development appears to have ceased.
+${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
+${}^3$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order (e.g. \url{https://doi.org/10.1137/S1064827594276424}).
+${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ (see \url{https://arxiv.org/abs/1708.05177} eq. (21)).
+${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
+${}^6$Sparsity found numerically and changes with approximations.
+ABCMB is not included, but has very similar properties to DISCO-EB.
+}
+\label{tab:boltzmann-comparison}
+\end{table}
+
+\subsection{History of \EB{} codes}
 
 \begin{figure}
 \centering
@@ -887,6 +1190,8 @@ including the time at which development started and ended (estimated from paper 
 \label{fig:codes}
 \end{figure}
 
+History of EB code development in UiO, e.g. Peter Callinn.
+
 \begin{itemize}
 \item \textbf{COSMICS} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
 is the code that accompanied the seminal paper that gave a complete and systematic treatment of linear cosmological perturbation theory in both the Newtonian and synchronous gauge with general relativity, cold dark matter, massless neutrinos, massive neutrions, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}
@@ -952,94 +1257,6 @@ but makes this compatible with both the symbolic-numeric interface and the impli
 which is no easy task.
 
 \end{itemize}
-
-\section{Structure of \EB{} codes}
-\subsection{Numerical methods in \EB{} codes}
-
-History of EB code development in UiO, e.g. Peter Callinn.
-
-As a computational physicist,
-a significant source of my interest in \EB{} codes come from their combination of a surprising number of numerical methods and algorithms:
-\begin{itemize}
-\item \textbf{Ordinary differential equations (ODEs):}
-The most fundamental part of any \EB{} codes is the solution of ODEs in time $t$
-\begin{equation}
-    \frac{\diff u}{\diff t} = f(u, t, p),
-    \quad
-    u(t_\ini) = u_\ini.
-\end{equation}
-for the solution $u(t)$ of the background and perturbation equations $f(u, t, p)$ with initial conditions $u_\ini$ and parameters $p$.
-The background (including thermodynamics\footnote{Many places the thermodynamics is not considered part of the background.}) typically features only 1-10 coupled equations,
-while the perturbations feature 10s or 100s of coupled equations that must be solved repeatedly for 100s to 1000s of different values of the perturbation wavenumber $k \in p$.
-Solving the equations is made even more challenging because they are \textbf{stiff} due to several different timescales coexisting in the same equations.
-Standard explicit ODE methods,
-such as the well-known Euler, RK4 and Dormand--Prince methods,
-fail catastrophically at solving stiff ODEs by taking tiny step sizes and diverging with huge errors.
-Some \EB{} codes remove the stiffness in the equations by approximating them with different versions in different regimes,
-which makes the use of explicit solvers possible, but makes highly model-dependent statements that make it much more difficult to modify the model.
-Instead of approximating the equations, one can solve the full stiff equations with implicit ODE solvers,
-such as lesser-known BDF, Radau and Rosenbrock methods,
-which are much more computationally demanding, harder to implement efficiently and has performance characteristics that depend much more on the equations than for explicit methods.
-
-\item \textbf{Quadrature (numerical integration):}
-With the introduction of the line-of-sight integration method by \cite{seljakLineSightApproach1996},
-\EB{} codes switched to evaluating $\ell$-dependent photon multipoles from ODEs to integrals
-\begin{equation}
-    I(a, b) = \int_a^b f(t) \, \diff t.
-\end{equation}
-Every integral can be reduced to a one-dimensional ODE and thus solved with an ODE solver,
-but most ODEs cannot be reformulated to integral equations.
-Quadrature methods are methods designed specifically for evaluating full integrals without obtaining the cumulative solution at intermediate time points.
-
-\item \textbf{Linear algebra:}
-\item \textbf{Interpolation:}
-\item \textbf{Symbolic computation:}
-\item \textbf{Special functions:}
-\item \textbf{Nonlinear equation solving:}
-\item \textbf{Differentiation:}
-\item \textbf{Parallellization:}
-\end{itemize}
-
-Want to combine this into one cohesive package.
-Two approaches:
-1. physical approximations with traditional numerical algorithms,
-2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
-
-\TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
-
-\begin{table}[htbp]
-\begin{center}
-\small
-\setlength{\tabcolsep}{2pt}
-\def\arraystretch{1.5}
-\begin{tabular}{lllllll}
-\toprule
- & CAMB & CLASS & PyCosmo & DISCO-EB & Bolt${}^1$ & SymBoltz \\
-\midrule
-Best implicit solver   & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
-Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Solver order (stable)  & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
-Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
-Jacobian method        & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
-Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
-Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub.  spl.       & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
-\bottomrule
-\end{tabular}
-\end{center}
-\caption[Characteristics of SymBoltz compared to other \EB{} codes.]{%
-Characteristics of SymBoltz compared to other \EB{} codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
-AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
-${}^1$Development appears to have ceased.
-${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^3$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order (e.g. \url{https://doi.org/10.1137/S1064827594276424}).
-${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ (see \url{https://arxiv.org/abs/1708.05177} eq. (21)).
-${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
-${}^6$Sparsity found numerically and changes with approximations.
-ABCMB is not included, but has very similar properties to DISCO-EB.
-}
-\label{tab:boltzmann-comparison}
-\end{table}
 
 \section{Modified models in \EB{} codes}
 \label{sec:modifications}
@@ -1121,7 +1338,10 @@ See also interactions sector for interactions of dark matter with baryons, photo
 
 \subsection{Dark radiation models}
 Self-interacting (fluid-like) dark radiation: \href{https://arxiv.org/abs/1703.10732}{1703.10732}, \href{https://arxiv.org/abs/2111.00014}{2111.00014}.
+
 \subsection{Consistent baryon physics}
+\label{sec:modify_baryons}
+
 All standard \EB{} codes treat baryons inconsistently, as pointed out by \cite{pookkillathBaryonPhysicsTight2019} for example.
 The seminal work of \cite[section 5.6]{maCosmologicalPerturbationTheory1995a} (rightfully) treat baryons as a non-relativistic fluid with $\delta P/\delta \rho = w \ll 1$.
 They set $\delta P/\delta \rho = \omega$ in the continuity equation \eqref{eq:pert_cont},
@@ -1156,6 +1376,7 @@ and \enquote{background evolution} should be understood as the evolution of a co
 \TODO{\cite{leungRecombinationInducedSoftening2004} also found difference, but \cite{wongCommentRecombinationInduced2006} argued against}
 
 \subsection{Recombination models and codes}
+\label{sec:modify_recombination}
 
 In the dense and hot early universe photons scatter off charged particles such as electrons and protons.
 This is called Compton scattering, or Thomson scattering at low energies $h\nu \ll m c^2$.
