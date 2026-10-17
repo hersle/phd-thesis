@@ -2033,17 +2033,19 @@ In particular, I advocate for thinking about the full \EB{} system of equations 
 as fundamentally \emph{one} (large) system of ODEs that should also be specified as such (including all differential and algebraic equations, parameter definitions and initial conditions).
 For example, the perturbation and background equations should be specified in the \emph{same} system.
 It should be the job of the cosmologist (\enquote{user}) to specify this large system of equations for their model.
-Then it should be the job of the code to break up the equations transform the system into an optimal numerical problem and to solve it.
-Thus, SymBoltz is in some sense not a \EB{} code, but rather a general framework designed to make it easy to specify and solve equations with the \EB{} structure \eqref{eq:eb}.
+Then it should be the job of the code to transform the system into an optimal numerical problem and to solve it,
+such as breaking up the equations into \enquote{background}, \enquote{thermodynamics} and \enquote{perturbation} stages.
 Provided that this symbolic framework is sufficiently general,
 it provides a common interface to modify any part of the \EB{} equations in a way that accommodates any well-defined extension of the equations.
 
 The easiest way to see how the equations are specified in SymBoltz is to look at one of the examples\footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/LCDM/}} in the online documentation of SymBoltz.
 It specifies the full \EB{} system \eqref{eq:eb} in around 300 lines of code,
-with the background thermodynamics, RECFAST recombination and perturbations all in the same system.
+with the background thermodynamics, RECFAST recombination and perturbations all in the same place.
 
-This is the idea with the mixed symbolic-numeric interface in SymBoltz.
-It is described in \cref{paper:symboltz}, but has received some additions in later updates:
+This is the core idea with the mixed symbolic-numeric interface in SymBoltz.
+It relies on ModelingToolkit.jl\footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}}, which is a Julia library designed for mixed symbolic-numeric computations.
+\Cref{paper:symboltz} describes how the framework works and what it achieves,
+but it has received some additions and improvements in later updates:
 
 \begin{itemize}
 \item All background, thermodynamics and perturbation equations, variables, parameters, initial conditions and so on should be specified as one single system.
