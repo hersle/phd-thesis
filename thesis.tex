@@ -906,6 +906,7 @@ We may think of it equivalently as a fluid \eqref{eq:fluid} with $w=-1$ in the b
 \TODO{discuss ICs very briefly here?}
 
 \section{\EB{} codes}
+\label{sec:eb_codes}
 
 The core task of any \EB{} code is to solve the \EB{} equations \eqref{eq:eb}.
 Afterwards, a range of post-processing steps may or may not be performed,
@@ -1132,7 +1133,8 @@ and the publication time of its first research paper (see main text).
 Several \EB{} codes have been developed over the last few centuries.
 Some are still actively developed,
 while others are abandoned or have grown into other codes that have succeeded them.
-Below and in \cref{fig:codes} I summarize the history of \EB{} codes in the literature.
+Below and in \cref{fig:codes}, I summarize the history of \EB{} codes in the literature
+while paying special attention to the new advances that were made with each code.
 
 \begin{itemize}
 \item \textbf{COSMICS}\footnote{\url{https://web.archive.org/web/19961122200110/http://arcturus.mit.edu/cosmics/}} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
@@ -1149,20 +1151,20 @@ This sped up the computation by two orders of magnitude at no significant loss i
 because it allows $\lmax \approx 10$ instead of $\lmax \approx 1500$ in the perturbation ODEs for each $k$,
 and because the perturbation ODEs can be solved on a coarser $k$-grid before interpolation of the source function $S(\tau, k)$.
 It was first made for flat universes,
-but extended to open universes in \TODO{cite \url{https://arxiv.org/abs/astro-ph/9704265}}
-and to closed universes in \TODO{cite \url{https://arxiv.org/abs/astro-ph/9911219}}.
-It was also updated to include the effects of gravitational lensing on the CMB power spectra \TODO{cite \url{https://arxiv.org/abs/astro-ph/9803150}},
-and was used in the first WMAP analysis \TODO{cite \url{https://arxiv.org/abs/astro-ph/0302218} (says it was used) and \url{https://arxiv.org/abs/astro-ph/0302209} (parameter results)}.
+but extended to open universes in \cite{zaldarriagaIntegralSolutionMicrowave1998}
+and to closed universes in \cite{zaldarriagaCMBFASTSpatiallyClosed2000}.
+It was also updated to include the effects of gravitational lensing on the CMB power spectra \cite{zaldarriagaGravitationalLensingEffect1998},
+and was used in the first WMAP analysis \cite{verdeFirstYearWilkinson2003,spergelFirstYearWilkinson2003}.
 The code evolved into CMBFAST and CAMB, the latter of which is maintained today.
 
-\item \textbf{CAMB}\footnote{\url{https://github.com/cmbant/CAMB}} \TODO{also cite \url{https://arxiv.org/abs/2607.14854}} \cite{lewisEfficientComputationCMB2000a}
+\item \textbf{CAMB}\footnote{\url{https://camb.info/} and \url{https://github.com/cmbant/CAMB}} \cite{lewisEfficientComputationCMB2000a,lewisCAMBV2Cosmological2026a}
 is a further evolution of CMBFAST and is one of the two most established codes in the cosmological community today, alongside CLASS.
-It reimplemented CMBFAST in a new \enquote{1+3 covariant formalism} that evolves gauge-independent covariant variables relative to some four-velocity \TODO{cite \url{https://arxiv.org/pdf/astro-ph/9804301}}.
+It reimplemented CMBFAST in a new \enquote{1+3 covariant formalism} that evolves gauge-independent covariant variables relative to some four-velocity \cite{challinorCosmicMicrowaveBackground1999}.
 Thus CAMB's conventions depart from the gauge-dependent formalism in \cite{maCosmologicalPerturbationTheory1995a}.
 Its first release targeted the implementation of closed geometries in the line-of-sight integral,
-and the first paper was put on arXiv only one day apart from the corresponding implementation in CMBFAST \cite{lewisEfficientComputationCMB2000a} \TODO{cite together with \url{https://arxiv.org/abs/astro-ph/9911219}}.
+and the first paper was put on arXiv only one day apart from the corresponding implementation in CMBFAST \cite{lewisEfficientComputationCMB2000a,zaldarriagaCMBFASTSpatiallyClosed2000}.
 CAMB was integrated in the CosmoMC parameter extraction code,
-which popularized MCMC pipelines where the output of \EB{} codes is compared with observations \TODO{cite \url{https://arxiv.org/abs/astro-ph/0205436}}.
+which popularized MCMC pipelines where the output of \EB{} codes is compared with observations \cite{lewisCosmologicalParametersCMB2002}.
 The core of CAMB remains written in Fortran, but CAMB also features a wrapper for Python.
 Notably, CAMB uses an explicit ODE integrator,
 which makes it necessary to use approximation schemes for the stiff equations that are tuned for the \LCDM{} model.
@@ -1171,55 +1173,82 @@ at the cost of being more difficult to extend to some modified models (see \cref
 The code is still actively maintained, and has spawned many forks for extended models,
 such as EFTCAMB (for effective field theory) and MGCAMB (for select modified gravity theories) \TODO{cite them}.
 
-\TODO{continue here}
-\item \textbf{CLASS}\footnote{\url{https://github.com/lesgourg/class_public/}} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f}
-is the second most established code in use today alongside CAMB.
-It is the first major code that is not from the COSMICS branch (see \cref{fig:codes}),
-and functioned as an independent cross-check of CAMB for the Planck experiment.
+\item \textbf{CLASS}\footnote{\url{http://class-code.net/} and \url{https://github.com/lesgourg/class_public/}} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f}
+is the other most established code in use today, together with CAMB.
+It is the first major code that is not from the COSMICS branch (see \cref{fig:codes})
+and thus works as an independent cross-check of CAMB.
+The two agree for \LCDM{} to $0.01\%$ with high-precision settings \cite{lesgourguesCosmicLinearAnisotropy2011e}.
+It supports both the synchronous and Newtonian gauges presented in \cite{maCosmologicalPerturbationTheory1995a}.
 It is written in C, and also provides a wrapper for use with Python.
-More modular and flexible; more structured than CAMB and CMBFAST.
-Highly tunable approximation schemes and precision parameters; more fine-grained control than CAMB.
-Implicit integrator.
-Compared to CAMB; good agreement \TODO{cite agreement paper}.
-It is the code that has most extensions (?): hi\_class, MGCLASS, CLASSIER, CLASS-PT, SONG.
+CLASS was made with the motivation of being more flexible and simpler to modify than CAMB and CMBFAST,
+and its modules $\texttt{input} \to \texttt{background} \to \texttt{thermodynamics} \to \texttt{perturbations} \to \ldots \to \texttt{output}$
+rigorously mirror the computational stages of the \EB{} problem in \cref{sec:eb_codes} \cite{lesgourguesCosmicLinearAnisotropy2011d}.
+It offers very fine-grained control for tuning several approximation schemes and precision parameters in order to control the tradeoff between precision and performance \cite{blasCosmicLinearAnisotropy2011c},
+and uses an implicit ODE integrator to allow disabling some approximation schemes (see \cref{sec:approx}).
+It also features a generic implementation of the $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}
+for non-cold dark matter species with arbitrary distribution functions $f_0(q)$ \cite{lesgourguesCosmicLinearAnisotropy2011f}.
+It has been extended into a wide range of modified models and additional computations,
+such as hi\_class and MGCLASS for modified gravity,
+SONG for second order perturbation theory,
+CLASS-PT for modeling mildly nonlinear structure formation with the effective field theory of large-scale structure,
+and ExoCLASS for exotic energy injection (see \cref{sec:modifications}).
 
 \item \textbf{PyCosmo}\footnote{\url{https://pypi.org/project/PyCosmo}} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021}
-is a third independent code and the first to be primarily written in Python,
-which is the high-level programming language that has become most popular in the cosmological community in recent years.
-It is the first code that features a mixed symbolic-numeric structure:
-equations are defined with sympy,
-then compiled to efficient C/C++ code using the sympy2c utility \cite{schmittSympy2cSymbolicExpressions2022a} that was made in tandem with the code.
-It is also the first code to be truly approximation-free:
-using the implicit BDF2 method coupled with the sparse and analytical Jacobians to completely circumvent approximation schemes found in older codes.
-
-%\item \textbf{CMBAns:}
-%???
+is a third independent code and the first to be written primarily in Python,
+which is a very widely used programming language in the cosmological community today.
+It is the first code that features a symbolic interface (using the sympy library) for specifying equations
+in order to make it simpler to implement modified models.
+The symbolic equations are also used to compile efficient C/C++ code for the numerical solver,
+using the sympy2c utility \cite{schmittSympy2cSymbolicExpressions2022a} that was made in tandem with the code.
+It is also the first code designed with an architecture that avoids approximation schemes:
+it uses the symbolic equations to automatically build analytical and sparse Jacobians for the ODEs and solves them with the implicit BDF2 solver (see \cref{sec:approx}).
 
 \item \textbf{Bolt}\footnote{\url{https://github.com/xzackli/Bolt.jl/}} \cite{XzackliBoltjlCitation}
-is the first differentiable \EB{} code and the first code written in the Julia programming language.
-Using ForwardDiff.jl, it can compute gradients of the matter and CMB power spectra with forward-mode automatic differentiation.
-Its implementation is minimal and direct in only a few hundred lines of code,
-However, the code unpublished and has not been used in any published work,
-and it appears to have been abandoned at the time of writing.
+is the first differentiable \EB{} code and the first code written in Julia.
+It can compute gradients of the output, such as matter and CMB power spectra,
+with forward-mode automatic differentiation using ForwardDiff.jl \cite{revelsForwardModeAutomaticDifferentiation2016} (see \cref{sec:differentiability}).
+Unlike older codes that include one or two built-in ODE solvers,
+Bolt is compatible with the very comprehensive OrdinaryDiffEq.jl library of ODE solvers \cite{rackauckasDifferentialEquationsjlPerformantFeatureRich2017a}.
+This makes it straightforward to swap out the numerical solver,
+which is important with stiff ODEs, where the optimal solver is problem-dependent.
+At the time of writing, the code has not been actively developed since 2024 and has no accompanying paper.
+However, it has inspired the development of later codes.
 
 \item \textbf{DISCO-EB}\footnote{\url{https://github.com/ohahn/DISCO-EB/}} \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}
-is another differentiable \EB{} code written in the Jax framework in Python.
-This has become a popular framework for extending numpy library in Python to differentiable programming and GPUs.
-The code is released as the first part of the DISCO-DJ I+II project \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026},
-which is the first differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation.
-At the time of writing, the code is focused at structure formation, features a highly simplified recombination treatment and does not compute CMB observables.
-\TODO{ABCMB is similar in many ways}
+is another differentiable \EB{} code written in the JAX framework in Python \cite{jax}.
+This is a popular framework that extends the numpy library in Python with support for automatic differentiation and GPUs.
+It is compatible with the Diffrax ODE solver library \cite{kidgerNeuralDifferentialEquations2022},
+which offers a suite of implicit ODE solvers that is similar to OrdinaryDiffEq.jl.
+At the time of writing, development has focused on enabling a fully differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026}.
+Consequently, DISCO-EB currently has a simplified recombination treatment and does not compute CMB observables.
+\textbf{ABCMB} \cite{zhouABCMBPythonJAXPackage2026b} is similar and built on the same Python+JAX platform,
+but includes detailed HyRec-2 recombination physics, line-of-sight integration and computation of CMB observables.
 
 \item \textbf{SymBoltz}\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
-is the first \EB{} code that is both symbolic-numeric, approximation-free and differentiable.
-It attemps to bring together the successes of the other \EB{} codes.
-It is inspired by the symbolic-numeric structure of PyCosmo,
-which makes it easier to modify models without touching code internals and generates ODE functions and sparse and analytical ODE Jacobians automatically.
-It follows through on the approximation-free property that begun partly with CLASS, PyCosmo, DISCO-EB and Bolt,
-but makes it stronger by combining Rosenbrock ODE methods with sparse and analytical Jacobians generated by the symbolic-numeric machinery.
-It also supports gradient computation with forward-mode automatic differentiation,
-but makes this compatible with both the symbolic-numeric interface and the implicit ODE solvers using sparse Jacobians,
-which is no easy task.
+is the code described in this thesis and in \cref{paper:symboltz}.
+It brings together what in my opinion are the successes of other recent \EB{} codes.
+Like PyCosmo, it features a symbolic interface for specifying equations,
+but SymBoltz takes this idea further to provide one common high-level interface to the user for modifying the full \EB{} equations \eqref{eq:eb} without touching internals of the code.
+The code also takes advantage of its \enquote{knowledge} of the symbolic equations to automate tasks that the user would otherwise have to do manually,
+such as separating background/thermodynamics/perturbation equations into different stages, interpolating arbitrary variables from the solution, and simplifying symbolic expressions (see \cref{sec:symbolicnumeric}).
+Like PyCosmo, SymBoltz also generates analytical and sparse ODE Jacobians from the symbolic equations.
+Like Bolt, it is compatible with the OrdinaryDiffEq.jl library for accessing a large suite of implicit ODE solvers,
+and provides the generated ODE Jacobian to the solvers,
+which makes it efficient to solve the ODEs without invoking approximation schemes.
+The symbolic-numeric structure is not custom-built but uses ModelingToolkit.jl,
+which is an independently developed library that continuously receives improvements
+and is tightly integrated with the OrdinaryDiffEq.jl ODE library.
+The development of SymBoltz has contributed significantly back to both libraries.
+Like Bolt and DISCO-EB, SymBoltz is also compatible with forward-mode automatic differentiation to compute accurate gradients without tuning finite-difference step sizes.
+This works through the implicit ODE solvers and the symbolic interface,
+but it requires that SymBoltz solves the full \EB{} equations without calling out to external codes.
+This makes SymBoltz reimplements recombination models inside its symbolic interface,
+while most other codes treat these as external programs and makes it challenging to support automatic differentiation.
+Like Bolt, SymBoltz is written in Julia,
+which I believe is a well suited for solving the two-language problem that is seen in all other codes,
+where the core is implemented in a fast low-level language like Fortran or C
+and a wrapper is available in a slow high-level language like Python
+The design ideas are elaborated in \cref{sec:symboltz}.
 
 \end{itemize}
 
