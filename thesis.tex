@@ -1698,6 +1698,7 @@ by considering modifications to the mathematical constant $\pi$ \cite{gammalCirc
 
 
 \subsection{Modified gravity and effective field theory}
+\label{sec:modify_gravity}
 
 \TODO{figure with \url{https://www.tessabaker.space/images/map_slide_v2.pdf}?}
 
@@ -1828,7 +1829,7 @@ such as Jordan-Brans-Dicke gravity, $f(R)$ gravity and covariant Galileons (each
 \TODO{give Brans-Dicke explicitly as an explicit example?}
 
 \subsection{Interacting models}
-\label{sec:interactions}
+\label{sec:modify_interacting}
 
 All species in the standard \LCDM{} model indirectly with each other through gravity,
 but only baryons and photons interact directly through Thomson scattering.
@@ -1981,7 +1982,7 @@ Significantly speeds up CLASS with high $l$ and $k$ (higher than default setting
 Other works have explored modifications to neutrino physics,
 for example decaying neutrinos \cite{chenWeakerAgainMass2022}.
 self-interacting neutrinos \cite{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017,kreischNeutrinoPuzzleAnomalies2020},
-or interactions between neutrinos and other species like dark matter \cite{mosbechFullBoltzmannHierarchy2021} (see \cref{sec:interactions}).
+or interactions between neutrinos and other species like dark matter \cite{mosbechFullBoltzmannHierarchy2021} (see \cref{sec:modify_interactions}).
 All these modifications require modifications of the neutrino hierarchy equations \eqref{eq:neutrino_hierarchy}.
 
 \TODO{also Non-cold dark matter models, passing different distribution functions $f_0(q)$}
@@ -1992,7 +1993,7 @@ All these modifications require modifications of the neutrino hierarchy equation
 \section{The development and features of SymBoltz}
 
 Throughout my PhD I became increasingly interested in \EB{} codes.
-First, I learned to use CLASS myself while working on \cref{paper:bransdicke}.
+First, I learned to use CLASS myself while working on \cref{paper:bransdicke} in this thesis.
 Second, it is a mandatory project\footnote{\url{https://cmb.wintherscoming.no/}} in the \enquote{Cosmology 2} course at UiO to write a simplified \EB{} code
 that solves the background, recombination with the Peebles equation, perturbations, and computes matter and CMB power spectra.
 Third, through my time as a PhD student I have seen countless papers that implement extended cosmological models in \EB{} codes (see \cref{sec:modifications}),
@@ -2014,17 +2015,19 @@ As \cref{sec:modifications} shows, the standard \LCDM{} \EB{} equations \eqref{e
 To modify the equations in other \EB{} codes,
 one must often make significant edits to the source code in many different places.
 For example, in CLASS one must generally edit some or all of the following files:
-parameter handling in \texttt{input.c} and \texttt{input.h},
-background equations in \texttt{background.c} and \texttt{background.h},
-thermodynamics equations in \texttt{thermodynamics.c} and \texttt{thermodynamics.h},
-perturbation equations in \texttt{perturbations.c} and \texttt{perturbations.h}.
-Moreover, every file must typically be edited in several places:
-initial conditions, evolution equations, parameter handling and input/output handling are handled in different places in each file.
+\begin{itemize}
+\item \texttt{input.c} and \texttt{input.h} for parameter handling,
+\item \texttt{background.c} and \texttt{background.h}: background equations,
+\item \texttt{thermodynamics.c} and \texttt{thermodynamics.h} for thermodynamics equations,
+\item \texttt{perturbations.c} and \texttt{perturbations.h} for perturbation equations.
+\end{itemize}
+Moreover, each file must typically be edited in several places:
+initial conditions, evolution equations, approximation schemes, parameter handling and input/output handling are handled in different places in each file.
 Navigating and understanding all these files is a nontrivial task for users that are unfamiliar with the code.
 At the time of writing these files contain more than 20 000 lines of code in total,
 where the high-level equations are intertwined with low-level machinery.
 In my opinion, this separation of the modules in CLASS reflect the right way to \emph{solve} the \EB{} problem,
-but an unnecessarily complicated way to \emph{specify} it.
+but make for an unnecessarily complicated way to \emph{specify} it.
 
 With SymBoltz, my vision is to separate out the full specification of the \EB{} equations \eqref{eq:eb}
 from internal machinery in the code.
@@ -2032,8 +2035,8 @@ In particular, I advocate for thinking about the full \EB{} system of equations 
 -- which includes what is commonly called the \enquote{background}, \enquote{thermodynamics}, \enquote{recombination code} and \enquote{perturbations} --
 as fundamentally \emph{one} (large) system of ODEs that should also be specified as such (including all differential and algebraic equations, parameter definitions and initial conditions).
 For example, the perturbation and background equations should be specified in the \emph{same} system.
-It should be the job of the cosmologist (\enquote{user}) to specify this large system of equations for their model.
-Then it should be the job of the code to transform the system into an optimal numerical problem and to solve it,
+It should be the responsibility of the cosmologist (\enquote{user}) to specify this large system of equations for their model;
+and it should be the responsibility of the code to transform the system into an optimal numerical problem and to solve it,
 such as breaking up the equations into \enquote{background}, \enquote{thermodynamics} and \enquote{perturbation} stages.
 Provided that this symbolic framework is sufficiently general,
 it provides a common interface to modify any part of the \EB{} equations in a way that accommodates any well-defined extension of the equations.
@@ -2043,10 +2046,17 @@ It specifies the full \EB{} system \eqref{eq:eb} in around 300 lines of code,
 with the background thermodynamics, RECFAST recombination and perturbations all in the same place.
 
 This is the core idea with the mixed symbolic-numeric interface in SymBoltz.
-It relies on ModelingToolkit.jl\footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}}, which is a Julia library designed for mixed symbolic-numeric computations.
-\Cref{paper:symboltz} describes how the framework works and what it achieves,
-but it has received some additions and improvements in later updates:
+It relies on ModelingToolkit.jl\footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}},
+which is a Julia library designed for mixed symbolic-numeric computations.
+Significant work in SymBoltz has been contributed back to this library.
+\Cref{paper:symboltz} describes how it works and what it achieves.
 
+\TODO{... but it has received some additions and improvements in later updates:}
+\TODO{give list?}
+\TODO{or just say it is described in paper 1+2?}
+\TODO{show example for trivial RM$\Lambda$ model?}
+
+\iffalse
 \begin{itemize}
 \item All background, thermodynamics and perturbation equations, variables, parameters, initial conditions and so on should be specified as one single system.
 It should not be necessary to jump between source files for the background, thermodynamics, recombination code and perturbations; and between different functions inside each such file.
@@ -2073,69 +2083,158 @@ Can use autodiff.
 
 \item Equations can be specified to integrate either forwards in time (default) or backwards in time.
 \end{itemize}
+\fi
 
-Not a homemade implementation,
-but using ModelingToolkit,
-to which many contributions have been done.
-
-\subsection{Lack of approximation schemes}
+\subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
 
-\TODO{old:}
-\textbf{Ordinary differential equations (ODEs):}
-The most fundamental part of any \EB{} codes is the solution of ODEs in time $t$
-for the solution $u(t)$ of the background and perturbation equations $f(u, t, p)$ with initial conditions $u_\ini$ and parameters $p$.
-The background (including thermodynamics\footnote{Many places the thermodynamics is not considered part of the background.}) typically features only 1-10 coupled equations,
-while the perturbations feature 10s or 100s of coupled equations that must be solved repeatedly for 100s to 1000s of different values of the perturbation wavenumber $k \in p$.
-Solving the equations is made even more challenging because they are \textbf{stiff} due to several different timescales coexisting in the same equations.
-Standard explicit ODE methods,
-such as the well-known Euler, RK4 and Dormand--Prince methods,
-fail catastrophically at solving stiff ODEs by taking tiny step sizes and diverging with huge errors.
-Some \EB{} codes remove the stiffness in the equations by approximating them with different versions in different regimes,
-which makes the use of explicit solvers possible, but makes highly model-dependent statements that make it much more difficult to modify the model.
-Instead of approximating the equations, one can solve the full stiff equations with implicit ODE solvers,
-such as lesser-known BDF, Radau and Rosenbrock methods,
-which are much more computationally demanding, harder to implement efficiently and has performance characteristics that depend much more on the equations than for explicit methods.
+The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} are \emph{stiff} \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
+This is a property of differential equations that may arise if several timescales coexist in the equations,
+and is very common in cosmology where the universe expands on a slow timescale while the photons and baryons interact on a very fast timescale, for example.
+Understanding this property is crucial to numerically solving the \EB{} equations,
+and there are two different ways of handling it.
 
-\TODO{}
-Everything in physical modeling involves some type of approximations,
-as no unified physical theory exists that describes everything happening in the universe.
-In my opinion, it is helpful to distinguish between two types of approximations:
-\begin{itemize}
-\item \textbf{Structural approximations:}
-These are the most fundamental types of approximations that determine the structure of the overall computational framework.
-One example is the use of perturbation theory in itself,
-which leads to the entire framework of cosmological perturbation theory.
-This is what is responsible for the separation of the background and linear perturbations in an \EB{} code, for example.
-These approximations make very few but very general assumptions,
-and thus define the framework within which a field of physical modeling
-\item \textbf{Model-independent approximations:}
-Good
-\item \textbf{Model-dependent approximations:}
-Bad. TCA, ...
-\end{itemize}
+\subsubsection{Explicit integrators with approximation schemes}
 
-Traditional \EB{} codes do not solve the same equations at all times.
-Instead, they employ a large array of approximation schemes that switch between different equations at different times and wavenumbers,
-depending on the value of some control parameter relative to some tunable threshold.
-
-This is very well illustrated by the following figure: \TODO{CLASS figure}.
-\begin{figure}[htbp]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=0.7\textwidth]{media/approximations}
-\caption{Approximation schemes in CLASS. \TODO{referene}.}
+\caption{%
+Validity regions in conformal time $\tau$ and perturbation wavenumber $k$ of the
+the tight coupling approximation (TCA),
+radiation streaming approximation (RSA) and
+ultra-relativistic fluid approximation (UFA)
+in CLASS for some choice of cosmological parameters.
+Reproduced from \cite{blasCosmicLinearAnisotropy2011c}.}
 \label{fig:approximations}
 \end{figure}
 
+Standard explicit ODE methods, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.
+The stiffness causes them to take tiny time steps and diverge with enormous errors.
+CAMB and CLASS remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
+Several approximation schemes have been invented, including the
+tight coupling approximation (TCA),
+radiation streaming approximation (RSA),
+ultra-relativistic fluid approximation (UFA) and
+non-cold dark matter fluid approximation (NCDMFA) \cite{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
+All of them involve switching between different variations of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
+The first three are illustrated by \cref{sec:approx}.
+
+For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=3kF_1/4$
+in the \EB{} equations \eqref{eq:eb} into a modified pair:
+\begin{subequations}
+\begin{align}
+\dot\theta_b &= -\frac{1}{1+R}\left(\scrH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right) + k^2\psi, \\
+\dot\theta_\gamma &= \dot\theta_b + \dot\Theta_{\gamma b}^{\mathrm{tca}},
+\end{align}
+\end{subequations}
+where $\sigma_\gamma^\mathrm{tca}$ and $\dot\Theta_{\gamma b}^\mathrm{tca}$
+are perturbative power series in the smallness parameter $\tau = 1/\dot\kappa$
+that measures the (short) mean free path of photons in the rapidly interacting photon-baryon plasma in the early universe
+\cite{blasCosmicLinearAnisotropy2011c}.
+This expansion is done to both first and second order, and in either case yields complicated expressions.
+Moreover, one must identify the $(\tau, k)$-regime where the approximation is valid,
+and tune a hyperparameter that decides when to switch the approximation scheme on and off.
+Finally, one should also validate any approximation scheme against the non-approximate equations,
+which call for a way of deactivating them anyway.
+
+Suppose that one goes through all the trouble of correctly deriving, implementing, tuning and validating
+all the necessary approximation schemes for the \LCDM{} model, and leans back to relax.
+In the next moment, someone enters the room and wants to implement an extended model
+in the \EB{} code that requires modifications of the equations.
+It is not unlikely that the modifications will touch one or more of the approximation schemes
+and require the whole process to be repeated for the modified equations.
+Strictly speaking, this is true even for the modifications that do not touch the approximated equations directly,
+because the tuning and validation in principle depends on the whole coupled perturbation ODE.
+For example, hi\_class requires the quasi-static approximation (QSA),
+and interacting models may require modification of the TCA (see \cref{sec:modifications}).
+
+The use of approximation schemes make it possible to use explicit ODE solvers,
+but at the cost of significantly complicating the modeling for users.
+They also reduce the size of the ODEs,
+as several approximation schemes effectively truncate the hierarchies \eqref{eq:hierarchy_l} and \eqref{eq:hierarchy_ql} in $l$ and $q$
+to effective fluid treatments \eqref{eq:fluid}.
+Together, they help both speed and stability of the equations,
+but they are not the only way to handle stiffness.
+
+\subsubsection{Implicit integrators without approximation schemes}
+
+SymBoltz and PyCosmo handle stiffness in a different way,
+by instead embracing it and solving the full stiff equations with implicit ODE solvers.
+This completely avoids approximation schemes and lets users specify \emph{one} \EB{} system to evolve at all times.
+However, it comes with some additional challenges that are related to the numerics of the code instead of the physics of the equations.
+
+Implicit ODE solvers are designed precisely to handle stiffness.
+A pedagogical way of introducing them is to contrast the explicit and implicit Euler methods:%
+\footnote{These are \emph{not} the methods used in SymBoltz or any other \EB{} code,
+but they offer a simple way to explain implicit ODE methods without complicating the high-level picture with multiple stages and coefficients.}
+\begin{subequations}
+\begin{align}
+u_{n+1} &= u_n + \Delta\tau \cdot f(u_{n  }) \label{eq:euler_explicit}, \\
+u_{n+1} &= u_n + \Delta\tau \cdot f(u_{n+1}) \label{eq:euler_implicit}.
+\end{align}
+\end{subequations}
+The explicit method \eqref{eq:euler_explicit} finds the ODE state $u_{n+1}$ at the next time step as a straightforward explicit expression in terms of the current state $u_{n}$ only.
+The implicit method \eqref{eq:euler_implicit} instead expresses an implicit system of equations that must be solved for $u_{n+1}$.
+Many implicit ODE solvers,
+including \texttt{ndf15} in CLASS, \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt in \cref{tab:boltzmann-comparison},
+set up this as a nonlinear equation for $u_{n+1}$ and solve it with a Newton method:
+\begin{equation}
+F(u_{n+1}) = u_{n+1} - \Delta\tau \cdot f(u_{n+1},\tau_{n+1}) - u_n .
+\end{equation}
+This requires $F$'s Jacobian matrix $W = \nabla F = I - \Delta\tau \cdot J$ and in turn $f$'s Jacobian $J = \nabla f$.
+Iterations with Newton's method are expensive operations,
+particularly if the ODE includes many variables.
+
+\textbf{Rosenbrock methods} are a different type of implicit solvers that avoid Newton iterations.
+They linearize the ODE function around the current time step:
+\begin{equation}
+f(u_{n+1}) \approx f(u_{n+1}) + J(u_{n+1}) \cdot (u_{n+1}-u_n) .
+\label{eq:rosenbrock_linearize}
+\end{equation}
+Inserting it in the implicit method \eqref{eq:euler_implicit}
+gives a \emph{linear} matrix equation for $u_{n+1}$,
+which can be solved much faster and without Newton iterations:
+\begin{equation}
+\big( 1 - \Delta\tau \, J(u_n) \, \big) u_{n+1} = \big( 1 + \Delta\tau \, J(u_n) \big) u_n + \Delta\tau \, f(u_n) .
+\label{eq:rosenbrock_linsolve}
+\end{equation}
+
+The linearization \eqref{eq:rosenbrock_linearize} is exact only if the ODE is linear with $f = J u$, which is always true for the perturbations \eqref{eq:pt_ode}.
+However, Rosenbrock methods also work for nonlinear ODEs such as the background \eqref{eq:bg_ode}.
+Higher-order Rosenbrock methods have multiple stages whose coefficients are carefully designed whose coefficients to cancel the linearization error up to some desired order.
+For example, the \texttt{Rodas5P} method that SymBoltz uses by default is a 5th order Rosenbrock method that is both stable, accurate and efficient \cite{steinebachConstructionRosenbrockWanner2023}.
+
+A challenge with implicit methods is that the Jacobian $J$ must be evaluated in addition to $f$.
+For example, in CLASS the source code is used to specify $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
+and the Jacobian $J$ is found by evaluating $f(u)$ several times with finite differences.
+This is sensitive to the finite difference step and not always reliable, and is also unnecessarily inefficient.
+\emph{This is where the symbolic-numeric interfaces of SymBoltz and PyCosmo come in.}
+With no extra input from the user, the symbolic framework automatically derives the Jacobian $J$ \emph{analytically} from the user-specified equations.
+In my opinion, this point is critical to understand, because it ties the ability to avoid approximations down to the fundamental architecture of the \EB{} code.
+
+Finally, the Jacobian of the perturbation ODEs is typically a very sparse matrix.
+It is very inefficient to solve the linear system \eqref{eq:rosenbrock_linsolve} with dense methods (that handle all $0$'s explicitly).
+Here the symbolic framework again comes in handy, as the Jacobian is precomputed analytically,
+so the sparsity pattern is determined ahead of time and the nonzero entries are computed directly by an automatically generated function.
+In contrast, a purely numerical code such as CLASS does not \enquote{know} where the zeros are and must determine them at runtime,
+which is more expensive than necessary.
+
+\TODO{ordinarydiffeq.jl?}
+
+I stress that it is \emph{the combination} of approximation-freeness and the symbolic-numeric interface
+that makes it much easier for users to modify the equations,
+and that the implicit ODE solvers remains performant due to optimal treatment of the ODE Jacobian.
+The stiffness of the \EB{} equations must be treated one way or another,
+and I advocate for solving it once and for all in the numerics
+instead of complicating the physics with approximation schemes on a model-by-model basis.
+
+\subsubsection{Approximation schemes in the times of emulators}
+
+\TODO{write Intro first about emulators?}
 Approximation schemes are also less necessary in the time of emulators.
-
-Traditional \EB{}, in particular CAMB and CLASS, contain several approximation schemes
-
-\subsubsection{Explicit integration with approximations}
-\TODO{}
-
-\subsubsection{Implicit integration without approximations}
-\TODO{}
+I advocate for moving approximation schemes to the level of emulators,
+to make it easier for users to implement modified cosmological models.
 
 \subsection{Differentiable output}
 
