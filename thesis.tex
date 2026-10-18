@@ -24,6 +24,7 @@
 
 \usepackage[table]{xcolor} % color tables
 \usepackage{booktabs}
+\usepackage{makecell}
 
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, backgrounds}
@@ -2236,28 +2237,18 @@ Approximation schemes are also less necessary in the time of emulators.
 I advocate for moving approximation schemes to the level of emulators,
 to make it easier for users to implement modified cosmological models.
 
-\subsection{Differentiable output}
+\subsection{Gradients through automatic differentiation}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1.0\textwidth]{media/ad_error}
-\caption{Finite difference error of $P(k)$ as a function of the step size for each parameter.}
-\label{fig:fd}
-\end{figure}
+Evaluating derivatives through \EB{} codes is necessary or desirable for Fisher forecasting, gradient-based MCMC methods and for training emulators.
+\TODO{ref to intro?}
+This is traditionally performed with finite differences,
+but automatic differentiation is a more robust way of doing it,
+as I explain below.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=1.0\textwidth]{media/ad_runtime}
-\caption{Autodiff performance of $P(k)$ since latest SymBoltz updates.}
-\label{fig:ad}
-\end{figure}
-
-\TODO{why we want derivatives}
-Evaluating derivatives through \EB{} codes is necessary for performing Fisher forecasts, using gradient-based MCMC methods and is desirable when training emulators.
-
-Any computer program can be interpreted as a mathematical function $F:~\mathbb{R}^m \rightarrow \mathbb{R}^n$
+Any computer program, including an \EB{} code,
+can be interpreted as a mathematical function $F: \mathbb{R}^m \rightarrow \mathbb{R}^n$
 that takes $m$ input parameters and computes $n$ output numbers.
-No matter how complicated, any program can be reduced to a composite function
+No matter how complicated the program is, it can always be reduced to a composite function
 \begin{equation}
 \label{eq:program}
 F = f_N \circ f_{N-1} \circ \cdots \circ f_2 \circ f_1,
@@ -2265,40 +2256,64 @@ F = f_N \circ f_{N-1} \circ \cdots \circ f_2 \circ f_1,
 F(p) = f_N(f_{N-1}(\cdots f_2(f_1(p)))),
 \end{equation}
 of elementary functions $f_i: \mathbb{R}^{m_i} \rightarrow \mathbb{R}^{n_i}$, such as additions, multiplications, exponentials, trigonometric functions and if statements.
-It can be instructive to think of $f_i$ as the $i$-th line of the source code.
+I find it intuitive to think of $f_i$ as the $i$-th line of the source code.
 For example, an \EB{} code takes in cosmological parameters $p = \{h, \Omega_{b0}, \Omega_{c0}, \ldots\}$ and computes distances, matter power spectra and CMB power spectra $F = \{D(z), P(k), C_\ell, \ldots\}$ at some desired redshifts $z$, wavenumbers $k$ and multipoles $\ell$.
 
-\textbf{Finite differences} is the traditional method to compute derivatives of the output with respect to the input for an arbitrary program $F$.
-For example, with central finite differences:
+\subsubsection{Finite differences}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{media/ad_error}
+\caption{%
+Error of one-sided and two-sided finite difference derivatives of the matter power spectrum $\pdv{P(k; \mathbf{p})}/{p_i}$ as a function of the step size $\epsilon$ for each cosmological parameter $p_i$ in the legend.
+The error is computed relative to the corresponding gradient with automatic differentiation.
+%$p = h, \Omega_{c0}, \Omega_{b0}, N_\mathrm{ur}, M_\nu, Y_\mathrm{He}, T_{\gamma 0}, w_0, w_a, ns, \log(10^{10} A_s)$
+computed relative to automatic differentiation.}
+\label{fig:fd}
+\end{figure}
+
+Finite differences is the easiest way of computing derivatives of an arbitrary program.
+It runs the program several times for nearby input values
+and approximates the limit definition of the derivative,
+for example with central finite differences:
 \begin{equation}
 \pdv{F}{p_i} \approx \frac{F(p_1, \ldots, p_i+\epsilon, \ldots, p_m) - F(p_1, \ldots, p_i-\epsilon, \ldots, p_m)}{2 \epsilon} .
 \label{eq:fd}
 \end{equation}
-This is very simple, works on any program and treats $F$ as a \enquote{black box},
-but it is approximate and needs $2m$ evaluations of $F$ to compute the gradient with respect to $m$ parameters.
-Moreover, the step $\epsilon$ must be tuned:
-the finite difference approximation itself is more accurate with smaller $\epsilon$,
-but too small $\epsilon$ results in numerical round-off errors due to noise in $F$.
-This is particularly true in \EB{} codes,
-which produces numerical noise around the level of precision of the solver due to internal precision parameters that trade speed and accuracy.
-The best step generally also depends on which parameter $p_i$ that is being differentiated,
-so it must generally be tuned again for each parameter.
+This is simple and works on any program by treating it as a \enquote{black box},
+but it is approximate and uses $2m$ evaluations of $F$ to compute the gradient with respect to $m$ parameters.
+Moreover, it is nontrivial to tune the step $\epsilon$,
+as the finite difference approximation itself is more accurate with smaller $\epsilon$,
+but too small $\epsilon$ results in numerical round-off errors from noise in $F$.
+The best $\epsilon$ generally also differs for each parameter.
+This is illustrated in \cref{fig:fd} and is particularly true in \EB{} codes,
+which produce numerical noise around the level of internal precision parameters.
 
-\textbf{Automatic differentiation} is a different method that avoids these issues.
-It \enquote{opens the black box} and instead numerically evaluates the chain rule
+\subsubsection{Automatic differentiation}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{media/ad_runtime}
+\caption{Autodiff performance of $P(k)$ since latest SymBoltz updates.}
+\label{fig:ad_performance}
+\end{figure}
+
+Automatic differentiation avoids these issues by \enquote{opening the black box}.
+Instead, it numerically evaluates the chain rule of the program \eqref{eq:program}:
 \begin{equation}
-\pdv{F}{p} = J_N \cdot J_{N-1} \cdots J_2 \cdot J_1
+\pdv{F}{p} = J_N \cdot J_{N-1} \cdots J_2 \cdot J_1 .
 \label{eq:ad}
 \end{equation}
-by propagating the Jacobian $J_i = \pdv{f_i}/{f_{i-1}}$ through every elementary function $f_i$ of the program.
-\enquote{Automatic} means that the code $F$ is translated into different code for the Jacobians $J_i$ without additional user input,
-and requires a programming language or compiler that is flexible enough to handle this.
-This method is exact (to machine precision) and has no additional hyperparameters that needs to be tuned.
+The Jacobian $J_i = \pdv{f_i}/{f_{i-1}}$ is propagated through every elementary function $f_i$ of the program.
+\enquote{Automatic} means that the code for $F$ is automatically translated into different code for evaluating $J_i$ without extra user input.
+This requires a flexible programming language or compiler, such as Julia or JAX in Python.
+The method is numerically exact with no additional hyperparameters to tune
+(but still depends on other precision parameters in the code, of course).
 
-The program \eqref{eq:program} must evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
-but this is in fact not required for the differentiation \eqref{eq:ad}.
-The Jacobian matrix product is associative, so it can be evaluated in any order.
-This property gives rise to two main ways of performing automatic differentiation:
+While the program \eqref{eq:program} must evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
+this is not required for the chain rule \eqref{eq:ad}.
+The Jacobian product is associative, so it can be evaluated in any order.
+This property gives rise to two modes of automatic differentiation:
 \begin{subequations}
 \begin{align}
 & \text{Forward-mode:} && \text{seed } \pdv{f_1}{p} = 1 \text{ and propagate } \pdv{f_i}{p} = J_i \cdot \pdv{f_{i-1}}{p} , \label{eq:ad_forward} \\
@@ -2306,55 +2321,110 @@ This property gives rise to two main ways of performing automatic differentiatio
 \end{align}
 \end{subequations}
 The seeds only state that the derivative of the input or output with respect to itself is $1$.
-While the two methods are mathematically equivalent, they differ fundamentally in how they are implemented and in performance characteristics.
+They are mathematically equivalent, but differ fundamentally in how they are implemented and in performance characteristics.
 A rule of thumb is that forward-mode is simpler to implement and performs better when there are many more outputs than inputs ($m \ll n$),
 while reverse-mode is more challenging to implement and performs better when there are many more inputs than outputs ($m \gg n$).
-In the following, we will therefore concentrate on forward-mode, as it is the only mode currently supported by SymBoltz,
-and is most appropriate for an \EB{} code that take 1s or 10s input parameters and outputs distances and power spectra at 100s or 1000s of $z$, $k$ and $\ell$.
+SymBoltz currently only supports forward-mode, so it is what I will focus on here.
+This most appropriate for taking derivatives of distances and power spectra at 100s-1000s of $\{z,k,l\}$
+as a function of 1-10 cosmological parameters.
+\TODO{but the same is not true for a scalar likelihood function}
 
 \textbf{Dual numbers} are a natural way to implement forward-mode automatic differentiation.
 Similarly to how a complex number $z = x + i y$ is a pair of real numbers $x$ and $y$ defined with an algebra such that $i^2 = -1$,
 a dual number $z = x + \epsilon y$ is a pair of real numbers defined with an algebra such that $\epsilon^2 = 0$.
 The significance of this is that $\epsilon^2 = \epsilon^3 = \ldots = 0$,
-so the Taylor expansion to first order through any function $f(z)$ on dual numbers produce \emph{exactly}
+so the Taylor expansion to first order of any function $f(z)$ on dual numbers is \emph{exactly}
 \begin{equation}
-f(x + \epsilon y) = f(x) + \epsilon y f^\prime(y).
+f(x + \epsilon y) = f(x) + \epsilon \, y f^\prime(y).
 \end{equation}
 This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i-1}$ and derivative $f_{i-1}^\prime = \pdv{f_{i-1}}/{p}$ of the $i$-th line of code in the program \eqref{eq:program},
 then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $(i+1)$-th line by the forward chain rule \eqref{eq:ad_forward}.
-By starting at $i=0$, evaluating the program with dual numbers give $F$ and $\pdv{F}/{P}$ at the final line $i=N$.
+By starting at $i=0$, evaluating the program with dual numbers accumulate both $F$ and $\pdv{F}/{P}$ at the final line $i=N$.
 
-In practice, evaluating the program with dual numbers requires that every single elementary function $f_i$ needs to support evaluation with both standard real numbers and dual numbers.
-This requires a flexible programming language that allows any given function to be compiled with one version for standard floating point input and another version for dual number input,
-which will result different machine code.
-Just-in-time (JIT) compiled languages and frameworks naturally accommodate this requirement, such as Julia (a fully JIT-compiled programming language) and Jax (a JIT framework on top of Python, which is not JIT compiled itself) \TODO{cite}.
-SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \cite{revelsForwardModeAutomaticDifferentiation2016}.
-\TODO{example product rule and sin-cos derivative?}
-\TODO{To differentiate the whole program, it therefore suffices to overload every elementary function $f_i$ with a method that takes in dual numbers and computes its derivative, and run it as usual}
+It requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
+For example, the function $\sin(x)$ must be overloaded to return $\sin(x)$ when called with real $z$,
+but $\sin(x) + \epsilon \, y \cos(x)$ when called with dual $z = x + \epsilon \, y$.
+This is a problem in the space of programming language design and compiler architecture,
+as they must allow any given function to be to different machine code for real numbers versus dual numbers.
+In addition, it is not always known at compile-time which functions must be compiled in which ways,
+as this differs for different sets of cosmological parameters that influence the computation in different ways.
+For this reason, just-in-time (JIT) compiled languages and frameworks have arisen and become popular to accommodate this functionality.
+This includes fully JIT-compiled programming languages (e.g. Julia, in which SymBoltz and Bolt is written),
+and JIT \enquote{sublanguages} or frameworks inside interpreted languages (e.g. JAX in Python, in which DISCO-EB and ABCMB implemented).
+Here the code is compiled only just before it is evaluated,
+i.e. when it is known what must be compiled in different ways.
+For this reason, it would be more challenging to support automatic differentiation in CAMB and CLASS,
+which are writted in Fortran and C that are ahead-of-time (AOT) compiled programming languages.
 
-On the other hand, implementing automatic differentiation systems is more challenging in traditional (ahead-of-time) compiled languages like C, C++ and Fortran.
-For example, when a C/C++ compiler compiles CLASS, it is compiled a binary with low-level machine instructions that works with floating point numbers at every step in the program.
-A completely different path of compiled code would be needed to run it with dual numbers to differentiate it.
-Moreover, the differentiated code would depend on which parameters that are to be differentiated,
-and require a way to declare which parameters should be differentiated.
-These things are handled in a simpler way with JIT compilation,
-where the JIT compiler compiles the necessary float/dual version of a function on-demand.
-This is why differentiable \EB{} codes have been created in Julia (SymBoltz.jl and Bolt.jl) and Jax (DISCO-EB, ABCMB).
+\subsubsection{Automatic differentiation in SymBoltz}
 
-\Cref{fig:autodiff} shows how automatic differentiation gives the sensitivity $\pdv{P(a,k;\mathbf{p})}/{p}$ of the matter power spectrum $P(a, k)$.
-It is a reproduction of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}, but using SymBoltz instead of DISCO-EB in order to show that the two codes are capable of similar differentiable computations.
-\begin{figure}[htbp]
+\begin{figure}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{media/Pkz_sensitivity}
 \caption{Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
-This is a recreation of Figure 4 in DISCO-EB \TODO{cite} in SymBoltz, to show that both codes can handle a similar computation.
-Similar figure as in DISCO-EB}
-\label{fig:autodiff}
+This is a recreation of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
+but in SymBoltz instead of DISCO-EB, to show that both codes can compute similar sensitivities.
+The plots show how the codes effectively evolve not values, but gradients of the matter power spectrum over time,
+and can be used in this form as a way to learn how it is influenced by different cosmological parameters.}
+\label{fig:ad_evolution}
 \end{figure}
 
-\subsection{Interpolation methods}
+SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \cite{revelsForwardModeAutomaticDifferentiation2016}.
+This was working in the initial release in \cref{paper:symboltz}, but quite slow.
+I have since worked to improve its performance.
+As shown in \cref{fig:ad_performance},
+it now runs as fast as one-sided (and $2\times$ faster than two-sided) finite differences,
+but without the precision and stability problems of finite differences.
+\Cref{fig:ad_evolution} shows how it can be used to evolve the sensitivity $\pdv{P(a,k;\mathbf{p})}/{p}$ of the matter power spectrum $P(a, k)$.
 
-\TODO{paper 3}
+\TODO{ultimate goal is gradient-driven MCMCs, but not quite there yet}
+
+\subsection{Interpolation with spectral methods}
+
+\begin{table}[htbp]
+\begin{center}
+\def\arraystretch{1.5}
+\begin{tabular}{lcc}
+\toprule
+ & \makecell{\textbf{Approximation-based} \\ (e.g. CAMB, CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz, PyCosmo)} \\
+\midrule
+\textbf{Local methods}    & \cellcolor{green}Suitable   & \cellcolor{green}Suitable \\
+\textbf{Spectral methods} & \cellcolor{red}Not suitable & \cellcolor{green}Suitable \\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Suitability of approximation-based and approximation-free Einstein-Boltzmann codes for local and spectral numerical methods, marked as \textcolor{green}{\enquote{good}} or \textcolor{red}{\enquote{bad}}.}
+\label{tab:spectral-suitability}
+\end{table}
+
+After the release of SymBoltz in \cref{paper:symboltz}
+and successfully removing approximation schemes in the \EB{} code,
+I became interested in the following question:
+\begin{displayquote}
+Is it possible to take better advantage of the resulting smoothness of the perturbation solution $u(\tau, k)$?
+\end{displayquote}
+For example, the approximation schemes in the $(\tau,k)$-space in \cref{fig:approximations}
+means that the solutions of the perturbation equations has discontinuities in either $u(\tau,k)$ or $\dot{u}(\tau,k)$.
+
+In the space of numerical methods,
+there is a category called \emph{spectral} methods that refer to a wide array of methods
+in interpolation, quadrature and other fields that all make use of some underlying function being fully smooth.
+This is contrast to \emph{local} (non-spectral) methods that work on smaller domains at the time.
+The benefit of spectral methods is that they can converge much more rapidly than local methods.
+
+Spectral methods is already used in \EB{} codes:
+multipole decomposition in Legendre is spectral in $\mu$;
+massive neutrino quadrature is performed with Gaussian integration which is spectral in $x$,
+does the absence of approximation schemes
+
+In \cref{paper:chebyshevb},
+I show that one such possibility is to use Chebyshev interpolation in $k$ and $l$.
+
+More important in the future with lower precision.
+
+I speculate that it is possible to take advantage of smoothness in more ways.
+For example line-of-sight integration (although trapezoidal is good for oscillatory problems).
+Or integrating over $k$ first, as in Beyond Limber-papers \TODO{cite}.
 
 \section{Future work}
 
@@ -2365,6 +2435,8 @@ Similar figure as in DISCO-EB}
 \TODO{curvature}
 
 \TODO{more models}
+
+\TODO{current feature matrix?}
 
 \subsection{Numerical methods in \EB{} codes}
 
@@ -2442,6 +2514,10 @@ In my opinion, communicating research results should always be done by humans.
 
 I think it is genuinely very important that we, as the cosmological research community,
 resolve the \enquote{political tension} in AI use and figure out the accepted way to use these tools while preserving the literature that we want as humans.
+
+\TODO{captions above tables}
+
+\TODO{web links in blue?}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
