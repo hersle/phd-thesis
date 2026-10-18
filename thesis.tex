@@ -2382,78 +2382,77 @@ but without the precision and stability problems of finite differences.
 
 \TODO{ultimate goal is gradient-driven MCMCs, but not quite there yet}
 
-\subsection{Interpolation with spectral methods}
+\subsection{Exploiting smoothness with spectral methods}
 
 \begin{table}[htbp]
 \begin{center}
 \def\arraystretch{1.5}
 \begin{tabular}{lcc}
 \toprule
- & \makecell{\textbf{Approximation-based} \\ (e.g. CAMB, CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz, PyCosmo)} \\
+& \makecell{\textbf{Approximation-based} \\ (e.g. CAMB, CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz, PyCosmo)} \\
 \midrule
-\textbf{Local methods}    & \cellcolor{green}Suitable   & \cellcolor{green}Suitable \\
-\textbf{Spectral methods} & \cellcolor{red}Not suitable & \cellcolor{green}Suitable \\
+\textbf{Local methods}    & \cellcolor{yellow}Algebraic convergence & \cellcolor{yellow}Algebraic convergence \\
+\textbf{Spectral methods} & \cellcolor{red}Degraded convergence     & \cellcolor{green}Exponential convergence \\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Suitability of approximation-based and approximation-free Einstein-Boltzmann codes for local and spectral numerical methods.}
+\caption{Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
 \label{tab:spectral}
 \end{table}
 
 The absence of approximation schemes means that the same ODE is evolved at all times.
-Consequently, the perturbation solution $u(\tau, k)$ is a fully \emph{smooth} function of both $\tau$ and $k$.
+Consequently, the perturbation solution $u(\tau, k)$ is a \emph{smooth} function of both $\tau$ and $k$
+(down to the numerical noise set by the ODE solver).
 This is not true to the same extent with approximations,
-as the transitions between approximations in \cref{fig:approximations}
+as the transitions between equations at different $(\tau,k)$ (see \cref{fig:approximations})
 can introduce small discontinuities or kinks in the solution.
 This leads me to ask the following question:
 \begin{displayquote}
 Is it possible to exploit the smoothness of the perturbation solutions $u(\tau, k)$ due to approximation-freeness?
 \end{displayquote}
 
-In the landscape of numerical computational methods,
-there is a category called \emph{spectral} methods in several applications (e.g. ODEs, interpolation and quadrature).
-The common denominator of all these methods is that they all assume the underlying function (e.g. the ODE solution, interpolant or integrand) to be smooth.
-Spectral methods makes use of this to expand the function into a linear combination of \emph{global} basis functions that run over the whole computational domain.
-This is contrast to \emph{local} (non-spectral) methods that work with piecewise domains at the time
-The major selling point of spectral methods is that they can converge exponentially fast (e.g. as $C^N$ for constant $C$ and $N$ points),
-whereas local methods converge algebraically fast (e.g. as $N^C$ instead, where $C$ is usually the method's order of convergence).
-However, if the function is not smooth, even if it only has a kink at one point;
+\emph{Spectral} methods are a class of computational methods (e.g. for ODEs, interpolation and quadrature).
+What they have in common is that they assume the underlying function (e.g. the ODE solution, interpolant or integrand) to be smooth.
+Spectral methods make use of this to expand the function into a linear combination of \emph{global} basis functions that run over the whole computational domain.
+This is in contrast to \emph{local} (non-spectral) methods that work with one subdomain at a time.
+The major selling point of spectral methods is that they can converge exponentially fast (e.g. with error $\rho^{-N}$ for $N$ points and some $\rho>1$),
+whereas local methods converge algebraically fast (e.g. as $N^{-p}$, where $p$ is usually the method's order of convergence).
+However, if the function is not smooth, even if it only has a kink at one point,
 then the exponential convergence is degraded and local methods are safer.
 As \cref{tab:spectral} illustrates, approximation-free \EB{} codes open the door to such methods.
 
 In fact, spectral methods are already used in some places in \EB{} codes.
 For example, the multipole expansion \eqref{eq:decompose_legendre} is spectral on $\mu \in [-1, 1]$,
-and the use of Gaussian quadrature for the $q$-integrals \eqref{eq:energy_momentum_integrals} is spectral on $q \in [0, \infty]$%
+and the use of Gaussian quadrature for the $q$-integrals \eqref{eq:energy_momentum_integrals} is spectral on $q \in [0, \infty)$%
 \footnote{COSMICS used 8th order Newton-Cotes quadrature (a local method) and needed 128 $q$-points \cite{maCosmologicalPerturbationTheory1995a},
-while CLASS uses Gaussian quadrature (a spectral method) with only 5 $q$-points \cite{lesgourguesCosmicLinearAnisotropy2011f}!}
+while CLASS uses Gaussian quadrature (a spectral method) with only 5 $q$-points \cite{lesgourguesCosmicLinearAnisotropy2011f}!}.
 
 In \cref{paper:chebyshev},
 I show that approximation-free \EB{} codes can do the interpolation in $k$ and $l$ (see \cref{sec:eb_codes})
-using global Chebyshev polynomials (a spectral method) instead of cubic splines (a local method, used by all other \EB{} codes).
-This is used to interpolate the perturbation solution $u(\tau,k)$ in $k$,
-which allows solving fewer perturbation $k$-modes \eqref{eq:pt_ode} for better precision.
-It is also used to interpolate CMB power spectra, which are smooth functions of $l$,
-which similarly allows solving fewer line-of-sight integrals \eqref{eq:los}.
+using global Chebyshev polynomials (a spectral method)%
+\footnote{Interpolation with Fourier series is perhaps more familiar and is spectral for smooth and periodic functions.
+Chebyshev interpolation is its closest analogue for smooth but non-periodic functions.}
+instead of cubic splines (a local method, used by most other \EB{} codes).
+Chebyshev interpolation is used both to interpolate the perturbation solution $u(\tau,k)$ in $k$ and angular power spectra $C_l$ in $l$,
+so fewer perturbation $k$-modes \eqref{eq:pt_ode} and line-of-sight integrals \eqref{eq:los} need to be solved for unchanged precision.
 This reinforces the position of approximation-free \EB{} codes:
 instead of using model-dependent approximation schemes that complicate the physics,
 we can relax approximation schemes and even \enquote{win back} some of the performance that is sacrificed in the process
 by taking advantage of the smoothness of the resulting solution.
 
-In my opinion, the improvement is not revolutionary provided that $0.1\%$ precision is sufficient for current cosmological surveys,
-where interpolation with cubic splines is good enough.
-However, I suspect that such spectral methods will become more important as future surveys require even greater precision from our modeling tools.
-For example, it takes much more computational resources to go from $0.1\%$ to $0.01\%$ than from $1\%$ to $0.1\%$.
-Here the gap between e.g. cubic splines and Chebyshev is greater.
-% local 10^(1/C) vs. global log(10)
+In my opinion, the improvement is not revolutionary given the $\approx 0.1\%$ precision target for current cosmological surveys,
+where interpolation with cubic splines is not much worse.
+However, as future surveys require even greater precision from our modeling tools, I believe that spectral methods will become more important.
+In theory, going from $0.1\%$ to $0.01\%$ precision requires increasing $N$ to $10^{1/p} \times N$ with algebraic convergence,
+but only to $N + \log(10)/\log(\rho)$ with exponential convergence.
 
-I also speculate that it is possible to take advantage of smoothness in more ways.
-For example line-of-sight integration (although trapezoidal is good for oscillatory problems).
-Or integrating over $k$ first, as in Beyond Limber-papers \TODO{cite}.
-
-From a greater perspective,
-I want to highlight here that going forward,
-it is not only the particular Chebyshev interpolation method in \cref{paper:chebyshev} that is interesting,
-but also a wider research direction of spectral methods.
+This is not the only way spectral methods may take advantage of smoothness.
+For example, several works have improved the computation of angular power spectra to relax the Limber approximation by using spectral methods
+\TODO{cite \url{https://arxiv.org/abs/1911.11947} and \url{https://arxiv.org/abs/2410.03632} and \url{https://arxiv.org/abs/2502.12142} and \url{https://arxiv.org/abs/2212.04291}}.
+I hope that \cref{paper:chebyshev} serves not only to describe its particular interpolation method,
+but also more broadly to highlight that spectral methods are a promising research direction.
+I also speculate that there are undiscovered ways to use spectral methods in \EB{} codes,
+and that this may make the approximation-free approach even stronger in the future.
 
 \section{Future work}
 
