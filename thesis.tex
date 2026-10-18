@@ -344,6 +344,8 @@ Recently very common to \emph{emulate} the output of expensive codes as a functi
 In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
 A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
 
+PICO, CosmoPower, Capse.jl, ...
+
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
 \AddToShipoutPictureFG*{\AtTextUpperLeft{\put(\LenToUnit{\textwidth},0){\makebox[0pt][r]{\raisebox{-\height}{\begin{tabular}{@{}c@{}}\href{https://github.com/hersle/SymBoltz.jl}{\includegraphics[width=0.28\textwidth]{media/symboltz_logo}} \\ \scriptsize\sffamily\href{https://github.com/hersle/SymBoltz.jl}{github.com/hersle/SymBoltz.jl}\end{tabular}}}}}} % put SymBoltz logo in top-right corner of the chapter start page without affecting spacing (similarly to e.g. https://arxiv.org/pdf/1909.01828)
@@ -2466,14 +2468,12 @@ and that this may make the approximation-free approach even stronger in the futu
 
 \TODO{current feature matrix?}
 
-\subsection{Numerical methods in \EB{} codes}
-
-Want to combine this into one cohesive package.
-Two approaches:
-1. physical approximations with traditional numerical algorithms,
-2. keep the full physical equations, but look for numerical algorithms with the best properties for the physical equations.
-
 \TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
+
+\TODO{2 approaches:
+1. physical approximations with traditional numerical algorithms,
+2. keep full physical equations, but look for numerical algorithms with the best properties for the physical equations.
+}
 
 \chapter{The nonlinear part}
 \label{chap:nonlin}
