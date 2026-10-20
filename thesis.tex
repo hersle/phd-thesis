@@ -2548,6 +2548,22 @@ There are several ways of obtaining nonlinear matter power spectra.
 
 \subsection{$N$-body simulations (COLA)}
 
+One problem:
+$\delta \ll 1$ also breaks at sufficiently high $k$ and low $z$ (could solve with higher-order perturbation theory)
+Can fix by applying higher-order perturbation theory.
+
+A more serious problem:
+At sufficiently high $k$ and low $z$, the assumption $\delta \ll 1$ of perturbation theory no longer holds.
+Moreover, the fluid description of \cref{sec:fluid} becomes meaningless due to shell crossing.
+Consider a spherically symmetric CDM distribution that collapses under gravity:
+for a sufficiently small radius $r$, it will pass through the origin and meet an infalling shell $r' > r$ on its way out,
+and the velocity field $v(x)$ becomes multivalued: particles at the same position have different velocities.
+It then no longer makes sense to describe CDM as a fluid with macroscopic $\delta$, velocity field $v(x)$ etc.,
+and we must resort to $N$-body simulations that effectively evolve particle samples of the distribution function $f(x, p)$ itself
+that evolve under the geodesic equation.
+
+Shell crossing: two CDM particles reach the same position but with different momenta (velocities).
+
 Shell crossing (of CDM): infalling at large $r$ meets infalling at lower $r$ that already passed through the origin.
 Then velocity distribution has two peaks,
 fluid approximation breaks down in linear theory breaks down.
