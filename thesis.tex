@@ -2480,17 +2480,114 @@ and that this may make the approximation-free approach even stronger in the futu
 \chapter{The nonlinear part}
 \label{chap:nonlin}
 
-Linear theory (see \cref{chap:lin}) is not good enough
-to model large-scale structure (LSS) at small scales (high $k$) and late times (low $z$).
-In this regime gravity has had the longest time to operate,
-so the clustering of matter becomes sufficiently dense for nonlinear effects to become important.
-Thus, our modeling has to account for this,
-and one way to do this is to run $N$-body simulations.
+When gravity acts sufficiently long on matter,
+the assumption $\delta \ll 1$ of linear perturbation theory in \cref{chap:lin} sooner or later breaks down.
+To accurately describe large-scale structure (LSS) at small scales (high $k \gtrsim 0.1\,h/\mathrm{Mpc}$) in the late universe (for low $z \lesssim 10$),
+we must incorporate nonlinear effects into our modeling.
+This makes nonlinear effects important for late-time cosmological probes,
+such as galaxy clustering and weak lensing.
 
-\Cref{paper:bransdicke} presents an effort in this direction.
-Connects back to the linear part by mapping the nonlinear boost to a linear boost.
+$N$-body simulations is a fundamental method for doing this.
+They simulate a great number of particles that represent the clustering of cold dark matter (CDM) in the universe.
+However, they are much more computationally expensive than \EB{} codes that solve linear perturbations.
+This makes it particularly demanding to use them to explore the parameter space of the cosmological model,
+and even more so when considering modified models.
 
-\section{\BD{} gravity}
+\Cref{paper:bransdicke} in this thesis presents a method for computing the \enquote{boost}
+\begin{equation}
+B(z, k/h; \mathbf{p}) = \frac{P_\mathrm{BD}(z,k/h; \mathbf{p})}{P_\mathrm{GR}(z,k/h; \mathbf{p})}
+\label{eq:boost_intro}
+\end{equation}
+of the nonlinear matter power spectra $P(z,k)$ \BD{} gravity
+-- a modified theory of gravity --
+compared to \GR{} as a function of cosmological parameters $\mathbf{p}$.
+This is achieved by running a cheap form of $N$-body simulations using the COLA method
+in order to probe parameter space dependence.
+The paper shows how one may exploit the freedom of parameterization of the boost \eqref{eq:boost_intro}
+in a way that makes it possible to compute it solely using linear theory and \EB{} codes from \cref{chap:lin}.
+
+\TODO{cite previous HMCODE fitting function of the boost calibrated to COLA/RAMSES \cite{joudakiTestingGravityCosmic2022a}?}
+
+\section{The need for $N$-body simulations}
+
+At late times and small scales (high $k$),
+the anisotropic stress \eqref{eq:pertein3} is negligible and we may set $\phi = \psi$.
+In equation \eqref{eq:pertein1},
+it is then the first term that dominates,
+so we may write it as a Poisson equation:
+\begin{equation}
+\nabla^2 \psi(\tau,\mathbf{x}) = 4\pi a(\tau)^2 \delta\rho_m(\tau,\mathbf{x}) .
+\label{eq:poisson_gr}
+\end{equation}
+In the nonlinear regime, the growth of matter breaks the assumption $\delta_m \ll 1$ of linear theory (i.e. in the Boltzmann equations),
+but we may continue to treat the metric perturbation to as linear perturbations (i.e. the Einstein equations)
+because the Poisson equation \eqref{eq:poisson_gr} suppresses it by a factor $k^{-2}$.
+
+One way to fix the breakdown of the linear assumption $\delta \ll 1$,
+which is valid up to $k \lesssim 0.1\,h/\mathrm{Mpc}$ or so,
+is to take the perturbation theory in \cref{chap:lin} to higher orders.
+This can incorporate nonlinear effects up to $k \lesssim 0.3\,h/\mathrm{Mpc}$ \TODO{cite Dodelson}.
+
+However, a deeper problem that not even higher-order perturbation theory can resolve properly
+is the \emph{shell crossing} phenomenon.
+Consider a spherically symmetric CDM distribution that collapses under gravity.
+A shell that starts at some sufficiently small radius fall in,
+pass unimpeded through the origin (because CDM is collisionless),
+and on its way out meet a shell that started at a higher radius and is still infalling.
+At the time $\tau$ and position $\mathbf{x}$ where they meet,
+the velocity field $\mathbf{u}(\tau, \mathbf{x})$ becomes multivalued.
+Perturbation theory (linear or higher-order) uses a fluid description (as in \cref{sec:fluid}),
+which mathematically assumes a well-defined velocity field $\mathbf{u}(\tau, \mathbf{x})$ at all $\tau$ and $\mathbf{x}$.
+This fundamental assumption breaks down due to shell crossing.
+
+$N$-body simulations handle this by evolving the \enquote{microscopic} distribution function $f$ of CDM particles (from \cref{sec:boltzmann}),
+instead of its \enquote{macroscopic} fluid variables such as $\delta$.
+The idea is to spawn particles with positions $\mathbf{x}_i$ and momenta $\mathbf{p}_i$
+that sample the distribution function in phase space,
+and evolve each of them under the geodesic equation.
+Each particle accelerates due to the (gradient of) the potential $\psi(\tau,\mathbf{x})$.
+Formally, this leads to a system of equations called the Vlasov--Poisson equation,
+where the Poisson equation \eqref{eq:poisson_gr} is coupled to a non-relativistic and collisionless Boltzmann equation,
+which is called the Vlasov equation.
+\TODO{give Dodelson eq 12.54?}.
+
+Initial conditions for $N$-body simulations are provided from linear theory.
+It is standard to arrange the initial particles such that
+they realize a linear matter power spectrum that is valid at a sufficiently early times
+before linearity breaks down and shell crossing is a problem.
+Thus, a modified theory in an $N$-body code also needs a corresponding implementation in an \EB{} code.
+Furthermore, $N$-body simulations usually only account for cold dark matter.
+To incorporate the effects of baryons, massive neutrinos, dark energy perturbations and other things that are not in the $N$-body code,
+it is common to evolve the \EB{} code until today and output its matter power spectrum,
+and then \enquote{backscale} using linear growth factors to the start of the $N$-body simulation \TODO{cite backscaling IC paper}.
+They are thus far from independent on the linear theory.
+
+Unfortunately, standard $N$-body simulations are very expensive.
+Accurate results can require millions to billions of particles advected over thousands of time steps.
+This makes it problematic to use them for exploring parameter space and even more so when exploring modified models.
+
+Fortunately, there is a clever way of alleviating this issue called the \textbf{COmoving Lagrangian Acceleration} (COLA) \textbf{method} \cite{tassevSolvingLargeScale2013b}.
+It is based on the insight that at large scales (low $k$),
+$N$-body simulations spend most of their effort on computing simple streaming-like particle motion by brute force.
+This can be well described using analytical approximations with the framework of Lagrangian Perturbation Theory (LPT) \TODO{ref?}.
+The COLA method modifies the standard $N$-body method by not solving directly for the geodesic trajectory $\mathbf{x}$ of each particle,
+but instead only for residual from LPT to, say, second order:
+\begin{equation}
+\mathbf{x}_\mathrm{res} = \mathbf{x} - \mathbf{x}_\mathrm{LPT}^{(2)} .
+\label{eq:cola}
+\end{equation}
+Here $\mathbf{x}_\mathrm{LPT}$ is the approximation to $\mathbf{x}$ that is valid to,
+say, second order in LPT, and is constructed by growth factors for the theory \TODO{true?}.
+This trick lets COLA simulations sacrifice some accuracy at the very smallest scales
+(where uncertainties of baryonic physics enter anyway),
+in order to greatly reduce the number of time steps necessary.
+This makes COLA $N$-body simulations suitable for probing parameter space
+including nonlinear effects up to mildly nonlinear scales $k \lesssim 1\,h/\mathrm{Mpc}$.
+Furthermore, the sacrifice of small-scale accuracy is made less severe
+and pairs very well with computing the boost \eqref{eq:boost_error},
+where the error cancels to some extent because it is made both in \BD{} and \GR{}.
+
+\section{\BD{} modified gravity}
 
 \BD{} gravity is a Horndeski theory of modified gravity,
 with the spacetime metric $g_{\mu\nu}$ and a scalar field $\varphi$ as degrees of freedom
@@ -2501,7 +2598,7 @@ S[g_{\mu\nu}, \varphi] = \frac{1}{16\pi} \int \diff^4 x \sqrt{-\lvert g \rvert} 
 The scalar field is coupled to the Ricci scalar
 and has a kinetic term proportional to the \BD{} coupling parameter (which is time-independent).
 
-By variation of the action $\delta S/\delta_{g^{\mu\nu}}$ and $\delta S/\delta \varphi$,
+By variation of the action $\delta S/\delta_{g^{\mu\nu}} = \delta S/\delta \varphi = 0$,
 the equations of motion are:
 \begin{subequations}
 \label{eq:bd_eom}
@@ -2512,133 +2609,106 @@ G_{\mu\nu} &= \frac{8\pi}{\varphi} T_{\mu\nu}
 \nabla^2 \varphi &= \frac{8\pi}{3+2\omega} T , \label{eq:bd_eom2}
 \end{align}
 \end{subequations}
-where $(\nabla \varphi)^2 = g^{\mu\nu} \, \nabla_\mu \varphi \, \nabla_\nu \varphi$, $\nabla^2 = g^{\mu\nu} \, \nabla_\mu \nabla_\nu$,
-and $T = T^\mu_\mu = g^{\mu\nu} T_{\mu\nu}$ is the trace of the energy-momentum tensor $T_{\mu\nu}$ of the matter action $S_M$.
+where $(\nabla \varphi)^2 = g^{\mu\nu} \, \nabla_\mu \varphi \, \nabla_\nu \varphi$,
+$\nabla^2 = g^{\mu\nu} \, \nabla_\mu \nabla_\nu$,
+and $T = T^\mu_\mu = g^{\mu\nu} \, T_{\mu\nu}$
+is the trace of the energy-momentum tensor $T_{\mu\nu}$ of the matter action $S_M$.
 \GR{} and the Einstein equations \eqref{eq:einstein} are recovered in the limit $\omega \rightarrow \infty$ with $\varphi = 1$.
 
 Using the perturbed FLRW metric \eqref{eq:flrw_perturbed},
-one may derive the corresponding background and perturbation equations and implement them in an \EB{} code (as in \cref{chap:lin}).
-One may also derive the Poisson equation:
+one can derive the corresponding background and perturbation equations and implement them in an \EB{} code (as in \cref{chap:lin}).
+The Poisson equation \eqref{eq:poisson_gr} in the matter-dominated late universe (necessary for the $N$-body implementation) becomes:
 \begin{equation}
-\nabla^2 \psi(a, \mathbf{x}) = 4\pi \mu(a) a^2 \bar{\rho}_m(a) \delta_m(a, \mathbf{x}),
+\nabla^2 \psi(\tau, \mathbf{x}) = 4\pi \mu(\tau) a(\tau)^2 \delta\rho_m(\tau,\mathbf{x}),
 \qquad
-\mu(a) = \frac{2\omega+4}{2\omega+3} \frac{1}{\bar\phi(a)},
+\mu(\tau) = \frac{2\omega+4}{2\omega+3} \frac{1}{\bar\phi(\tau)} .
+\label{eq:poisson_bd}
 \end{equation}
-which is valid for matter domination in the late universe.
-Combined with the geodesic equation, it describes the necessary implementation into $N$-body simulations.
+It shows that \BD{} gravity effectively promotes Newton's constant $\mu=1$ in \GR{}
+to a time-dependent gravitational coupling $\mu(\tau)$.
 
-The Poisson equation shows that \BD{} gravity
-effectively promotes Newton's constant $\mu=1$ in \GR{}
-to a time-dependent gravitational coupling $\mu(a)$.
-
-Why do we study \BD{}, in particular?
-In fact, Table 1 in \cref{paper:bransdicke} shows that $\omega$ has been constrained to increasingly higher values,
-so \BD{} might appear as a non-viable modification of gravity.
-The first point is that \BD{} approximates a subset of all Horndeski theories of modified gravity over cosmological scales,
-so constraints on the validity of \BD{} can be interpreted more interestingly as
-deviations from \GR{} that parameterize the direction of Horndeski theories in \enquote{model space}
+Why are we interested in \BD{}, in particular?
+In fact, \BD{} might appear as a non-viable modification of gravity,
+as Table 1 in \cref{paper:bransdicke} shows that $\omega$ has been constrained to increasingly higher values over time.
+The first point is that a subset of all Horndeski theories of modified gravity
+reduce to \BD{} on cosmological distance scales.
+Thus, constraints on its validity can rather be interpreted as deviations from \GR{}
+(parameterized in the direction of Horndeski theories in \enquote{model space})
 \cite{avilezCosmologicalConstraintsBransDicke2014b,joudakiTestingGravityCosmic2022a}.
-The second point (also in the table) is that the constraints on \BD{} fall in two categories:
-those from small-scale experiments (i.e. solar system tests and Pulsar/Shapiro timing) and large-scale probes (i.e. CMB/BAO/LSS).
-The third point is to illustrate a new strategy that may also be used to predict nonlinear corrections from other modified theories (see \cref{sec:boost}).
-
-\section{Computing nonlinear matter power spectra}
-
-There are several ways of obtaining nonlinear matter power spectra.
-
-\subsection{$N$-body simulations (COLA)}
-
-One problem:
-$\delta \ll 1$ also breaks at sufficiently high $k$ and low $z$ (could solve with higher-order perturbation theory)
-Can fix by applying higher-order perturbation theory.
-
-A more serious problem:
-At sufficiently high $k$ and low $z$, the assumption $\delta \ll 1$ of perturbation theory no longer holds.
-Moreover, the fluid description of \cref{sec:fluid} becomes meaningless due to shell crossing.
-Consider a spherically symmetric CDM distribution that collapses under gravity:
-for a sufficiently small radius $r$, it will pass through the origin and meet an infalling shell $r' > r$ on its way out,
-and the velocity field $v(x)$ becomes multivalued: particles at the same position have different velocities.
-It then no longer makes sense to describe CDM as a fluid with macroscopic $\delta$, velocity field $v(x)$ etc.,
-and we must resort to $N$-body simulations that effectively evolve particle samples of the distribution function $f(x, p)$ itself
-that evolve under the geodesic equation.
-
-Shell crossing: two CDM particles reach the same position but with different momenta (velocities).
-
-Shell crossing (of CDM): infalling at large $r$ meets infalling at lower $r$ that already passed through the origin.
-Then velocity distribution has two peaks,
-fluid approximation breaks down in linear theory breaks down.
-$N$-body simulations instead evolve the full phase space distribution functions
-by evolving particles $(\mathbf{x}, \mathbf{p})$ that sample the distribution function in time.
-
-Cannot describe distribution function by fluid moments.
-Must evolve $\mathbf{x}$ and $\mathbf{p}$ separately.
-
-Standard $N$-body is expensive.
-Use COLA method instead \cite{tassevSolvingLargeScale2013b}.
-\TODO{illustrate how to go from geodesic equation to COLA equations?}
-
-COLA is approximate and loses accuracy on small scales,
-which pairs very nicely with the boost prediction where error cancels.
-
-\subsection{Halo models}
-
-\cite{joudakiTestingGravityCosmic2022a}
-retune the HMCODE fitting function
-to COLA/RAMSES simulations with \BD{}.
+The second point (also in Table 1) is that constraints on \BD{} fall in two categories:
+those from small-scale experiments (e.g. solar system tests and Pulsar/Shapiro timing) and large-scale probes (e.g. cosmological observables such as CMB/BAO/LSS).
+As the table shows, small-scale experiments have historically been tighter,
+so \BD{} offers a way of benchmarking the strength of the constraints versus cosmological constraints.
+The third point is to illustrate a new strategy for
+computing the nonlinear corrections in a cheap way by mapping it back to results from linear theory.
+This strategy is explained in the next section,
+and could also be used for incorporating nonlinearities from other modified theories and models.
 
 \section{Emulating the matter power spectrum boost}
 \label{sec:boost}
 
-Emulate expensive $N$-body simulations.
+The goal of \cref{paper:bransdicke} is to compute the nonlinear matter power spectrum \eqref{eq:boost_intro}
+in a way that is sufficiently accurate, simple and fast.
+It may then be combined with existing emulators for $P_\mathrm{GR}$,
+such as EuclidEmulator2 \TODO{cite} (which are carefully designed since GR is the fiducial model),
+which is trained on the output of many $N$-body simulations,
+in order to predict the full \BD{} spectrum $P_\mathrm{BD} = B \cdot P_\mathrm{GR}$ in a cheap way.
 
-Emulate the boost $B=P_\mathrm{BD}/P_\mathrm{GR}$ between the power spectra in \GR{} and \BD{}.
-It can also be combined with existing emulators for $P_\mathrm{GR}$,
-which are more carefully designed since it is the fiducial model,
-in order to build a tree of predictions to several models.
-It is also more robust and easier to emulate than $P_\mathrm{BD}$ directly,
-because any error that we make in both $P_\mathrm{BD}$ and $P_\mathrm{GR}$ will partially cancel:
+Several papers do this for other modified gravity theories \TODO{cite examples}.
+They do this by creating new emulators for the boost $B$ trained on the output of several $N$-body simulations,
+using neural networks or similar function approximation methods.
+
+First and foremost, approximating $B = P_\mathrm{BD}/P_\mathrm{GR}$ instead of $P_\mathrm{BD}$
+is a fundamentally easier task because any error that we make in both $P_\mathrm{BD}$ and $P_\mathrm{GR}$ will partially cancel:
 \begin{equation}
 B = \frac{P_\mathrm{BD}}{P_{\mathrm{GR}}} = 1 + \frac{P_\mathrm{BD}-P_\mathrm{GR}}{P_{\mathrm{GR}}} .
+\label{eq:boost_error}
 \end{equation}
 
-From a wider perspective, the point of the paper is to show a new strategy for emulating the boost.
-Many other works create emulators for the boost, which have to be trained.
-
-Our strategy instead exploits the freedom of parameterization.
-Consider, very generally, that we run
-one \BD{} simulation with parameters $p_\mathrm{BD}$
-and one \GR{} simulation with parameter $p_\mathrm{GR}$.
-We then compute the boost by comparing the power spectra at generally different wavenumbers $k_\mathrm{BD} \neq k_\mathrm{GR}$
-and redshifts $z_\mathrm{BD} \neq z_\mathrm{GR}$:
+Second, our strategy exploits the freedom of parameterization of the boost:
 \begin{equation}
-B(z_\mathrm{BD}, z_\mathrm{GR}, k_\mathrm{BD}, k_\mathrm{GR}; p_\mathrm{BD}, p_\mathrm{GR}) = \frac{P_\mathrm{BD}(z_\mathrm{BD}, k_\mathrm{BD}; p_\mathrm{BD})}{P_\mathrm{GR}(z_\mathrm{GR}, k_\mathrm{GR}; p_\mathrm{GR})}
+B(z, k/h; \mathbf{p}_\mathrm{BD}) = \frac{P_\mathrm{BD}(z, k/h; \mathbf{p}_\mathrm{BD})}{P_\mathrm{GR}(z, k/h; \mathbf{p}_\mathrm{GR}(\mathbf{p}_\mathrm{BD}))}
 \end{equation}
-This looks and is overcomplicated,
-but the point is to make clear that we are free to do this.
+The point is that we are free to define \emph{how} we compare a \GR{} universe to a \BD{} universe.
+We first run a \BD{} simulation with parameters $\mathbf{p}_\mathrm{BD}$,
+then compute the parameters of a corresponding \GR{} universe
+with a transformation $\mathbf{p}_\mathrm{GR}(\mathbf{p}_\mathbf{BD})$%
+\footnote{In principle we could also make
+$z_\mathrm{GR}(z_\mathrm{BD})$ and $k_\mathrm{GR}(k_\mathrm{BD})$.
+The notation $P(z, k/h)$ means that we compare spectra at equal $z$ and $k/h$
+(but different $k$, as we define $\mathbf{p}_\mathrm{GR}(\mathbf{p}_\mathrm{BD})$ with $h_\mathrm{GR} \neq h_\mathrm{BD}$).}
+of \emph{our own choosing},
+and finally run the \GR{} simulation.
+The overarching point is that we can take advantage of this freedom to \enquote{design}
+a boost function that is as simple as possible to emulate.%
+\footnote{To make the point clearly:
+In the extreme case, suppose that we could find a parameter transformation
+$\mathbf{p}_\mathrm{GR}(\mathbf{p}_\mathbf{BD})$ such that $B = 1$ exactly.
+That creates a trivial mapping for computing $P(z, k; \mathbf{p}_\mathbf{BD})$ exactly.
+}
 
-Next, to reduce the dimensionality of the parameter space,
-let us reduce to the case where we first run one \BD{} simulation with parameters $p_\mathrm{BD}$,
-followed by a \GR{} simulation with parameters $p_\mathrm{GR}(p_\mathrm{BD})$
-that are determined as a function of the first simulation.
-We also make $z_\mathrm{BD} = z_\mathrm{GR} = z$ for simplicity,
-but allow for $k_\mathrm{GR}(k_\mathrm{BD}, p_\mathrm{BD})$:
-\begin{equation}
-B(z, k_\mathrm{BD}; p_\mathrm{BD}) = \frac{P_\mathrm{BD}(z, k_\mathrm{BD}; p_\mathrm{BD})}{P_\mathrm{GR}(z, k_\mathrm{GR}(k_\mathrm{BD}, p_\mathrm{BD}); p_\mathrm{GR}(p_\mathrm{BD}))}
-\end{equation}
-We may then play with different wavenumber and parameter transformations
-to find those that yield the boost function that is easiest to approximate and emulate.
-
-What we find in \cref{paper:bransdicke} is this:
-if we use the same value of $\sigma_8$ and $\varphi_\ini h^2$
-and compare spectra at equal $k/h$,
-then the boost of the nonlinear matter power spectra (from the $N$-body simulations)
-very closely (to around $1\%$?) match the boost of the \emph{linear} spectra (from \EB{} codes).
-In other words, we effectively map the nonlinear boost (which is very expensive to compute) to the linear boost (which is very cheap to compute).
-
+What we find in \cref{paper:bransdicke} is that
+if we use the value of $\sigma_8$, $\varphi_\ini h^2$, $\rho_{m0}$ and $\rho_{r0}$ in \GR{} and \BD{},
+and we compare spectra at equal $z$ and $k/h$;
+then the boost of the \emph{nonlinear} spectra (from $N$-body simulations)
+very closely (to $1$-$2\,\%$ match the boost of the \emph{linear} spectra (from \EB{} codes).
+We show this by running a few $N$-body simulations and comparing the boosts to those from \EB{} codes.
 \TODO{summarize the \emph{physical} understanding of this argument}
+Thus, instead of going through the trouble of running many expensive $N$-body simulations or training emulator from a suite of them,
+we can compute the boost efficiently by only two calls to cheap \EB{} solvers.
+
+\section{Outlook}
+
+The emulation strategy described in \cref{paper:bransdicke} and \cref{sec:boost}
+could be used to create simple and fast ways to constrain other modified theories of gravity, too.
+By starting with one carefully designed emulator of $P_\mathrm{GR}(z, k)$ for \GR{},
+one could in this way build up a network of \enquote{boost approximations} (or emulators)
+that predicts nonlinear matter power spectra for several modified gravity models.
 
 \chapter{Conclusion and outlook}
 \label{sec:conclusion}
+
+\TODO{drop this section and rather add two short conclusions/outlooks to each of chapters 2/3?}
 
 \subsection{AI/LLM usage}
 
