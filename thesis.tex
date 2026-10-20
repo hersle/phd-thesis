@@ -92,6 +92,11 @@
 
 \begin{preface}
 \TODO{Preface, including acknowledgments and thanks.}
+\section*{Tool usage}
+UiO now requires declaration of AI use, see
+\url{https://www.mn.uio.no/forskning/phd/oppbygging/ki.html}
+and
+\url{https://www.mn.uio.no/kurt/universitet/kunstig-intelligens/maler-for-deklarasjon-av-ki-i-oppgaver.html}
 \section*{Acknowledgements}
 \TODO{}
 \end{preface}
@@ -101,7 +106,87 @@
 \chapter{Background}
 \label{chap:back}
 
-% Theoretical
+Modern cosmology is largely a computational science.
+
+%When Edwin Hubble measured the distances to ... and fit it to $v=H_0 d$,
+%he could do the calculation with pen/paper .
+
+Today, the increasing data volume and precision of modern observations makes fully analytical modeling infeasible.
+Analytical work is used to formulate the laws of physics and the fundamental equations of cosmology,
+such as the Einstein and Boltzmann equations.
+However, they take the form of partial differential equations (PDEs) or ordinary differential equations (ODEs)
+that are impossible to solve analytically.
+Instead, we must now obtain numerical solutions of the fundamental equations through computer simulations.
+This involves development and use of advanced numerical methods and software packages that are fast, robust and flexible
+in a way that makes it easy to implement extensions to the current standard model of cosmology,
+which is put under more and more scrutiny by increasingly precise observations.
+Some of the most fundamental tools in this toolbox are
+\EB{} codes for evolving linear perturbations,
+$N$-body simulations that incorporate nonlinear effects of matter clustering,
+and emulators that are surrogate models that accelerate predictions from such physically principled codes.
+In this way, computational science is the bridge that connects the
+theoretical and observational frontiers of cosmological research.
+
+\section{The computational paradigm of cosmology}
+
+\TODO{define model; predict observables; run MCMC}
+
+As computers have become more and more powerful in the 1980s and onwards,
+cosmology has shifted from a science with analytical \enquote{pen-and-paper} work
+into a field that increasingly relies on numerical computations.
+Cosmology has become a scientific software development discipline,
+due to user-friendliness, flexibility, speed and robustness that are required in order to
+
+In particular, this computational science relies on three types of computational tools that I highlight in this thesis.
+
+\subsection{Bayesian inference (MCMCs)}
+
+\subsection{Linear \EB{} codes}
+
+Linear \EB{} codes solve the background and linear perturbations of the \EB{} equations that define a cosmological model.
+This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
+but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
+For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB.
+
+Generally, this is the must fundamental code that must be modified for a given cosmological model,
+requiring the implementation of background (including thermodynamcis) and perturbation equations.
+These codes stitch together a wide range of advanced numerical methods to solve several steps.
+For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
+Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
+and now run on the order of seconds on a normal laptop.
+
+As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
+In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
+particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
+
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+
+\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
+
+$N$-body simulations model the matter distribution in the universe with particles,
+and evolve them forward in time with gravitational forces.
+This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
+
+Slow
+
+Ramses, COLA, ...
+
+More on this in \cref{chap:nonlin}.
+
+\cite{sletmoenSimplePredictionNonlinear2024}
+
+\subsection{Emulators}
+
+Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
+However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
+Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
+
+In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
+A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
+
+PICO, CosmoPower, Capse.jl, ...
+
+\TODO{old below:}
 
 In 1915, Albert Einstein published the theory of General Relativity (GR),
 where gravity was generalized from being a force in Newton's theory
@@ -291,62 +376,6 @@ Time-dependent dark energy
 
 \subsection{Interacting models}
 
-\section{Computational paradigm of cosmology}
-
-\TODO{define model; predict observables; run MCMC}
-
-As computers have become more and more powerful in the 1980s and onwards,
-cosmology has shifted from a science with analytical \enquote{pen-and-paper} work
-into a field that increasingly relies on numerical computations.
-Cosmology has become a scientific software development discipline,
-due to user-friendliness, flexibility, speed and robustness that are required in order to
-
-In particular, this computational science relies on three types of computational tools that I highlight in this thesis.
-
-\subsection{Linear \EB{} codes}
-
-Linear \EB{} codes solve the background and linear perturbations of the \EB{} equations that define a cosmological model.
-This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$,
-but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
-For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB.
-
-Generally, this is the must fundamental code that must be modified for a given cosmological model,
-requiring the implementation of background (including thermodynamcis) and perturbation equations.
-These codes stitch together a wide range of advanced numerical methods to solve several steps.
-For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
-Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
-and now run on the order of seconds on a normal laptop.
-
-As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
-In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
-particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
-
-\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
-
-\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
-
-$N$-body simulations model the matter distribution in the universe with particles,
-and evolve them forward in time with gravitational forces.
-This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
-
-Slow
-
-Ramses, COLA, ...
-
-More on this in \cref{chap:nonlin}.
-
-\cite{sletmoenSimplePredictionNonlinear2024}
-
-\subsection{Emulators}
-
-Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
-However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
-Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
-
-In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
-A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
-
-PICO, CosmoPower, Capse.jl, ...
 
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
@@ -489,6 +518,7 @@ Finally, this means we can write the metric as:
 \diff{s}^2 = -a^2(\tau) (1+2\Psi(\tau, \mathbf{x}))\diff{\tau}^2 + a^2(\tau) (1-2\Phi(\tau, \mathbf{x})) \diff{\mathbf{x}}^2 .
 \label{eq:flrw_perturbed}
 \end{equation}
+\TODO{fix conventions with $\psi$ vs $\Psi$}
 
 \subsection{Fourier space}
 \label{sec:fourier}
@@ -1296,6 +1326,7 @@ ${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \m
 ${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
 ${}^6$Sparsity found numerically and changes with approximations.
 ABCMB is not included, but has very similar properties to DISCO-EB.
+\TODO{make this appear less \enquote{boastful/arrogant}; it should be understood as a table where green measures how suitable the properties are for attaining approximation-freeness for example.}
 }
 \label{tab:boltzmann-comparison}
 \end{table}
@@ -1642,7 +1673,7 @@ x_e^\text{rei} = \begin{cases} 0 & \text{$z > z_\text{rei}$} \\ 1 & \text{$z < z
 \end{equation}
 
 Then $\tanh$-activated (smoothened) reionization function \cite{lewisCosmicMicrowaveBackground2006}:
-$$x_e(z) = \frac{f}{2}\left[1 + \tanh!\left(\frac{y_{\rm re} - y}{\Delta y}\right)\right], \qquad y = (1+z)^{3/2}$$
+$$x_e(z) = \frac{f}{2}\left[1 + \tanh \left(\frac{y_{\rm re} - y}{\Delta y}\right)\right], \qquad y = (1+z)^{3/2}$$
 
 Small effect? \cite{huModelIndependentReionizationObservables2003}
 
