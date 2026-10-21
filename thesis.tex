@@ -155,7 +155,7 @@ through the Einstein equations:
 It also describes how energy and momentum
 react to the geometry of spacetime through the geodesic equation:
 \begin{equation}
-\odv[2]{x^\mu}{\lambda} + \Gamma^\mu_{\alpha\beta} \odv{x^\alpha}{\lambda} \odv{x^\beta}{\lambda} = 0 .
+\odv[order=2]{x^\mu}{\lambda} + \Gamma^\mu_{\alpha\beta} \odv{x^\alpha}{\lambda} \odv{x^\beta}{\lambda} = 0 .
 \label{eq:geodesic}
 \end{equation}
 This is a two-way process.
@@ -181,11 +181,11 @@ one obtains the first and second Friedmann equations:
 They describe how the universe expands with the scale factor $a(t)$ due $\rho$ and $P$,
 which is sourced by the following \enquote{ingredients}.
 
-\item \textbf{The cosmological constant} ($\Lambda$)
-was first put by Einstein in his equation \eqref{eq:einstein}
-in order to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
+\item \textbf{Dark energy}
+as a cosmological constant $\Lambda$ was first added by Einstein in his equation \eqref{eq:einstein}
+in order for them to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
 When Hubble observed that nearby galaxies are recessing and showed that the universe expands with time,
-he famously removed it and called it his \enquote{biggest blunder}.
+Einstein famously erased it and called it his \enquote{biggest blunder}.
 However, it is now back in the equations to explain the acceleration \eqref{eq:fried2}
 of the expansion that has been found from supernova observations in the 1990s.
 We move $\Lambda$ to the right side of the Einstein equations $G_{\mu\nu} = 8\pi T_{\mu\nu}$,
@@ -244,31 +244,48 @@ with remarkable success.
 However, as gradually uncovered by increasingly precise observations,
 it also faces a number of challenges.
 For example
-\cite{perivolaropoulosChallengesCDMUpdate2022b}.
-\TODO{fig of $H_0$ tension + $w_0 w_a$ plot?}
+\cite{perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
 \item
-Theoretically, we do not understand the nature of dark matter and dark energy (the cosmological constant) \TODO{scale problem}.
-The \LCDM{} model only poses the equations that describe them, but not their nature.
+We do not understand the theoretical nature of dark matter and dark energy (the cosmological constant).
+The equations of the \LCDM{} model only describe \emph{how} dark matter effectively behaves,
+but not what it \emph{is} in terms of physical theories we already understand.
+Moreover, the cosmological constant problem is a discrepancy of 50-120 orders of magnitude
+between the energy density of $\Lambda$ measuredin cosmology and the vacuum energy density that is predicted from quantum field theory.
 
 \item
-The Hubble tension is that observations of the CMB (which depends mostly on early-universe physics)
-and observations of supernova distances (which depends mostly on late-universe physics)
-give incompatible values of the acceleration rate $H_0$ today.
+Observations of the CMB (which depends mostly on early-universe physics)
+and of supernova distances (which depend mostly on late-universe physics)
+give incompatible values of the Hubble parameter $H_0 = H(t_0)$ today.
+This is called the \enquote{Hubble tension} and illustrated in \TODO{figure}.
+A similar tension exists for the amplitude of matter clustering from CMB versus LSS data,
+but is much less severe.
 
 \item
-A similar but less severe tension exists for the growth rate $S_8$,
-which CMB data predicts to be higher than what large-scale structure data does.
+\TODO{neutrino mass problem?}
+\item
+We observe a dipole moment in the CMB due to the Solar System's relative motion to it,
+but the dipole moment found in the LSS due to the same effect is found to be of a different magnitude.
+This potential anisotropy in our universe challenges the cosmological principle,
+which is a very fundamental assumption in both the \LCDM{} model and common extensions of it.
 
 \item
-The dipole problem challenges the cosmological principle:
-a measurement of our peculiar velocity through the universe from CMB and LSS data does not align.
-
-\item
-In addition, recent DESI results prefers deviations from the cosmological constant,
-where extended models that parameterize deviations from the cosmological constant
-show a preference towards other types of dark energy.
+Recent measurements from the DESI survey of the BAO feature imprinted in the LSS
+shows a preference for time-varying models of dark energy parameterized with equation of state $w(t) = w_0 + (1-a(t)) w_a$.
+\TODO{cite \url{https://arxiv.org/pdf/2404.03002} and \url{https://arxiv.org/pdf/2503.14738}}
+Here $\Lambda$ corresponds to $w_0 = -1$ and $w_a = 0$,
+but the measurements prefer $w_0 > -1$ and $w_a < 0$.
+Furthermore, the DESI results on \LCDM{} constrain the sum of neutrino masses to the \emph{upper} bound $\sum m_\nu < 0.064\,\mathrm{eV}$,
+which is in tension with the \emph{lower} bound $\sum m_\nu > 0.059\,\mathrm{eV}$ found from terrestrial neutrino oscillation experiments.
+However, the $w_0 w_a \mathrm{CDM}$ model relaxes the upper bound to $\sum m_\nu < 0.16\,\mathrm{eV}$,
+which is compatible with the lower bound.
+\TODO{cite \url{https://arxiv.org/pdf/2503.14738}}
+\TODO{figure}
 \end{itemize}
+These and other discrepancies motivate research on modifying all parts of the cosmological model.
+We will see some example modifications in \cref{sec:modifications}.
+Every such modification must be implemented into the software
+that we use for modifying the cosmological model.
 
 \iffalse
 \section{The standard model of cosmology}
