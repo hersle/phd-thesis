@@ -117,115 +117,160 @@ such as the Einstein and Boltzmann equations.
 However, they take the form of partial differential equations (PDEs) or ordinary differential equations (ODEs)
 that are impossible to solve analytically.
 Instead, we must now obtain numerical solutions of the fundamental equations through computer simulations.
-This involves development and use of advanced numerical methods and software packages that are fast, robust and flexible
-in a way that makes it easy to implement extensions to the current standard model of cosmology,
-which is put under more and more scrutiny by increasingly precise observations.
-Some of the most fundamental tools in this toolbox are
-\EB{} codes for evolving linear perturbations,
-$N$-body simulations that incorporate nonlinear effects of matter clustering,
-and emulators that are surrogate models that accelerate predictions from such physically principled codes.
+This involves development and use of advanced numerical methods and software packages that are fast and robust.
 In this way, computational science is the bridge that connects the
 theoretical and observational frontiers of cosmological research.
 
-\section{The computational paradigm of cosmology}
+Simultaneously, the current standard model of cosmology
+-- the \LCDM{} model --
+is put under increased scrutiny from the tighter data error bars.
+This has revealed inconsistencies where different observational probes
+return different constraints for the parameters of the model.
+Assuming the data analysis is correct,
+this means that the \LCDM{} model is not realistic enough.
+Thus, a large fraction of contemporary cosmological research
+is devoted to exploring modifications to the standard model.
 
-\TODO{define model; predict observables; run MCMC}
+What does this mean for our computational tools?
+It means that not only \enquote{hard} aspects like speed and robustness are priorities,
+but so are \enquote{softer} principles such as user-friendliness and flexibility,
+in order to facilitate easy implementation of modified cosmological models.
+Moreover, we should strive to avoid model-specific approximation schemes and assumptions,
+as they make it harder to implement modifications and are a source of error for modifications.
 
-As computers have become more and more powerful in the 1980s and onwards,
-cosmology has shifted from a science with analytical \enquote{pen-and-paper} work
-into a field that increasingly relies on numerical computations.
-Cosmology has become a scientific software development discipline,
-due to user-friendliness, flexibility, speed and robustness that are required in order to
+\section{Status of the standard cosmological model}
 
-In particular, this computational science relies on three types of computational tools that I highlight in this thesis.
+The \LCDM{} is the current best explanation we have to explain the observations we make in our universe.
+It assumes that \cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
+\begin{itemize}
+\item \textbf{\GR{}}
+is assumed to be the correct theory of gravity.
+It describes how the geometry of spacetime in the Einstein tensor $G_{\mu\nu}$
+reacts to the content of energy and momentum $T_{\mu\nu}$
+through the Einstein equations:
+\begin{equation}
+    G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
+\label{eq:einstein}
+\end{equation}
+It also describes how energy and momentum
+react to the geometry of spacetime through the geodesic equation:
+\begin{equation}
+\odv[2]{x^\mu}{\lambda} + \Gamma^\mu_{\alpha\beta} \odv{x^\alpha}{\lambda} \odv{x^\beta}{\lambda} = 0 .
+\label{eq:geodesic}
+\end{equation}
+This is a two-way process.
 
-\subsection{Bayesian inference (MCMCs)}
+\item \textbf{The cosmological principle}
+asserts that the universe is almost homogeneous and isotropic.
+As a zeroth order approximation, it is described by the flat
+Friedmann--Lemaître--Robertson--Walker (FLRW) spacetime metric:
+\begin{equation}
+\diff{s}^2 = -\diff{t}^2 + a(t)^2 \left( \diff{r}^2 + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
+\label{eq:flrw}
+\end{equation}
+When this $g_{\mu\nu}$ is inserted into the Einstein equation \eqref{eq:einstein}
+and one assumes that $T_{\mu\nu}$ is described by a perfect fluid with energy density $\rho$ and pressure $P$,
+one obtains the first and second Friedmann equations:
+\begin{subequations}
+\begin{align}
+    H^2 = \frac{\dot{a}}{\dot{a}} &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
+    \dot{H} + H^2 = \frac{\ddot{a}}{a} &= - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3}. \label{eq:fried2}
+\end{align}%
+\label{eq:fried}%
+\end{subequations}
+They describe how the universe expands with the scale factor $a(t)$ due $\rho$ and $P$,
+which is sourced by the following \enquote{ingredients}.
 
-\subsection{Linear \EB{} codes}
+\item \textbf{The cosmological constant} ($\Lambda$)
+was first put by Einstein in his equation \eqref{eq:einstein}
+in order to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
+When Hubble observed that nearby galaxies are recessing and showed that the universe expands with time,
+he famously removed it and called it his \enquote{biggest blunder}.
+However, it is now back in the equations to explain the acceleration \eqref{eq:fried2}
+of the expansion that has been found from supernova observations in the 1990s.
+We move $\Lambda$ to the right side of the Einstein equations $G_{\mu\nu} = 8\pi T_{\mu\nu}$,
+and absorb it into $T_{\mu\nu}$ with $P = -\rho$.
 
-Linear \EB{} codes solve the background and linear perturbations of the \EB{} equations that define a cosmological model.
-This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
-but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
-For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB.
+\item \textbf{Cold dark matter} (CDM)
+is an invisible and non-interacting form of matter
+that makes up around $25\%$ of the energy density today.
+It is observed indirectly through its enhanced effect on the clustering of large-scale structure,
+galaxy rotation curves, gravitational lensing and the cosmic microwave background, for example.
+It was first suggested (independently?) by Lord Kelvin, Jacobus Kapteyn and Fritz Zwicky,
+that the universe contains more matter than the luminous matter we can observe from Earth.
+\TODO{cite}
 
-Generally, this is the must fundamental code that must be modified for a given cosmological model,
-requiring the implementation of background (including thermodynamcis) and perturbation equations.
-These codes stitch together a wide range of advanced numerical methods to solve several steps.
-For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
-Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
-and now run on the order of seconds on a normal laptop.
+\item \textbf{Baryons}
+are \enquote{normal} visible matter that interacts with light,
+and makes up around $5\%$ of the energy density today.
+\enquote{Baryons} in cosmology includes baryons, such as protons and neutrons, that make up the elements;
+but also leptons, such as electrons, which are not baryons, but nevertheless referred to as such by cosmologists.
+Baryons cluster like CDM, but unlike CDM the interacting baryon-photon plasma in the early universe
+creates outwards pressure that counteract collapse.
+The resulting baryon acoustic oscillations (BAO) leaves a detectable signature on the matter distribution and cosmic microwave background.
 
-As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
-In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
-particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
+\item \textbf{Photons}
+are massless and thus relativistic particles.
+They interact with baryons through scattering off charged particles.
+In the early universe the temperature was so high that atoms were ionized and photons constantly scattered off electrons,
+but as the universe expanded and became cooler the electrons and ions combined and the universe became transparent to photons.
+Photons that were last scattered at this time have since traveled unimpeded through the universe and are observable as the cosmic microwave background today,
+which functions us a direct probe of early universe physics.
+This was first detected by Penzias and Wilson in 1964,
+and has now been refined with the Planck experiment.
+They made up a significant fraction of the energy budget in the early universe, but are negligible today.
 
-\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+\item \textbf{Neutrinos}
+are massive but light particles in the standard model of particle physics.
+They behave relativistically (similar to photons) in the early universe,
+but nonrelativistically (similar to matter) in the late universe
+as the expansion decreases their momentum.
+They decoupled from the primordial plasma in the very early universe,
+where they interacted only weakly with electrons and positrons.
 
-\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
+\item \textbf{Inflation}
+is a brief period of exponentially fast expansion that took place in the very early universe.
+Through quantum fluctuations, this created the initial perturbation seeds
+that were later amplified by gravity into inhomogeneities.
+\end{itemize}
 
-$N$-body simulations model the matter distribution in the universe with particles,
-and evolve them forward in time with gravitational forces.
-This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
+The \LCDM{} model has developed gradually,
+and is the best model we have come up with so far
+that simultaneously explains
+the acceleration of the universe,
+anisotropies in the cosmic microwave background
+and statistics of large-scale structure
+with remarkable success.
+However, as gradually uncovered by increasingly precise observations,
+it also faces a number of challenges.
+For example
+\cite{perivolaropoulosChallengesCDMUpdate2022b}.
+\TODO{fig of $H_0$ tension + $w_0 w_a$ plot?}
+\begin{itemize}
+\item
+Theoretically, we do not understand the nature of dark matter and dark energy (the cosmological constant) \TODO{scale problem}.
+The \LCDM{} model only poses the equations that describe them, but not their nature.
 
-Slow
+\item
+The Hubble tension is that observations of the CMB (which depends mostly on early-universe physics)
+and observations of supernova distances (which depends mostly on late-universe physics)
+give incompatible values of the acceleration rate $H_0$ today.
 
-Ramses, COLA, ...
+\item
+A similar but less severe tension exists for the growth rate $S_8$,
+which CMB data predicts to be higher than what large-scale structure data does.
 
-More on this in \cref{chap:nonlin}.
+\item
+The dipole problem challenges the cosmological principle:
+a measurement of our peculiar velocity through the universe from CMB and LSS data does not align.
 
-\cite{sletmoenSimplePredictionNonlinear2024}
+\item
+In addition, recent DESI results prefers deviations from the cosmological constant,
+where extended models that parameterize deviations from the cosmological constant
+show a preference towards other types of dark energy.
+\end{itemize}
 
-\subsection{Emulators}
-
-Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
-However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
-Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
-
-In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
-A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
-
-PICO, CosmoPower, Capse.jl, ...
-
-\TODO{old below:}
-
-In 1915, Albert Einstein published the theory of General Relativity (GR),
-where gravity was generalized from being a force in Newton's theory
-to an inherent property of spacetime sourced by the presence of energy.
-
-This marked the beginning of modern cosmology,
-as GR was immediately applied to study the structure of the universe.
-Eisntein first applied his theory to a static and finite universe,
-but could only make this stable by introducing an ad-hoc cosmological constant into the field equations.
-
-In 1922, Alexander Friedmann propose an expanding universe,
-and in 1927 the priest and astronomer Georges Lemaître predicted a distance-redshift relation.
-Here the cosmological constant is removed, and Einstein called it \enquote{his biggest blunder}.
-In 1929, Edwin Hubble used distance measurements to nearby galaxies to confirm a linear distance-redshift relation,
-providing evidence that the universe is indeed expanding.
-
-\TODO{de Sitter, CC was in-out-in}
-\TODO{continued with dark matter (Zwicky, Coma Cluster), big bang, CMB, steady-state, }
-
-Cosmological constant abandoned, but came back in 1998 with evidence for accelerating universe.
-
-% Observational
-
-Today, improvements in observational techniques have cosmology a precision science.
-While the original Hubble diagram was scarce and involved 24 nebulae,
-modern cosmological data consists of enormous volumes with ever-improving precision.
-CMB (COBE, WMAP, Planck, ...),
-LSS (SDSS, 2dF, Euclid, ...)
-SN (DES, Pantheon, ...).
-
-% Computational
-
-To connect theoretical developments with observational data,
-computational methods are needed to make accurate predictions for a given cosmological model before comparing them to data.
-This requires numerical methods and software tools that is fast, flexible and robust.
-In particular, modern cosmology relies on Einstein--Boltzmann codes for evolving linear perturbations
-and $N$-body simulations for non-linear evolution of the matter distribution in the universe.
-This poses a software engineering problem:
-
+\iffalse
 \section{The standard model of cosmology}
 
 Over the last century, the standard model of cosmology has been successively refined and evolved to the standard \LCDM{} model.
@@ -375,7 +420,108 @@ Time-dependent dark energy
 \TODO{$w_0 w_a$, ...}
 
 \subsection{Interacting models}
+\fi
 
+\section{The computational tools of cosmology}
+
+\TODO{paradigm?}
+In this section I will briefly outline the realm of computational tools
+for obtaining predictions from cosmological models
+that the papers in this thesis is concerned with.
+This includes (linear) \EB{} solvers, $N$-body simulations and emulators,
+which are all among the most fundamental tools in the cosmological modeling toolbox.
+
+\subsection{\EB{} codes}
+
+Linear \EB{} codes solve the background and (linear) perturbations of the \EB{} equations that define a cosmological model.
+For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB \TODO{show fig gen with SymBoltz?}.
+%This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
+%but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
+
+Generally, this is the must fundamental code that must be modified for a given cosmological model,
+requiring the implementation of background (including thermodynamcis) and perturbation equations.
+These codes stitch together a wide range of advanced numerical methods to solve several steps.
+For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
+Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
+and now run on the order of seconds on a normal laptop.
+
+As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
+In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
+particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
+
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+
+\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
+
+Take over in the regime where linear breaks down.
+
+$N$-body simulations model the matter distribution in the universe with particles,
+and evolve them forward in time with gravitational forces.
+This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
+
+Slow
+
+Ramses, COLA, ...
+
+More on this in \cref{chap:nonlin}.
+
+\cite{sletmoenSimplePredictionNonlinear2024}
+
+\subsection{Emulators}
+
+Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
+However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
+Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
+
+In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
+A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
+
+PICO, CosmoPower, Capse.jl, ...
+
+\subsection{Bayesian inference (MCMCs)}
+
+\TODO{define model; predict observables; run MCMC}
+
+\iffalse
+\TODO{old below:}
+In 1915, Albert Einstein published the theory of General Relativity (GR),
+where gravity was generalized from being a force in Newton's theory
+to an inherent property of spacetime sourced by the presence of energy.
+
+This marked the beginning of modern cosmology,
+as GR was immediately applied to study the structure of the universe.
+Eisntein first applied his theory to a static and finite universe,
+but could only make this stable by introducing an ad-hoc cosmological constant into the field equations.
+
+In 1922, Alexander Friedmann propose an expanding universe,
+and in 1927 the priest and astronomer Georges Lemaître predicted a distance-redshift relation.
+Here the cosmological constant is removed, and Einstein called it \enquote{his biggest blunder}.
+In 1929, Edwin Hubble used distance measurements to nearby galaxies to confirm a linear distance-redshift relation,
+providing evidence that the universe is indeed expanding.
+
+\TODO{de Sitter, CC was in-out-in}
+\TODO{continued with dark matter (Zwicky, Coma Cluster), big bang, CMB, steady-state, }
+
+Cosmological constant abandoned, but came back in 1998 with evidence for accelerating universe.
+
+% Observational
+
+Today, improvements in observational techniques have cosmology a precision science.
+While the original Hubble diagram was scarce and involved 24 nebulae,
+modern cosmological data consists of enormous volumes with ever-improving precision.
+CMB (COBE, WMAP, Planck, ...),
+LSS (SDSS, 2dF, Euclid, ...)
+SN (DES, Pantheon, ...).
+
+% Computational
+
+To connect theoretical developments with observational data,
+computational methods are needed to make accurate predictions for a given cosmological model before comparing them to data.
+This requires numerical methods and software tools that is fast, flexible and robust.
+In particular, modern cosmology relies on Einstein--Boltzmann codes for evolving linear perturbations
+and $N$-body simulations for non-linear evolution of the matter distribution in the universe.
+This poses a software engineering problem:
+\fi
 
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
