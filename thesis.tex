@@ -178,7 +178,7 @@ one obtains the first and second Friedmann equations:
 \end{align}%
 \label{eq:fried}%
 \end{subequations}
-They describe how the universe expands with the scale factor $a(t)$ due $\rho$ and $P$,
+They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
 which is sourced by the following \enquote{ingredients}.
 
 \item \textbf{Dark energy}
@@ -488,7 +488,7 @@ It is designed to make it easier to implement modified cosmological models,
 remove the need for approximation schemes that complicate the equations in other codes,
 and to support modern numerical methods such as automatic differentiation and spectral interpolation methods.
 
-\subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
+\subsection{Nonlinear \texorpdfstring{$\boldsymbol{N}$}{N}-body simulation codes}
 
 At sufficiently small distance scales and late times,
 the linear perturbation theory that underlies \EB{} codes is no longer sufficient.
@@ -979,6 +979,7 @@ This hierarchy goes only over $l$, while $q$ has been integrated out.
 Also note that $P/\rho = \delta P/\delta\rho = 1/3$ with $\epsilon = q$.
 
 \subsubsection{Fluid treatment}
+\label{sec:fluid}
 
 The simplest way to model a species is to describe it as a \enquote{fluid}.
 A fluid is a species whose individual energy-momentum contribution in \eqref{eq:totalT}
@@ -1519,7 +1520,7 @@ Like Bolt, SymBoltz is written in Julia,
 which I believe is a well suited for solving the two-language problem that is seen in all other codes,
 where the core is implemented in a fast low-level language like Fortran or C
 and a wrapper is available in a slow high-level language like Python
-The design ideas are elaborated in \cref{sec:symboltz}.
+The design ideas are elaborated in \cref{paper:symboltz}.
 
 \begin{table}[htbp]
 \begin{center}
@@ -2243,7 +2244,7 @@ Significantly speeds up CLASS with high $l$ and $k$ (higher than default setting
 Other works have explored modifications to neutrino physics,
 for example decaying neutrinos \cite{chenWeakerAgainMass2022}.
 self-interacting neutrinos \cite{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017,kreischNeutrinoPuzzleAnomalies2020},
-or interactions between neutrinos and other species like dark matter \cite{mosbechFullBoltzmannHierarchy2021} (see \cref{sec:modify_interactions}).
+or interactions between neutrinos and other species like dark matter \cite{mosbechFullBoltzmannHierarchy2021} (see \cref{sec:modify_interacting}).
 All these modifications require modifications of the neutrino hierarchy equations \eqref{eq:neutrino_hierarchy}.
 
 \TODO{also Non-cold dark matter models, passing different distribution functions $f_0(q)$}
@@ -2620,6 +2621,7 @@ For this reason, it would be more challenging to support automatic differentiati
 which are writted in Fortran and C that are ahead-of-time (AOT) compiled programming languages.
 
 \subsubsection{Automatic differentiation in SymBoltz}
+\label{sec:differentiability}
 
 \begin{figure}[t]
 \centering
