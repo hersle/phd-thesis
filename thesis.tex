@@ -138,13 +138,14 @@ in order to facilitate easy implementation of modified cosmological models.
 Moreover, we should strive to avoid model-specific approximation schemes and assumptions,
 as they make it harder to implement modifications and are a source of error for modifications.
 
-\section{Status of the standard cosmological model}
+\section{The standard cosmological model}
 
-The \LCDM{} is the current best explanation we have to explain the observations we make in our universe.
+The \LCDM{} model is the current iteration of the standard model in cosmology
+because it is the best explanation we have so far of several observations we have made in the Universe.
 It assumes that \cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
 \item \textbf{\GR{}}
-is assumed to be the correct theory of gravity.
+is the correct theory of gravity.
 It describes how the geometry of spacetime in the Einstein tensor $G_{\mu\nu}$
 reacts to the content of energy and momentum $T_{\mu\nu}$
 through the Einstein equations:
@@ -152,13 +153,12 @@ through the Einstein equations:
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
 \label{eq:einstein}
 \end{equation}
-It also describes how energy and momentum
-react to the geometry of spacetime through the geodesic equation:
+It also describes the reverse process:
+how energy and momentum react to the geometry of spacetime through the geodesic equation:
 \begin{equation}
 \odv[order=2]{x^\mu}{\lambda} + \Gamma^\mu_{\alpha\beta} \odv{x^\alpha}{\lambda} \odv{x^\beta}{\lambda} = 0 .
 \label{eq:geodesic}
 \end{equation}
-This is a two-way process.
 
 \item \textbf{The cosmological principle}
 asserts that the universe is almost homogeneous and isotropic.
@@ -173,7 +173,7 @@ and one assumes that $T_{\mu\nu}$ is described by a perfect fluid with energy de
 one obtains the first and second Friedmann equations:
 \begin{subequations}
 \begin{align}
-    H^2 = \frac{\dot{a}}{\dot{a}} &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
+    H^2 = \left( \frac{\dot{a}}{\dot{a}} \right)^2 &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
     \dot{H} + H^2 = \frac{\ddot{a}}{a} &= - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3}. \label{eq:fried2}
 \end{align}%
 \label{eq:fried}%
@@ -244,14 +244,15 @@ with remarkable success.
 However, as gradually uncovered by increasingly precise observations,
 it also faces a number of challenges.
 For example
-\cite{perivolaropoulosChallengesCDMUpdate2022b}:
+\cite{bullLCDMProblemsSolutions2016,abdallaCosmologyIntertwinedReview2022a,perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
 \item
 We do not understand the theoretical nature of dark matter and dark energy (the cosmological constant).
-The equations of the \LCDM{} model only describe \emph{how} dark matter effectively behaves,
+The equations of the \LCDM{} model describe only \emph{how} dark matter effectively behaves,
 but not what it \emph{is} in terms of physical theories we already understand.
-Moreover, the cosmological constant problem is a discrepancy of 50-120 orders of magnitude
-between the energy density of $\Lambda$ measuredin cosmology and the vacuum energy density that is predicted from quantum field theory.
+A natural theoretical candidate for the cosmological constant is the vacuum energy density from quantum field theory,
+but calculations show that it is off by at least 60 orders of magnitude
+\cite[e.g.][]{cirelliDarkMatter2025,weinbergCosmologicalConstantProblem1989,perivolaropoulosChallengesCDMUpdate2022b}.
 
 \item
 Observations of the CMB (which depends mostly on early-universe physics)
@@ -259,31 +260,32 @@ and of supernova distances (which depend mostly on late-universe physics)
 give incompatible values of the Hubble parameter $H_0 = H(t_0)$ today.
 This is called the \enquote{Hubble tension} and illustrated in \TODO{figure}.
 A similar tension exists for the amplitude of matter clustering from CMB versus LSS data,
-but is much less severe.
+but is much less severe
+\cite{perivolaropoulosChallengesCDMUpdate2022b}.
 
 \item
-\TODO{neutrino mass problem?}
-\item
 We observe a dipole moment in the CMB due to the Solar System's relative motion to it,
-but the dipole moment found in the LSS due to the same effect is found to be of a different magnitude.
+but the dipole effect found in the LSS for the same reason is found to be twice as large.
 This potential anisotropy in our universe challenges the cosmological principle,
-which is a very fundamental assumption in both the \LCDM{} model and common extensions of it.
+which is a very fundamental assumption in both the \LCDM{} model and common extensions of it
+\cite{secrestTestCosmologicalPrinciple2021}.
 
 \item
 Recent measurements from the DESI survey of the BAO feature imprinted in the LSS
-shows a preference for time-varying models of dark energy parameterized with equation of state $w(t) = w_0 + (1-a(t)) w_a$.
-\TODO{cite \url{https://arxiv.org/pdf/2404.03002} and \url{https://arxiv.org/pdf/2503.14738}}
-Here $\Lambda$ corresponds to $w_0 = -1$ and $w_a = 0$,
-but the measurements prefer $w_0 > -1$ and $w_a < 0$.
-Furthermore, the DESI results on \LCDM{} constrain the sum of neutrino masses to the \emph{upper} bound $\sum m_\nu < 0.064\,\mathrm{eV}$,
-which is in tension with the \emph{lower} bound $\sum m_\nu > 0.059\,\mathrm{eV}$ found from terrestrial neutrino oscillation experiments.
-However, the $w_0 w_a \mathrm{CDM}$ model relaxes the upper bound to $\sum m_\nu < 0.16\,\mathrm{eV}$,
-which is compatible with the lower bound.
-\TODO{cite \url{https://arxiv.org/pdf/2503.14738}}
+prefers time-varying models of dark energy when its equation of state is
+parameterized as a first-order Taylor expansion in the scale factor around its value today.
+\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
+
+\item
+The DESI results also constrain the total neutrino mass by an \emph{upper} bound
+that is in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments.
+However, when the time-varying dark energy model is used instead of the \LCDM{} model,
+the constraints become compatible.
+\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
 \TODO{figure}
 \end{itemize}
 These and other discrepancies motivate research on modifying all parts of the cosmological model.
-We will see some example modifications in \cref{sec:modifications}.
+We will consider some examples of modified models in \cref{sec:modifications}.
 Every such modification must be implemented into the software
 that we use for modifying the cosmological model.
 
@@ -441,63 +443,164 @@ Time-dependent dark energy
 
 \section{The computational tools of cosmology}
 
-\TODO{paradigm?}
-In this section I will briefly outline the realm of computational tools
-for obtaining predictions from cosmological models
-that the papers in this thesis is concerned with.
-This includes (linear) \EB{} solvers, $N$-body simulations and emulators,
-which are all among the most fundamental tools in the cosmological modeling toolbox.
+To make predictions from the \LCDM{} model and its extensions,
+we must solve their equations of motion numerically with computers.
+Here I summarize some of the most important categories of modeling tools in the computational toolbox of cosmology
+that are related to my contributions in this thesis.
 
 \subsection{\EB{} codes}
 
-Linear \EB{} codes solve the background and (linear) perturbations of the \EB{} equations that define a cosmological model.
-For example, they predict and output distance measures and power spectra for the distribution of matter and the CMB \TODO{show fig gen with SymBoltz?}.
+\EB{} codes solve the background and linear perturbations of the coupled \EB{} equations in cosmology.
+They describe the Einstein equations \eqref{eq:einstein} coupled to the evolution of the matter content in the universe given by the Boltzmann equation,
+and are solved perturbatively around the FLRW metric \eqref{eq:flrw} for a given cosmological model.
+These equations must be modified depending on the cosmological model.
+The solutions of these equations are used to predict distance measures,
+power spectra for the spatial distribution of matter
+and power spectra for the angular distribution of anisotropies in the cosmic microwave background
+and how this is influenced by gravitational lensing.
+\TODO{show fig gen with SymBoltz?}.
 %This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
 %but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
 
-Generally, this is the must fundamental code that must be modified for a given cosmological model,
-requiring the implementation of background (including thermodynamcis) and perturbation equations.
-These codes stitch together a wide range of advanced numerical methods to solve several steps.
-For every set of new cosmological parameters, the codes solve large and stiff ODEs, evaluate thousands of integral equations, and compute special functions such as (hyper)spherical Bessel functions.
-Despite all these challenging steps, these codes have been refined and optimized with approximation schemes over several decades,
-and now run on the order of seconds on a normal laptop.
+This is the most fundamental piece of software used for cosmological modeling.
+Not only do \EB{} codes lead directly to the important observables mentioned above,
+but they also provide initial conditions for other modeling tools such as $N$-body simulations (see below).
+The two most established codes today are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c},
+which are directly integrated into parameter estimation tools using Bayesian inference
+such as CosmoMC \cite{lewisCosmologicalParametersCMB2002,lewisEfficientSamplingFast2013},
+MontePython \cite{audrenConservativeConstraintsEarly2013,brinckmannMontePython3Boosted2018}
+and Cobaya \cite{torradoCobayaCodeBayesian2021}.
+It is the combination of these tools with observational data
+that is responsible for most constraints on cosmological parameters in the contemporary literature.
 
-As of today, the two most established codes in the community are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c}.
-In \cref{chap:lin} I present a new \EB{} code called SymBoltz that aims to improve certain aspects of the traditional codes,
-particularly related to the simplicity of specifying models, avoiding complicating approximation schemes and enabling automatic differentiation.
+The codes incorporate a wide range of numerical methods
+in order to solve several challenging numerical problems.
+This includes large and highly stiff ordinary differential equations,
+numerical quadrature of thousands of line-of-sight integrals,
+computation of special functions such as (hyper)spherical Bessel functions,
+interpolation schemes and parallelization techniques.
+Despite these challenges, the codes have been highly refined and run on the order of seconds on a modern laptop.
 
-\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+\Cref{chap:lin} in this thesis describes the largest contribution of my work,
+which is the implementation of a new \EB{} code called SymBoltz
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.
+It is designed to make it easier to implement modified cosmological models,
+remove the need for approximation schemes that complicate the equations in other codes,
+and to support modern numerical methods such as automatic differentiation and spectral interpolation methods.
 
 \subsection{Nonlinear \texorpdfstring{$N$}{N}-body simulation codes}
 
-Take over in the regime where linear breaks down.
+At sufficiently small distance scales and late times,
+the linear perturbation theory that underlies \EB{} codes is no longer sufficient.
+Here nonlinear effects from gravitational clustering becomes important.
+$N$-body codes are codes that simulate the nonlinear evolution of gravitational clustering
+by evolving $N$ matter particles in a box that interact with each other due to gravity.
+This is extremely expensive as $N$ grows and can take anywhere from minutes to months,
+and $N$-body simulation codes can be grouped in two categories.
 
-$N$-body simulations model the matter distribution in the universe with particles,
-and evolve them forward in time with gravitational forces.
-This follows their full motion and models the nonlinear behavior of the matter distribution in a universe.
+\enquote{Slow-but-accurate} codes aim to describe the nonlinear clustering as accurately as possible.
+This includes both taking physical effects such as baryons into account,
+which requires more complicated hydrodynamics solvers,
+and using computational techniques such as adaptive mesh refinement in order to
+increase the resolution of the computational grid in areas where the particles cluster
+to get accurate results down to small scales.
+This is good for running one or a few simulations,
+but is very demanding for exploring the parameter space of the model.
+Some examples of codes in this category are
+GADGET \cite{springelGADGETCodeCollisionless2001},
+RAMSES \cite{teyssierCosmologicalHydrodynamicsAdaptive2002a} and
+AREPO \cite{weinbergerArepoPublicCode2020}.
 
-Slow
+\enquote{Fast-but-approximate} codes sacrifice accuracy in order to achieve faster computational speeds.
+These codes usually neglect baryonic effects and consider only cold dark matter, which results in a simpler and elegant computational problem,
+and a fixed particle-mesh (PM) structure of the computational grid.
+Some codes employ approximations such as the COLA method \cite{tassevSolvingLargeScale2013b},
+which sacrifices accuracy at the very smallest scales in order to take much fewer time steps.
+Such methods are more appropriate for exploring dependence throughout parameter space,
+and their accuracy sacrifice is less of a downside in applications that study difference or ratios of an observable in two different universes.
+Some example of codes in this category are
+L-PICOLA \cite{howlettLPICOLAParallelCode2015},
+its modified gravity generalization MG-PICOLA \cite{wintherCOLAScaledependentGrowth2017}
+that is now succeeded by
+FML/COLASolver\footnote{\url{https://github.com/HAWinther/FML/tree/master/FML/COLASolver}},
+FastPM \cite{fengFastPMNewScheme2016} and
+PySCo \cite{bretonPySCoFastParticleMesh2025}.
 
-Ramses, COLA, ...
+\Cref{chap:nonlin} in this thesis describes a smaller fraction of my work in this direction.
+There we use \enquote{fast-but-approximate} $N$-body simulations with the COLA method
+in order to predict the nonlinear matter power spectrum in modified Brans-Dicke gravity relative to \GR{}.
+We show a way to reduce the nonlinear prediction to that from linear \EB{} codes.
+This technique can be used in conjunction with emulators (see below) of \GR{} simulations,
+in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 
-More on this in \cref{chap:nonlin}.
+\subsection{Emulators and interpolation methods}
 
-\cite{sletmoenSimplePredictionNonlinear2024}
+\EB{} and, to a much greater extent, $N$-body simulations are expensive to run.
+To estimate cosmological parameters using Bayesian inference,
+Markov chain Monte Carlo (MCMC) methods need to sample $10^4$-$10^6$ points in parameter space and in principle run these codes for every sample.
+It is therefore very common to \emph{emulate} the output of expensive computations.
 
-\subsection{Emulators}
+Generally speaking, an emulator refers to \emph{any} method that reproduces or \enquote{imitates} the output of a physically principled and expensive function $\mathcal{O}(\mathbf{p})$ of parameters $\mathbf{p}$ using a cheap surrogate model:
+\begin{equation}
+\mathbf{p} \,\,\,\to\,\,\, \mathrm{???} \,\,\,\to\,\,\, \mathcal{O} .
+\end{equation}
+\emph{How} an emulator works internally (???) is of secondary importance.
+The most important point is that the result $\mathcal{O}$ correctly matches the target function within some given tolerance,
+and that the evaluation (???) is as fast as possible using whatever means necessary.
 
-Linear \EB{} solvers, and to a greater extent $N$-body simulations, are expensive to run.
-However, applications such as bayesian parameter inference with MCMCs typically need their predictions at many points very quickly.
-Recently very common to \emph{emulate} the output of expensive codes as a function of the cosmological parameters.
+Perhaps pedantically and philosophically, how can we be sure that a \enquote{black box} produces correct results when we have no idea what it does?
+And how do we reconcile this with our standards for validation, transparency and explainable methods in research?
+The most crucial insight is in my opinion the very simple property that observables in our own universe and physical models are \emph{smooth} functions of the parameters.
+As one perturbs the parameters $\mathbf{p}$ slightly,
+any well-defined observable function that we can detect in our universe should respond smoothly to it,
+so that the value of $\mathcal{O}$ and all of its derivatives (which are really just derived observables from $\mathcal{O}$) are continuous functions of $\mathbf{P}$.
+This is a fundamental philosophical assumption at least in classical (non-quantum) theories of physics,
+and is what makes it possible to describe physics in the mathematical language of calculus and differential equations.
 
-In full generality, \emph{emulation} is any method that uses a fast and approximate surrogate model to reproduce the output of an expensive function in a much cheaper way.
-A wide number of emulators have been created for emulating CMB predictions from \EB{} codes \TODO{refs}, nonlinear matter power spectra from $N$-body simulations \TODO{ref}, halo models \TODO{refs}, ...
+Emulation therefore simply reduces to the mathematical field of function approximation,
+which is an extremely wide discipline in mathematics \cite[e.g.][]{trefethenApproximationTheoryApproximation2019}.
+%It only happens to be the case that the
+%operations inside the smooth function
+%-- i.e. an \EB{} codes or $N$-body simulations --
+%is long and of physical nature,
+%which makes the use of emulators
+The expensive function is typically evaluated for a small number of sample points,
+and then interpolation and regression methods are used to evaluate it cheaply at other points.
+A downside is that this training process must be repeated for every new cosmological model.
+Another challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space,
+but recent explosion of research in artificial intelligence and machine learning have made it feasible to emulate functions of
+$O(10)$ cosmological parameters using neural networks, for example.
+In this field, the extent to which a function is smooth
+is a critical assumption that enables better interpolation methods.
 
-PICO, CosmoPower, Capse.jl, ...
+A very large number of emulators and emulator frameworks have been created
+for emulating the output from \EB{} codes and $N$-body simulations
+for both standard and extended cosmological models, including
+CMBwarp \cite{jimenezFastCosmologicalParameter2004},
+PICO \cite{fendtPicoParametersImpatient2007,fendtComputingHighAccuracy2007},
+CosmicNet \cite{albersCosmicNetPhysicsdrivenImplementation2019,guntherCosmicNetIIEmulating2022},
+CosmoPower \cite{manciniCOSMOPOWEREmulatingCosmological2022b,pirasCosmoPowerJAXHighdimensionalBayesian2023},
+BACCO \cite{zennaroBACCOSimulationProject2023a},
+CONNECT \cite{nygaardCONNECTNeuralNetwork2023},
+Capse.jl \cite{boniciCapsejlEfficientAutodifferentiable2024},
+Effort.jl \cite{boniciEffortFastDifferentiable2025a},
+emulators for modified gravity simulations \cite{wintherEmulatorsNonlinearMatter2019a,maulandSesamePowerSpectrum2024a},
+and many more.
 
-\subsection{Bayesian inference (MCMCs)}
+When used as drop-in replacements for \EB{} codes wit high-precision settings in parameter inference calls,
+emulators can speed up theoretical predictions by up to $10^6 \times$
+and reduce the total MCMC runtime from days or weeks to seconds or minutes
+\cite[e.g.][]{boniciCapsejlEfficientAutodifferentiable2024}.
+This shifts the bottleneck of the computation from the theoretical predictions
+to the comparison with the observational dataset (i.e. the likelihood function).
 
-\TODO{define model; predict observables; run MCMC}
+\Cref{chap:nonlin} effectively presents an emulation method for $N$-body simulations
+that maps the expensive $N$-body simulations down to cheap \EB{} codes.
+\Cref{chap:lin} presents a new interpolation method inside SymBoltz
+that is enabled by the smoothness of its approximation-free output.
+I also argue how I believe we could benefit from moving our dependence on approximation schemes
+from the internal model-dependent layer implemented inside codes
+to the model-independent layer \emph{around} the code.
 
 \iffalse
 \TODO{old below:}
