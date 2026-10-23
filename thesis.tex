@@ -151,7 +151,7 @@ reacts to the content of energy and momentum $T_{\mu\nu}$
 through the Einstein equations:
 \begin{equation}
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
-\label{eq:einstein}
+\label{eq:einstein_intro}
 \end{equation}
 It also describes the reverse process:
 how energy and momentum react to the geometry of spacetime through the geodesic equation:
@@ -168,21 +168,22 @@ Friedmann--Lemaître--Robertson--Walker (FLRW) spacetime metric:
 \diff{s}^2 = -\diff{t}^2 + a(t)^2 \left( \diff{r}^2 + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
 \label{eq:flrw}
 \end{equation}
-When this $g_{\mu\nu}$ is inserted into the Einstein equation \eqref{eq:einstein}
+When this $g_{\mu\nu}$ is inserted into the Einstein equation \eqref{eq:einstein_intro}
 and one assumes that $T_{\mu\nu}$ is described by a perfect fluid with energy density $\rho$ and pressure $P$,
 one obtains the first and second Friedmann equations:
 \begin{subequations}
 \begin{align}
-    H^2 = \left( \frac{\dot{a}}{\dot{a}} \right)^2 &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
+    H^2 = \left( \frac{\dot{a}}{a} \right)^2 &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
     \dot{H} + H^2 = \frac{\ddot{a}}{a} &= - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3}. \label{eq:fried2}
 \end{align}%
 \label{eq:fried}%
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
 which is sourced by the following \enquote{ingredients}.
+\TODO{figure of LSS survey?}
 
 \item \textbf{Dark energy}
-as a cosmological constant $\Lambda$ was first added by Einstein in his equation \eqref{eq:einstein}
+as a cosmological constant $\Lambda$ was first added by Einstein in his equation \eqref{eq:einstein_intro}
 in order for them to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
 When Hubble observed that nearby galaxies are recessing and showed that the universe expands with time,
 Einstein famously erased it and called it his \enquote{biggest blunder}.
@@ -451,7 +452,7 @@ that are related to my contributions in this thesis.
 \subsection{\EB{} codes}
 
 \EB{} codes solve the background and linear perturbations of the coupled \EB{} equations in cosmology.
-They describe the Einstein equations \eqref{eq:einstein} coupled to the evolution of the matter content in the universe given by the Boltzmann equation,
+They describe the Einstein equations \eqref{eq:einstein_intro} coupled to the evolution of the matter content in the universe given by the Boltzmann equation,
 and are solved perturbatively around the FLRW metric \eqref{eq:flrw} for a given cosmological model.
 These equations must be modified depending on the cosmological model.
 The solutions of these equations are used to predict distance measures,
@@ -606,144 +607,163 @@ to the model-independent layer \emph{around} the code.
 \label{chap:lin}
 \AddToShipoutPictureFG*{\AtTextUpperLeft{\put(\LenToUnit{\textwidth},0){\makebox[0pt][r]{\raisebox{-\height}{\begin{tabular}{@{}c@{}}\href{https://github.com/hersle/SymBoltz.jl}{\includegraphics[width=0.28\textwidth]{media/symboltz_logo}} \\ \scriptsize\sffamily\href{https://github.com/hersle/SymBoltz.jl}{github.com/hersle/SymBoltz.jl}\end{tabular}}}}}} % put SymBoltz logo in top-right corner of the chapter start page without affecting spacing (similarly to e.g. https://arxiv.org/pdf/1909.01828)
 
-The universe is homogeneous and isotropic only in an approximate and statistical sense,
-when it is averaged over sufficiently large scales \TODO{figure of LSS survey?}.
-Cosmological perturbation theory is a systematic theoretical framework for studying the evolution of the universe and the growth of structure
-using perturbation theory around a perfectly homogeneous and isotropic background universe.
-It makes it possible to formulate analytical equations for describing the universe,
-which take the form of ordinary differential equations (ODEs) are solved numerically
-by \EB{} codes, of which CAMB and CLASS are best known.
-This is very challenging because the equations are long, large and stiff;
-yet they need to be fast to be run in MCMC chains,
+Since the universe is almost homogeneous and isotropic,
+it makes sense to do perturbation theory around a perfectly homogeneous and isotropic background universe.
+Cosmological perturbation theory is a systematic theoretical framework for this,
+and lets us study the evolution of the universe and the growth of structure.
+It formulates a number of analytical equations that describe the universe,
+which take the form of ordinary differential equations (ODEs)
+that must be solved numerically by \EB{} codes such as CAMB and CLASS.
+This is challenging because the equations are long, large and stiff;
+yet the codes should be fast to be run in MCMC chains,
 and simple to modify with alternative cosmological models.
-\TODO{more complicated, but richer information than the background alone.}
-
 To this end,
-the majority of my work has been invested in developing a new \EB{} solver named SymBoltz.
+the majority of my work has been invested
+in developing a new \EB{} solver named SymBoltz.
+
 \Cref{paper:symboltz} in this thesis describes the initial implementation of SymBoltz;
 including how it is made easier for users to modify the equations through a mixed symbolic-numeric interface,
 handle stiffness with implicit ODE solvers instead of deriving complicated approximations of the equations,
 and support new numerical methods such as automatic differentiation for obtaining accurate gradients of its output.
-\Cref{paper:chebyshev} shows how the lack of approximation schemes
-also opens the door to more efficient interpolation schemes,
-which are very important to reduce the work done inside these codes,
-by taking advantage of the smoothness of its approximation-free output.
-\Cref{paper:interactions} shows how a class of interacting cosmological models are implemented in SymBoltz,
-in a way that is simpler and involves less work for users than in CAMB and CLASS
-due to both the symbolic-numeric interface and the lack of approximation schemes.
+
+\Cref{paper:chebyshev} shows how SymBoltz can make use of more efficient interpolation schemes due to the smoothness of its approximation-free output.
+Interpolation is very important to reduce the computational work inside these codes.
+
+\Cref{paper:interactions} shows how a class of
+modified cosmological models with non-standard interactions between baryons, cold dark matter and dark energy
+are implemented in SymBoltz.
+It demonstrates that less work is necessary than in CAMB and CLASS,
+both due to the symbolic-numeric interface and the lack of approximation schemes.
 
 In this chapter, I briefly introduce cosmological perturbation theory
-and the structure and computations of \EB{} codes.
-I then review the historical development of existing \EB{} codes,
-and provide a overview of how they have been widely modified to implement many different extended cosmological models.
+and give an overview of the structure and history of \EB{} codes.
+I then review how they have been widely modified to implement many different extended cosmological models.
 This motivates the ideas behind the design of SymBoltz,
-which I reiterate in this thesis (from a broader perspective than in the paper) together with improvements that have been made since the initial implementation.
-I close with the current status of SymBoltz and an outlook to how it may be used in the future.
+which I reiterate in this thesis from a broader perspective of cosmological research as a whole than in the paper.
+I also go through some improvements that have been made since the initial implementation,
+before closing with the current status of SymBoltz and an outlook to how it may be used in the future.
 
 \section{Cosmological perturbation theory}
 
 The idea of cosmological perturbation theory is that the universe is \emph{almost} homogeneous and isotropic,
-and to do perturbation theory around a perfectly homogeneous and isotropic FLRW metric \eqref{eq:flrw}.
+and to do perturbation theory around a perfectly homogeneous and isotropic FLRW metric $\bar{g}_{\mu\nu} = a^2(\tau) \eta_{\mu\nu}$,
+where $\tau$ is conformal time and $\eta_{\mu\nu}$ is the Minkowski metric.
 In linear perturbation theory,
-every variable is expanded into an $O(\epsilon^0)$ background term and an $O(\epsilon^1)$ linear perturbation term, such as the metric and energy-momentum tensor
-\cite{maCosmologicalPerturbationTheory1995a}:
+every variable is expanded into an $O(\epsilon^0)$ background term and an $O(\epsilon^1)$ linear perturbation term, such as the metric and energy-momentum tensor:
 \begin{equation}
-    g_{\mu\nu} = \bar{g}_{\mu\nu} + h_{\mu\nu} ,
-    \qquad
-    T_{\mu\nu} = \bar{T}_{\mu\nu} + \delta T_{\mu\nu} ,
-    \qquad
-    (h_{\mu\nu} \ll \bar{g}_{\mu\nu}, \, \delta T_{\mu\nu} \ll \bar{T}_{\mu\nu}) .
+g_{\mu\nu} = a^2(\tau) (\eta_{\mu\nu} + h_{\mu\nu}) ,
+\qquad
+T_{\mu\nu} = \bar{T}_{\mu\nu} + \delta T_{\mu\nu} ,
+\qquad
+(h_{\mu\nu} \ll 1, \, \delta T_{\mu\nu} \ll \bar{T}_{\mu\nu}) .
 \end{equation}
-
-Before we write down any particular theory and equations,
-we will summarize a few subtle and general considerations that make up the general framework around cosmological perturbation theory.
+Before writing down any particular theory and equations,
+I summarize some general and subtle considerations that make up the theoretical framework of cosmological perturbation theory
+\cite[e.g.][]{dodelsonModernCosmology2021a,baumannNotes}.
 
 \subsection{Scalar-vector-tensor decomposition}
 
-\TODO{analogy to Helmholtz decomposition}
-
-By definition, $h_{\mu\nu}$ is a $4 \times 4$ tensor perturbation to the metric and thus has 10 independent components.
-It is a good idea to split $h_{\mu\nu}$ into the scalar $h_{00}$, 3-vector $h_{0i}$ and symmetric 3-tensor $h_{ij}$ (this is \emph{not} the final SVT decomposition),
-and in turn decompose each of them into scalars, vectors and tensors \cite[e.g.][]{baumannNotes,bertschingerCosmologicalPerturbationTheory2000}:
+By definition, $h_{\mu\nu}$ is a symmetric $4 \times 4$ metric tensor perturbation and thus has 10 independent components.
+If we are too eager and attack the Einstein equations directly with $h_{\mu\nu}$,
+we will end up with a system of equations that unnecessarily couples all 10 components.
+It turns out that it is a good idea to first split $h_{\mu\nu}$ into the scalar $h_{00}$, 3-vector $h_{0i}$ and symmetric 3-tensor $h_{ij}$,
+and in turn make a scalar-vector-tensor (SVT) decomposition of each of them:
 \begin{subequations}
 \begin{align}
-h_{00} &= A , \\
+h_{00} &= -2 A , \\
 h_{0i} &= \partial_i B + B_i, \\
-h_{ij} &= 2 C \delta_{ij} + 2 \big( \partial_i \partial_j - \tfrac13 \delta_{ij} \nabla^2 \big) E + \big( \partial_i E_j + \partial_j E_i \big) + 2 E_{ij} ,
+h_{ij} &= 2 C \delta_{ij} + 2 \big( \partial_i \partial_j - \tfrac13 \delta_{ij} \nabla^2 \big) E + \big( \partial_i E_j + \partial_j E_i \big) + 2 E_{ij} .
 \end{align}
 \end{subequations}
-where $A$-$D$ are scalars,
-$B_i$ and $E_i$ are vectors that have the two constraints to $\partial_i B_i = \partial_i E_i = 0$,
-and $E_{ij}$ is a tensor that has the four constraints $\partial^i E_{ij} = E^i_i = 0$.
-This decomposes the 10 independent $h_{\mu\nu}$ components into
-$4$ \enquote{scalar} degrees of freedom $\{A,B,C,D\}$,
-$4=6-2$ vector degrees of freedom $\{B_i, E_i\}$,
-and $2=6-4$ tensor degrees of freedom $\{E_{ij}\}$.
+Here $\{A,B,C,E\}$ are scalars (i.e. 4 free functions),
+$\{B_i,E_i\}$ are transverse (divergence-free) vectors with $\partial^i B_i = \partial^i E_i = 0$ (i.e. $6-2=4$ free functions),
+and $E_{ij}$ is a symmetric transverse-traceless tensor with $\partial^i E_{ij} = E^i_{\ i} = 0$ (i.e. $6-4=2$ free functions).
+Such a decomposition is mathematically always possible.%
+\footnote{The vector decomposition is also called the Helmholtz decomposition, and is familiar from electromagnetism.
+The tensor decomposition is the same idea generalized to one higher rank.}
+This is the final decomposition of the 10 components $h_{\mu\nu}$ into
+4 scalar, 4 vector and 2 tensor functions.
 
-The crucial point of this decomposition is that the Einstein equations for scalar, vector and tensor perturbations are independent at linear order.
-This makes them easier to reason about physically and separates their numerical solutions.
-Without the decomposition, we would be solving for all 10 components together in a way that unnecessarily couples the scalar, vector and tensor parts.
+The crucial point of the decomposition is that the linear perturbations of the Einstein equations for scalar, vector and tensor modes \emph{decouple}.
+%This is found mathematically by working through the Einstein equations by brute force,
+%and can be understood physically due to scalars, vectors and tensors transforming in different ways on the FLRW background.
+The decoupling makes it easier to reason about them physically and understand what sources each mode,
+and to solve them numerically as three smaller systems rather than one large system.
+Without the decomposition, we would unnecessarily mix all 10 components
+and solve for them in an overcomplicated way.
 
-Scalar perturbations are related to physical densities and determines the CMB temperature and E-mode polarization power spectra and the growth of structure.
-Vector perturbations are related to vorticity in the fluid and decay as the universe evolves.
-Tensor perturbations are related to B-mode polarization and source gravitational waves.
-\TODO{source}
-We will here consider only scalar perturbations, that are most important and the only mode currently implemented in SymBoltz.
+Here we consider only scalar perturbations, which are most important.
+They drive the temperature fluctuations and E-mode polarization of the CMB
+and the growth of large-scale structure.
+%Vector perturbations have few sources and die out as the universe expands,
+%while tensor perturbations are gravitational waves produced in the early universe and an increasingly viable observational probe.
+%Scalar perturbations are associated with density fluctuations and determine the CMB temperature and E-mode polarization power spectra and the growth of large-scale structure.
+%Vector perturbations have few sources and decay as the universe expands, so they are usually ignored.
+%Tensor perturbations are gravitational waves, which are generated by inflation in the early universe and a promising observational probe.
+%We will here consider only scalar perturbations, that are most important and the only mode currently implemented in SymBoltz.
 
 \subsection{Gauge freedom}
 
-Another concern is that the laws of physics should not depend on our choice of spacetime coordinates $x^\mu$,
-which are just mathematical labels.
-Consider an infinitesimal coordinate transformation, which also leads to a change in the perturbed metric:
-\begin{equation}
-x^\mu \to x^\mu + \xi^\mu(x)
-\qquad \implies \qquad
-h_{\mu\nu} \to h_{\mu\nu} - L(\xi) \bar{g}_{\mu\nu} .
-\label{eq:coordinate_transformation}
-\end{equation}
-Through the four degrees of freedom in $\xi^\mu(x)$, we have the power to arbitrarily change $h_{\mu\nu}$.
-This means that 4 of 10 degrees of freedom are \enquote{gauge} degrees of freedom due to our arbitrary labeling of spacetime coordinates,
-while there are only 6 physical degrees of freedom.
+Another concern is that the laws of physics should not depend on our labeling of spacetime coordinates $x^\mu$.
+If we make an infinitesimal coordinate transformation $x^\mu \to \tilde{x}^\mu = x^\mu + \xi^\mu(x)$,
+then the metric $g_{\mu\nu} \to \tilde{g}_{\mu\nu}$ and its perturbation $h_{\mu\nu} \to \tilde{h}_{\mu\nu}$ also change
+in order to preserve the spacetime interval $\diff{s}^2 = g_{\mu\nu} \, \diff{x}^\mu \diff{x}^\nu = \tilde{g}_{\mu\nu} \, \diff{\tilde{x}}^\mu \diff{\tilde{x}}^\nu$.
+%Through the four degrees of freedom in $\xi^\mu(x)$ we can change $h_{\mu\nu}$.
+%we have the power to arbitrarily change $h_{\mu\nu}$.
+This means that 4 of 10 degrees of freedom are unphysical \enquote{gauge} degrees of freedom due to an arbitrary transformation of the coordinates,
+while there are only 6 remaining truly physical degrees of freedom.
 
-To see how this affects each of the scalar-vector-tensor sectors, we can decompose $\xi^\mu$ in the same way.
-We set $x^0 = T$ and $x^i = \partial_i L + L_i$ with two scalars $T$ and $L$ and a 3-vector $L_i$ constrained to $\partial_i L_i = 0$.
-It can be shown that this leads to the following change in the scalar-vector-tensor parts \cite[e.g.][]{baumannNotes}:
+To show how this affects each of the scalar-vector-tensor modes,
+one can make a similar scalar-vector decomposition of $\xi^\mu$ with $\xi^0 = T$ and $\xi^i = \partial_i L + L_i$,
+where $\{T,L\}$ are scalars and $L_i$ is a transverse vector with $\partial^i L_i = 0$.
+This leads to the following change in the scalar-vector-tensor parts \cite[e.g.][]{baumannNotes}:
 \begin{equation}
 \begin{alignedat}{3}
 % TODO: how to get 3 perfectly spaced columns while preserving 1 eq number?
-A &\to A - T' - \scrH T, \qquad\qquad &
-B_i &\to B_i - L_i', \qquad \qquad&
-E_{ij} &\to E_{ij}, \\
-B &\to B + T - L', \qquad\qquad&
-E_i &\to E_i - L_i, \qquad\qquad& \\
-C &\to C - \scrH T - \tfrac13\nabla^2 L, \qquad\qquad & & \\
-D &\to D - L, \qquad & &
+A &\to \tilde{A} = A - \dot{T} - \tfrac{\dot{a}}{a} T, \qquad &
+B_i &\to \tilde{B}_i = B_i - \dot{L}_i, \qquad &
+E_{ij} &\to \tilde{E}_{ij} = E_{ij}, \\
+B &\to \tilde{B} = B + T - \dot{L}, \qquad&
+E_i &\to \tilde{E}_i = E_i - L_i, \qquad& \\
+C &\to \tilde{C} = C - \tfrac{\dot{a}}{a} T - \tfrac13\nabla^2 L, \qquad & & \\
+E &\to \tilde{E} = E - L. \qquad & &
 \end{alignedat}
 \label{eq:gauge}
 \end{equation}
-The point is that the scalars $T$ and $L$ influence only the scalars $A$-$D$,
-the vector $L_i$ influence only the vectors $B_i$ and $E_i$,
-and the nonexistent tensorial part of the coordinate change leaves the tensor $E_{ij}$ unchanged.
-The scalars $T,L$ take away two scalar degrees of freedom,
-and the 3-vector $L_i$ with one constraint takes away two vector degrees of freedom.
-This leaves 2 scalar, 2 vector and 2 tensor degrees of freedom.
+The scalars $\{T,L\}$ influence only the scalars $\{A,B,C,E\}$ and
+the vector $L_i$ (with the transverse constraint) influences only the vectors $B_i$ and $E_i$.
+The tensorial part $E_{ij}$ is unchanged.
+Thus, two scalar and two vector degrees of freedom are due to the gauge,
+leaving 2 scalar, 2 vector and 2 tensor truly physical degrees of freedom.
 
 From here we have two options.
-The first option is to seek gauge-invariant variables that do not change with the gauge transformation \eqref{eq:coordinate_transformation},
-such as the \enquote{Bardeen potentials} $\Phi$ and $\Psi$.
-The second option is to use our freedom in choosing $T$ and $L$ to fix a gauge by imposing some additional conditions.
+One is to seek gauge-invariant variables that do not change with the gauge transformation \eqref{eq:gauge},
+such as the Bardeen potentials $\Phi$ and $\Psi$ \cite{bardeenGaugeinvariantCosmologicalPerturbations1980}.
+Another (and what most \EB{} codes do) is to fix one particular gauge by using our freedom in choosing $T$ and $L$.
+The two most common gauges (for scalar modes only) are
+\cite{maCosmologicalPerturbationTheory1995a}:
+\begin{itemize}
+\item \textbf{The synchronous gauge} is defined by
+$A=B=0$
+(i.e. a transformation with $\{T,L\}$ such that $\dot{T} + \frac{\dot{a}}{a} T = A$ and $\dot{L}-T = B$).
+\item \textbf{The (conformal) Newtonian gauge} is defined by
+$B=E=0$
+(i.e. a transformation with $\{T,L\}$ such that $\dot{L} - T = B$ and $L = E$).
+\end{itemize}
+Here we work in the conformal Newtonian gauge,
+which is the only gauge currently implemented in SymBoltz.
+Ultimately, the transformation \eqref{eq:gauge} can be used
+to relate variables in one gauge to another
+or to construct gauge-invariant variables.
+Of course, observables must be built from gauge-invariant combinations of variables.
 
-We will do the second and work with scalar perturbations in the conformal Newtonian gauge, where we can set $B = E = 0$, which is also the one implemented in SymBoltz.
-Another option is the synchronous gauge, where $A = B = 0$, which is the default gauge in CAMB and CLASS (CLASS also supports the Newtonian gauge).
-Ultimately, perturbations in one gauge can be related to another by transformation \eqref{eq:gauge},
-and cosmological observables are built from gauge-independent variables (that can be computed from gauge-dependent variables at the end of the computation).
-
-Finally, this means we can write the metric as:
+We can now write down the perturbed FLRW metric in the Newtonian gauge:
 \begin{equation}
 \diff{s}^2 = -a^2(\tau) (1+2\Psi(\tau, \mathbf{x}))\diff{\tau}^2 + a^2(\tau) (1-2\Phi(\tau, \mathbf{x})) \diff{\mathbf{x}}^2 .
 \label{eq:flrw_perturbed}
 \end{equation}
 \TODO{fix conventions with $\psi$ vs $\Psi$}
+\TODO{reformat Baumann citation}
 
 \subsection{Fourier space}
 \label{sec:fourier}
@@ -798,6 +818,7 @@ Inserting the perturbed spacetime metric \eqref{eq:flrw_perturbed} for scalar pe
 and computing up to 1st order in perturbation theory, we obtain
 the Friedmann equations \eqref{eq:fried} to 0th order,
 and four overdetermined linear perturbation equations for the metric potentials $\Phi$ and $\Psi$:
+\TODO{define $\scrH$}
 \begin{subequations}
 \label{eq:pertein}
 \begin{align}
