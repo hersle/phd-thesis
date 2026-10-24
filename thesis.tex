@@ -607,10 +607,9 @@ Of course, observables must be built from gauge-invariant combinations of variab
 
 We can now write down the perturbed FLRW metric in the Newtonian gauge:
 \begin{equation}
-\diff{s}^2 = -a^2(\tau) (1+2\Psi(\tau, \mathbf{x}))\diff{\tau}^2 + a^2(\tau) (1-2\Phi(\tau, \mathbf{x})) \diff{\mathbf{x}}^2 .
+\diff{s}^2 = -a^2(\tau) (1+2\psi(\tau, \mathbf{x}))\diff{\tau}^2 + a^2(\tau) (1-2\phi(\tau, \mathbf{x})) \diff{\mathbf{x}}^2 .
 \label{eq:flrw_perturbed}
 \end{equation}
-\TODO{fix conventions with $\psi$ vs $\Psi$}
 
 \subsection{Fourier space}
 \label{sec:fourier}
@@ -664,20 +663,20 @@ It describes how energy and momentum describes the geometry of spacetime.
 Inserting the perturbed spacetime metric \eqref{eq:flrw_perturbed} for scalar perturbations in the Newtonian gauge,
 and computing up to 1st order in perturbation theory, we obtain
 the Friedmann equations \eqref{eq:fried} to 0th order,
-and four overdetermined linear perturbation equations for the metric potentials $\Phi$ and $\Psi$:
+and four overdetermined linear perturbation equations for the metric potentials $\phi$ and $\psi$:
 \TODO{define $\scrH$}
 \begin{subequations}
 \label{eq:pertein}
 \begin{align}
-k^2 \Phi + 3\scrH(\dot{\Phi} + \scrH \Psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
-k^2 (\dot\phi + \scrH \Psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
-\ddot{\Phi} + \scrH (\dot{\Psi}+2\dot{\Phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \Psi + \frac{k^2}{3} (\Phi-\Psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
-k^2 (\Phi-\Psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
+k^2 \phi + 3\scrH(\dot{\phi} + \scrH \psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
+k^2 (\dot\phi + \scrH \psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
+\ddot{\phi} + \scrH (\dot{\psi}+2\dot{\phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \psi + \frac{k^2}{3} (\phi-\psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
+k^2 (\phi-\psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
 \end{align}
 \end{subequations}
-These are four overdetermined equations for the two metric potentials $\Phi$ and $\Psi$.
-It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\Phi}$
-and determine $\Psi$ algebraically from the constraint \eqref{eq:pertein4}.
+These are four overdetermined equations for the two metric potentials $\phi$ and $\psi$.
+It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
+and determine $\psi$ algebraically from the constraint \eqref{eq:pertein4}.
 The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ (see \cref{sec:boltzmann})
 \cite[equation 25]{maCosmologicalPerturbationTheory1995a}.
 
@@ -700,8 +699,8 @@ this leads to the continuity and Euler equations for the total energy-momentum c
 \begin{subequations}
 \label{eq:pert_fluid} % TODO: move all labels in subequations before align
 \begin{align}
-\dot{\delta} &= -(1+w)(\theta-3\dot{\Phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
-\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi. \label{eq:pert_euler}
+\dot{\delta} &= -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
+\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi. \label{eq:pert_euler}
 \end{align}
 \end{subequations}
 This describes the evolution only of the total energy-momentum contributions.
@@ -765,7 +764,7 @@ Energy $E = \epsilon / a$ with
 \end{equation}
 
 \TODO{example $C[f]$ for same-place collision of $1+2 \leftrightarrow 3+4$ with momentum and energy conservation? see Dodelson. then easy to include Thomson scattering later?}
-\TODO{decide on $\calF$ vs $\Psi$ notation; and $\phi$ vs $\Phi$ etc. Just stick to Ma \& Bertschinger?}
+\TODO{decide on $\calF$ vs $\Psi$ notation}
 
 \subsubsection{Hierarchy with multipoles and momenta}
 
@@ -774,7 +773,7 @@ Inserting the full distribution function \eqref{eq:distribution},
 using the geodesic equation to express $\odv{q}/{\tau}$,
 collecting terms to first order and going to Fourier space gives:
 \begin{equation}
-\pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\Phi} - i k \mu \frac{q}{\epsilon} \psi \right) = \frac{1}{f_0} \pdv{f}{\tau}_C .
+\pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\phi} - i k \mu \frac{\epsilon}{q} \psi \right) = \frac{1}{f_0} \pdv{f}{\tau}_C .
 \label{eq:boltzmann_linear}
 \end{equation}
 Here $\mu = \cos \hat{\mathbf{k}} \cdot \hat{\mathbf{q}}$ is the direction between the wavenumber $\mathbf{k}$ and momentum $\mathbf{q}$,
@@ -791,7 +790,7 @@ we obtain the following \enquote{hierarchy} for the evolution of each multipole 
 \begin{subequations}
 \label{eq:hierarchy_ql}
 \begin{align}
-\dot{\Psi}_0 &= -k \frac{q}{\epsilon} \Psi_1 - \dot{\Phi}\,\odv{\log f_0}{\log q} , \\
+\dot{\Psi}_0 &= -k \frac{q}{\epsilon} \Psi_1 - \dot{\phi}\,\odv{\log f_0}{\log q} , \\
 \dot{\Psi}_1 &= \frac{k}{3} \frac{q}{\epsilon} (\Psi_0 - 2\Psi_2) - \frac{k}{3} \frac{\epsilon}{q} \psi \odv{\log f_0}{\log q} , \\
 \dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}(l \Psi_{l-1} - (l+1) \Psi_{l+1}) \qquad\quad (l \geq 2) .
 \end{align}
@@ -837,8 +836,8 @@ and use that $\int \diff{q} \, q^3 f_0 \odv{\log f_0}/{\log q} = \int \diff{q} \
 This gives
 \begin{subequations}
 \begin{align}
-\dot{F}_0 &= -k F_1 + 4 \dot{\Phi} , \\
-\dot{F}_1 &= \frac{k}{3} (F_0 - 2 F_2 + 4\Psi) , \\
+\dot{F}_0 &= -k F_1 + 4 \dot{\phi} , \\
+\dot{F}_1 &= \frac{k}{3} (F_0 - 2 F_2 + 4\psi) , \\
 \dot{F}_l &= \frac{k}{2l+1} (l F_{l-1} - (l+1) F_{l+1}) , \quad (l \geq 2) .
 \end{align}%
 \label{eq:hierarchy_l}%
@@ -864,12 +863,12 @@ This gives the continuity equation:
 \begin{subequations}
 \label{eq:fluid}
 \begin{equation}
-\dot{\delta} = -(1+w)(\theta-3\dot{\Phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
+\dot{\delta} = -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
 \label{eq:fluid_continuity}
 \end{equation}
 Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
 \begin{equation}
-\dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \Psi .
+\dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi .
 \label{eq:fluid_euler}
 \end{equation}
 One can continue even with the $l=2$ equation
@@ -1456,7 +1455,7 @@ Note that it is possible to have both $w < -1$ and $w > -1$, but not $w = -1$ ex
 
 \subsection{Quintessence (scalar field)}
 
-Another common model for dark energy is a time-varying scalar field $\phi$ that slowly rolls down a potential $V(\phi)$ \cite{tsujikawaQuintessenceReview2013}.
+Another common model for dark energy is a time-varying scalar field $\varphi$ that slowly rolls down a potential $V(\varphi)$ \cite{tsujikawaQuintessenceReview2013}.
 Although this class of models was first introduced by \cite{ratraCosmologicalConsequencesRolling1988},
 the term \enquote{quintessence} was later coined by \cite{caldwellCosmologicalImprintEnergy1998}.
 It means \enquote{the fifth essence} in Spanish, and is named in the hope of being the next fundamental contribution to the energy-momentum of \enquote{matter} after baryons, dark matter, photons and neutrinos.
@@ -1464,27 +1463,27 @@ This is so because they remove $\Lambda$ from the left side of the Einstein equa
 
 The scalar field evolves in conformal time according to the Klein-Gordon equation:
 \begin{equation}
-\ddot{\phi} = -2\scrH\dot{\phi} - a^2 V^\prime(\phi)
+\ddot{\varphi} = -2\scrH\dot{\varphi} - a^2 V^\prime(\varphi)
 \end{equation}
-in a freely specified potential function $V(\phi)$.
+in a freely specified potential function $V(\varphi)$.
 It contributes to the total energy-momentum with energy density, pressure and equation of state
 \begin{equation}
-\rho = \frac12 \dot{\phi}^2 + V(\phi), \quad
-P = \frac12 \dot{\phi}^2 + V(\phi), \quad
-w = \frac{P}{\rho} = \frac{\frac12\dot{\phi}^2 - V(\phi)}{\frac12\dot{\phi}^2 + V(\phi)}.
+\rho = \frac12 \dot{\varphi}^2 + V(\varphi), \quad
+P = \frac12 \dot{\varphi}^2 + V(\varphi), \quad
+w = \frac{P}{\rho} = \frac{\frac12\dot{\varphi}^2 - V(\varphi)}{\frac12\dot{\varphi}^2 + V(\varphi)}.
 \end{equation}
 Note that $-1 \leq w \leq 1$.
 To mimic dark energy and enable the accelerated late-time expansion with $w \lesssim -1$,
-we need $\phi$ to roll slowly in $V(\phi)$ with $\dot\phi \ll \sqrt{V}$.
+we need $\varphi$ to roll slowly in $V(\varphi)$ with $\dot\varphi \ll \sqrt{V}$.
 
 Perturbations of the scalar field also evolve with the perturbed Klein-Gordon equation:
 \begin{equation}
-\ddot{\delta\phi} = -2 \scrH \dot{\delta\phi} - (k^2 + a^2 V^\pprime) \delta\phi + \dot\phi (\dot{\Psi} + 3\dot{\Phi}) - 2 a^2 V^\prime \Psi.
+\ddot{\delta\varphi} = -2 \scrH \dot{\delta\varphi} - (k^2 + a^2 V^\pprime) \delta\varphi + \dot\varphi (\dot{\psi} + 3\dot{\phi}) - 2 a^2 V^\prime \psi.
 \end{equation}
 They contribute energy density and pressure perturbations
 \begin{equation}
-\delta\rho = \frac{1}{a^2}\dot{\phi} \, \dot{\delta\phi} - \frac{1}{a^2}\dot{\phi}^2 \Psi + V^\prime \delta\phi, \quad
-\delta P   = \frac{1}{a^2}\dot{\phi} \, \dot{\delta\phi} - \frac{1}{a^2}\dot{\phi}^2 \Psi - V^\prime \delta\phi.
+\delta\rho = \frac{1}{a^2}\dot{\varphi} \, \dot{\delta\varphi} - \frac{1}{a^2}\dot{\varphi}^2 \psi + V^\prime \delta\varphi, \quad
+\delta P   = \frac{1}{a^2}\dot{\varphi} \, \dot{\delta\varphi} - \frac{1}{a^2}\dot{\varphi}^2 \psi - V^\prime \delta\varphi.
 \end{equation}
 
 \subsection{Early dark energy}
@@ -1818,7 +1817,7 @@ This is a viable route to alleviating the $H_0$ tension, for example \cite{sekig
 %Thomson scattering $\sigma_T \propto \alpha^2 / m_e^2$ \TODO{?}
 
 A changing gravitational constant $G$ affects the expansion history through the Friedmann equation $H^2 = 8\pi G \rho / 3$,
-and the perturbations through the Poisson equation $\nabla^2 \Phi = 4 \pi G a^2 \delta \rho$.
+and the perturbations through the Poisson equation $\nabla^2 \psi = 4 \pi G a^2 \delta \rho$.
 For example, a time-independent increase of $G$ leads to increased damping of the CMB power spectrum at high $\ell$ \cite{umezuCosmologicalConstraintsNewtons2005,galliCavendishPLANCKConstraining2009,lamineCosmologicalMeasurementGravitational2025}.
 Several modified gravity theories also lead to effective changes in $G$,
 including \BD{} gravity in particular \TODO{ref somewhere}.
@@ -1837,26 +1836,26 @@ by considering modifications to the mathematical constant $\pi$ \cite{gammalCirc
 MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
 MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstraintsSubhorizon2022}
 take a phenomenological approach to modified gravity.
-They modify the Einstein equations for the metric potentials $\Phi$ and $\Psi$ in GR (where $\mu=\eta=1$ below)
+They modify the Einstein equations for the metric potentials $\phi$ and $\psi$ in GR (where $\mu=\eta=1$ below)
 with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$:
 \begin{subequations}
 \begin{align}
-k^2\Psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
-k^2\big(\Phi - \gamma(a,k) \Psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} .
+k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
+k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} .
 \end{align}%
 \label{eq:mg}%
 \end{subequations}
 Without shear stress $\sigma = 0$,
-this becomes $k^2 \Psi = -4\pi\mu a^2 \rho \Delta$ and $\Phi = \gamma \Psi$,
+this becomes $k^2 \psi = -4\pi\mu a^2 \rho \Delta$ and $\phi = \gamma \psi$,
 which are common approximations in $N$-body simulations in the late universe, for example.
 But in \EB{} codes it is necessary to account for the shear stress of photons and neutrinos in the early universe.
 
 Equations \eqref{eq:mg} are not plug-and-play replacements in \EB{} codes.
-The continuity equations \eqref{eq:pert_cont} require $\dot\Phi$,
-which is directly available in standard \LCDM{} implementations that evolve a differential equation for $\dot\Phi$.
-Modified gravity codes must instead obtain $\dot\Phi$ by differentiating equations \eqref{eq:mg},
+The continuity equations \eqref{eq:pert_cont} require $\dot\phi$,
+which is directly available in standard \LCDM{} implementations that evolve a differential equation for $\dot\phi$.
+Modified gravity codes must instead obtain $\dot\phi$ by differentiating equations \eqref{eq:mg},
 which results in long expressions \cite[e.g.][in the synchronous gauge]{zuccaMGCAMBMassiveNeutrinos2019}.
-Similarly, the line-of-sight integral for the CMB source function \TODO{ref} needs $\dot\Psi$.
+Similarly, the line-of-sight integral for the CMB source function \TODO{ref} needs $\dot\psi$.
 This can be computed either by expanding the derivative or by evaluating the derivative numerically with splines after integrating the perturbations.
 
 \subsubsection{Theoretically based}
@@ -1868,11 +1867,11 @@ This is generally a very large space of models.
 
 In particular, both codes support Horndeski theories of gravity.
 This is the most general class of theories with second order equations of motion
-from a metric tensor $g_{\mu\nu}$ and scalar field $\phi$ as degrees of freedom.
+from a metric tensor $g_{\mu\nu}$ and scalar field $\varphi$ as degrees of freedom.
 Any Horndeski theory is specified by four free functions
-of $\phi$ and the kinetic term $X = -(\partial_\mu \phi)^2/2$:
+of $\varphi$ and the kinetic term $X = -(\partial_\mu \varphi)^2/2$:
 \begin{equation}
-G_2(\phi, X), \quad G_3(\phi, X), \quad G_4(\phi, X), \quad G_5(\phi, X) .
+G_2(\varphi, X), \quad G_3(\varphi, X), \quad G_4(\varphi, X), \quad G_5(\varphi, X) .
 \label{eq:horndeski}
 \end{equation}
 
@@ -1880,8 +1879,8 @@ The background gravity equations are schematically modified as \cite[e.g.][]{bel
 \begin{subequations}
 \begin{align}
 0 &= C(H) = C_3 H^3 + C_2 H^2 + C_1 H + C_0 , \label{eq:hifried1} \\
-\dot{H} &= \dot{H}(H, \phi, \dot{\phi}), \label{eq:hifried2} \\
-\ddot{\phi} &= \ddot{\phi}(H, \phi, \dot{\phi}) . \label{eq:hikg}
+\dot{H} &= \dot{H}(H, \varphi, \dot{\varphi}), \label{eq:hifried2} \\
+\ddot{\varphi} &= \ddot{\varphi}(H, \varphi, \dot{\varphi}) . \label{eq:hikg}
 \end{align}%
 \label{eq:hibg}%
 \end{subequations}
@@ -1894,7 +1893,7 @@ where the constraint \eqref{eq:fried1} has the form $C_2 H^2 + C_0 = 0$ and is u
 Instead, equations \eqref{eq:hifried2} and \eqref{eq:hikg} are integrated as ODEs, but with a few nuances:
 \begin{itemize}
 \item The initial condition for $H(\tau_\ini)$ is found by solving the constraint equation \eqref{eq:hifried1} with a nonlinear root solver (e.g. a Newton method).
-Initial conditions for $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ are set freely or with predetermined expressions on a model-by-model basis.
+Initial conditions for $\varphi(\tau_\ini)$ and $\dot{\varphi}(\tau_\ini)$ are set freely or with predetermined expressions on a model-by-model basis.
 \item The constraint \eqref{eq:hifried1} is accounted for over time by constraint dampening:
 \begin{equation}
 \dot{H} \to \dot{H} - a \gamma_H \cdot \sign(C^\prime(H)) \cdot C(H), \quad (a \gamma_H > 0).
@@ -1906,21 +1905,21 @@ so deviations from it grow over time.
 It is common with overdetermined systems that have more equations than variables,
 such as the Einstein equations, where a subset of equations must be chosen to integrate with numerical methods.
 \item One parameter or initial condition must usually be found with the shooting method,
-as not all choices of $H_0$ (treated as a free parameter), $\phi(\tau_\ini)$ and $\dot{\phi}(\tau_\ini)$ integrate such that $H(\tau_0)$ takes the value $H_0$.
+as not all choices of $H_0$ (treated as a free parameter), $\varphi(\tau_\ini)$ and $\dot{\varphi}(\tau_\ini)$ integrate such that $H(\tau_0)$ takes the value $H_0$.
 \end{itemize}
 
 The gravitational perturbation equations are also modified.
 They can be arranged schematically as four redundant Einstein equations
-and one perturbed Klein-Gordon equation for the metric potentials $\Phi$ and $\Psi$
-and the scalar field perturbation $v_X = -a\,\delta\phi / \dot{\phi}$
+and one perturbed Klein-Gordon equation for the metric potentials $\phi$ and $\psi$
+and the scalar field perturbation $v_X = -a\,\delta\varphi / \dot{\varphi}$
 \cite{belliniMaximalFreedomMinimum2014a}:
 \begin{subequations}
 \begin{align}
-A_1 \dot{\Phi} + A_2 \dot{v}_X + A_3 \Phi + A_4 \Psi + A_5 v_X &= A, && (G_{00}) \label{eq:hipt1} \\
-B_1 \dot{\Phi} + B_2 \dot{v}_X + B_3 \Psi + B_4 v_X &= B, && (G_{0i}) \label{eq:hipt2} \\
-C_1 \Phi + C_2 \Psi + C_3 v_X &= C, && (G_{ij}) \label{eq:hipt3} \\
-D_1 \ddot{\Phi} + D_2 \ddot{v}_X + D_3 \dot{\Phi} + D_4 \dot{\Psi} + D_5 \dot{v}_X + D_6 \Psi + D_7 v_X &= D, && (G_{ii}) \label{eq:hipt4} \\
-E_1 \ddot{\Phi} + E_2 \ddot{v}_X + E_3 \dot{\Phi} + E_4 \dot{\Psi} + E_5 \dot{v}_X + E_6 \Phi + E_7 \Psi + E_8 v_X &= 0 , && (\delta\phi) \label{eq:hipt5}
+A_1 \dot{\phi} + A_2 \dot{v}_X + A_3 \phi + A_4 \psi + A_5 v_X &= A, && (G_{00}) \label{eq:hipt1} \\
+B_1 \dot{\phi} + B_2 \dot{v}_X + B_3 \psi + B_4 v_X &= B, && (G_{0i}) \label{eq:hipt2} \\
+C_1 \phi + C_2 \psi + C_3 v_X &= C, && (G_{ij}) \label{eq:hipt3} \\
+D_1 \ddot{\phi} + D_2 \ddot{v}_X + D_3 \dot{\phi} + D_4 \dot{\psi} + D_5 \dot{v}_X + D_6 \psi + D_7 v_X &= D, && (G_{ii}) \label{eq:hipt4} \\
+E_1 \ddot{\phi} + E_2 \ddot{v}_X + E_3 \dot{\phi} + E_4 \dot{\psi} + E_5 \dot{v}_X + E_6 \phi + E_7 \psi + E_8 v_X &= 0 , && (\delta\varphi) \label{eq:hipt5}
 \end{align}
 \end{subequations}
 where the right sides $A$-$D$ are energy-momentum contributions from matter,
@@ -1930,10 +1929,10 @@ that are uniquely determined from $G_i$ evaluated on the background.
 Some coefficients also have factors of $k^2$.
 
 These overdetermined equations can be solved in the following way:
-a second order ODE for $\ddot{v}_X$ by eliminating $\ddot{\Phi}$ from \eqref{eq:hipt4} and \eqref{eq:hipt5};
-a first order ODE for $\dot\Phi$ from either \eqref{eq:hipt1} or \eqref{eq:hipt2};
-and an algebraic equation for $\Psi$ from \eqref{eq:hipt3}.
-This also needs $\dot{\Psi}$, which can be found by differentiating the $\Psi$ expression once.
+a second order ODE for $\ddot{v}_X$ by eliminating $\ddot{\phi}$ from \eqref{eq:hipt4} and \eqref{eq:hipt5};
+a first order ODE for $\dot\phi$ from either \eqref{eq:hipt1} or \eqref{eq:hipt2};
+and an algebraic equation for $\psi$ from \eqref{eq:hipt3}.
+This also needs $\dot{\psi}$, which can be found by differentiating the $\psi$ expression once.
 This is similar in principle to \LCDM{} apart from the addition of the scalar field equation,
 but much more convoluted as the coefficients have quite long expressions.
 
@@ -1988,10 +1987,10 @@ or use the shooting method to determine the initial conditions that give the des
 The perturbation equations must also be modified \cite[e.g.][appendix A]{figuerueloDarkMatterbaryonsElastic2026}:
 \begin{subequations}
 \begin{align}
-\delta_b &= -\theta_b + +3 \dot{\Psi}, \\
-\theta_b &= -\scrH \theta_c + k^2 \Phi + c_s^2 k^2 \delta_b + \dot{\kappa} \frac{4 \rho_\gamma}{3 \rho_b} (\theta_\gamma - \theta_b) + \frac{\gamma}{a^2} (\rho_c - \rho_b) , \\
-\delta_c &= -\theta_c + 3 \dot{\Psi}, \\
-\theta_b &= -\scrH \delta_c + k^2 \Phi - \frac{\gamma}{a^2} \frac{\rho_b}{\rho_c} (\theta_c - \theta_b) .
+\delta_b &= -\theta_b + 3 \dot{\phi}, \\
+\theta_b &= -\scrH \theta_c + k^2 \psi + c_s^2 k^2 \delta_b + \dot{\kappa} \frac{4 \rho_\gamma}{3 \rho_b} (\theta_\gamma - \theta_b) + \frac{\gamma}{a^2} (\rho_c - \rho_b) , \\
+\delta_c &= -\theta_c + 3 \dot{\phi}, \\
+\theta_b &= -\scrH \delta_c + k^2 \psi - \frac{\gamma}{a^2} \frac{\rho_b}{\rho_c} (\theta_c - \theta_b) .
 \end{align}
 \end{subequations}
 Such modifications frequently touch the approximation schemes in \EB{} codes.
@@ -2747,7 +2746,7 @@ The Poisson equation \eqref{eq:poisson_gr} in the matter-dominated late universe
 \begin{equation}
 \nabla^2 \psi(\tau, \mathbf{x}) = 4\pi \mu(\tau) a(\tau)^2 \delta\rho_m(\tau,\mathbf{x}),
 \qquad
-\mu(\tau) = \frac{2\omega+4}{2\omega+3} \frac{1}{\bar\phi(\tau)} .
+\mu(\tau) = \frac{2\omega+4}{2\omega+3} \frac{1}{\bar\varphi(\tau)} .
 \label{eq:poisson_bd}
 \end{equation}
 It shows that \BD{} gravity effectively promotes Newton's constant $\mu=1$ in \GR{}
