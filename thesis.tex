@@ -614,28 +614,55 @@ We can now write down the perturbed FLRW metric in the Newtonian gauge:
 \subsection{Fourier space}
 \label{sec:fourier}
 
-Cosmological theories do not predict the universe exactly in position space $(\tau, \mathbf{x})$.
-Instead, they predict statistical properties of observables that are computed in Fourier space, such as matter and CMB power spectra.
-The last step is therefore to transform a perturbation $\delta f(\tau, \mathbf{x})$ from position-space to Fourier-space $\delta f(\tau, \mathbf{k})$:
-\TODO{a macro for $\delta\!f$ with less space?}
-\begin{subequations}
-\begin{align}
-\delta f(\tau, \mathbf{k}) = \int \diff{^3 x} \, e^{-i \mathbf{k} \cdot \mathbf{x}} \delta f(\tau, \mathbf{x}), \label{eq:r2f} \\
-\delta f(\tau, \mathbf{x}) = \int \frac{\diff{^3 k}}{(2\pi)^3} \, e^{+i \mathbf{k} \cdot \mathbf{x}} \delta f(\tau, \mathbf{k}). \label{eq:f2r}
-\end{align}
-\end{subequations}
-
-A computational advantage of going to Fourier space is that partial differential equations (PDEs) in $(\tau, \mathbf{x})$
-become ordinary differential equations (ODEs) in $\tau$ that evolve independently per $\mathbf{k}$.
-This happens because every term in every linearly perturbed equation has exactly one perturbed factor $\delta f(\tau, \mathbf{x})$ by construction,
-which may be multiplied by a $\tau$-dependent factor and is acted upon by time derivatives $\pdv{}/{\tau}$ and spatial gradient $\pdv{}/{x_i}$.
-The Fourier transformation \eqref{eq:r2f} therefore inserts exactly one $\mathbf{k}$-integral in every term that does not mix different $\mathbf{k}$.
-It leaves time derivatives intact and turns spatial gradients into multiplications:
+When we do linear perturbation theory ($O(\epsilon^1)$)
+around a perfectly homogeneous and isotropic background universe ($O(\epsilon^0)$),
+every perturbation equation we encounter will be in this form:
+\TODO{delta f spacing}
 \begin{equation}
-\pdv{f(\tau, \mathbf{x})}{\tau} \to \pdv{f(\tau, \mathbf{k})}{\tau} , \qquad
-\pdv{f(\tau, \mathbf{x})}{x_i} \to (i k_i) \cdot f(\tau, \mathbf{k}) .
+%c(\tau) \, \partial_\tau^{n_\tau} \, \partial_x^{n_x} \, \partial_y^{n_y} \, \partial_z^{n_z} \, \delta f(\tau, \mathbf{x}) ,
+\sum_i C_i(\tau) \, \partial_\tau^{a_i} \, \partial_x^{b_i} \, \partial_y^{c_i} \, \partial_z^{d_i} \, \delta f_i(\tau, \mathbf{x}) = 0,
+\label{eq:pert_real}
 \end{equation}
-In this way, only derivatives with respect to time are left.
+where $C_i(\tau)$ are time-dependent functions of the background
+that cannot depend on $\mathbf{x}$ because it is homogeneous,
+and $\delta f_i(\tau, \mathbf{x})$ are perturbation variables
+that appear linearly in every term and are acted upon by any number of time and space derivatives.
+This is a partial differential equation (PDE) in 4 variables $(\tau, \mathbf{x})$,
+and is difficult to solve in position space.
+
+We therefore move to Fourier space $(\tau, \mathbf{k})$ by transforming every perturbation:
+%(I rely on context or explicit arguments to distinguish $\delta f(\tau, \mathbf{x})$ and $\delta f(\tau, \mathbf{k})$):%
+%\begin{subequations}
+%\begin{align}
+\begin{equation}
+\delta f(\tau, \mathbf{k}) = \int \diff{^3 x} \, e^{-i \mathbf{k} \cdot \mathbf{x}} \, \delta f(\tau, \mathbf{x}), \qquad %\label{eq:r2f}
+\delta f(\tau, \mathbf{x}) = \int \frac{\diff{^3 k}}{(2\pi)^3} \, e^{+i \mathbf{k} \cdot \mathbf{x}} \, \delta f(\tau, \mathbf{k}). %\label{eq:f2r}
+\end{equation}
+%\end{align}
+%\end{subequations}
+Transforming equation \eqref{eq:pert_real} to Fourier space gives the corresponding equation for $\delta f(\tau, \mathbf{k})$:
+%is found with the following simple prescription:
+%\begin{equation}
+%\pdv{f(\tau, \mathbf{x})}{\tau} \to \pdv{f(\tau, \mathbf{k})}{\tau} , \qquad
+%\pdv{f(\tau, \mathbf{x})}{x_i} \to (i k_i) \cdot f(\tau, \mathbf{k}) .
+%\partial_\tau \, \delta f(\tau, \mathbf{x}) \to \partial_\tau \, \delta f(\tau, \mathbf{k}) , \qquad
+%\partial_{x_i} \, \delta f(\tau, \mathbf{x}) \to (i k_i) \, \delta f(\tau, \mathbf{k}) .
+%\end{equation}
+%In other words, equation \eqref{eq:pert_real} in Fourier space is
+\begin{equation}
+\sum_i C_i(\tau) \, (i k_x)^{b_i} (i k_y)^{c_i} (i k_z)^{d_i} \, \partial_\tau^{a_i} \, \delta f_i(\tau, \mathbf{k}) = 0.
+\label{eq:pert_fourier}
+\end{equation}
+This is a set of ordinary differential equations (ODEs) in time $\tau$
+for each wavenumber $\mathbf{k}$ \emph{independently}.
+This decoupling happens due to linearity (one $\delta f$ per term)
+and homogeneity ($C_i(\tau)$ does not depend on $\mathbf{x}$):
+only one $\mathbf{k}$-integral is inserted per term,
+so all terms of equation \eqref{eq:pert_real} combine under a single $\mathbf{k}$-integral
+whose integrand must vanish for each $\mathbf{k}$.
+There is never any convolution between different $\mathbf{k}$.
+It is much easier to solve many small ODEs \eqref{eq:pert_fourier}
+than one big four-dimensional PDE \eqref{eq:pert_real}.
 
 \section{\EB{} equations}
 
