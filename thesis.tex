@@ -622,15 +622,15 @@ We can now write down the perturbed FLRW metric in the Newtonian gauge:
 \subsection{Fourier space}
 \label{sec:fourier}
 
-When we do linear perturbation theory ($O(\epsilon^1)$)
-around a perfectly homogeneous and isotropic background universe ($O(\epsilon^0)$),
-every perturbation equation we encounter will be in this form:
+When we do linear perturbation theory
+on a homogeneous and isotropic background
+every perturbation equation we encounter will come in the form
 \begin{equation}
 %c(\tau) \, \partial_\tau^{n_\tau} \, \partial_x^{n_x} \, \partial_y^{n_y} \, \partial_z^{n_z} \, \deltaf(\tau, \mathbf{x}) ,
-\sum_i C_i(\tau) \, \partial_\tau^{a_i} \, \partial_x^{b_i} \, \partial_y^{c_i} \, \partial_z^{d_i} \, \deltaf_i(\tau, \mathbf{x}) = 0,
+\sum_i C_i(\tau) \, \partial_\tau^{a_i} \, \partial_x^{b_i} \, \partial_y^{c_i} \, \partial_z^{d_i} \, \deltaf_i(\tau, \mathbf{x}) = 0.
 \label{eq:pert_real}
 \end{equation}
-where $C_i(\tau)$ are time-dependent functions of the background
+Here $C_i(\tau)$ are time-dependent functions of the background
 that cannot depend on $\mathbf{x}$ because it is homogeneous,
 and $\deltaf_i(\tau, \mathbf{x})$ are perturbation variables
 that appear linearly in every term and are acted upon by any number of time and space derivatives.
@@ -647,7 +647,8 @@ We therefore move to Fourier space $(\tau, \mathbf{k})$ by transforming every pe
 \end{equation}
 %\end{align}
 %\end{subequations}
-Transforming equation \eqref{eq:pert_real} to Fourier space gives the corresponding equation for $\deltaf(\tau, \mathbf{k})$:
+Transforming equation \eqref{eq:pert_real},
+the corresponding equation for $\deltaf(\tau, \mathbf{k})$ becomes
 %is found with the following simple prescription:
 %\begin{equation}
 %\pdv{f(\tau, \mathbf{x})}{\tau} \to \pdv{f(\tau, \mathbf{k})}{\tau} , \qquad
@@ -660,16 +661,16 @@ Transforming equation \eqref{eq:pert_real} to Fourier space gives the correspond
 \sum_i C_i(\tau) \, (i k_x)^{b_i} (i k_y)^{c_i} (i k_z)^{d_i} \, \partial_\tau^{a_i} \, \deltaf_i(\tau, \mathbf{k}) = 0.
 \label{eq:pert_fourier}
 \end{equation}
-This is a set of ordinary differential equations (ODEs) in time $\tau$
-for each wavenumber $\mathbf{k}$ \emph{independently}.
+This is a set of ordinary differential equations (ODEs) in time $\tau$ for each wavenumber $\mathbf{k}$,
+where different $\mathbf{k}$ enters \emph{independently}.
 This decoupling happens due to linearity (one $\deltaf$ per term)
-and homogeneity ($C_i(\tau)$ does not depend on $\mathbf{x}$):
-only one $\mathbf{k}$-integral is inserted per term,
+and homogeneity ($C_i(\tau)$ independent of $\mathbf{x}$).
+Then only one $\mathbf{k}$-integral is inserted per term,
 so all terms of equation \eqref{eq:pert_real} combine under a single $\mathbf{k}$-integral
-whose integrand must vanish for each $\mathbf{k}$.
+whose integrand must vanish separately per $\mathbf{k}$.
 There is never any convolution between different $\mathbf{k}$.
-It is much easier to solve many small ODEs \eqref{eq:pert_fourier} in Fourier space,
-rather than one big four-dimensional PDE \eqref{eq:pert_real} in position space.
+It is far easier to solve many small ODEs \eqref{eq:pert_fourier} in Fourier space
+than one big four-dimensional PDE \eqref{eq:pert_real} in position space.
 
 \section{\EB{} equations}
 
@@ -703,10 +704,11 @@ and ultimately the spacetime metric $g_{\mu\nu}$ \cite[e.g.][]{dodelsonModernCos
 On the right is the energy-momentum tensor $T_{\mu\nu}$ that describes the \enquote{matter} content of the universe.
 Here we absorb the cosmological constant $\Lambda$ into $T_{\mu\nu}$ (see \cref{sec:LCDM}).
 
-Now insert the perturbed spacetime metric \eqref{eq:flrw_perturbed}
+Now insert the perturbed metric \eqref{eq:flrw_perturbed}
 and compute up to 1st order in perturbation theory.
 In the background (to 0th order),
-we get the Friedmann equations \eqref{eq:fried} for the scale factor $a(\tau)$ (here in conformal time $\tau$):
+we get the Friedmann equations \eqref{eq:fried} for the scale factor $a(\tau)$
+with respect to conformal time $\tau$:%
 \TODO{$\scrH$ or $\mathcal{H}$?}
 \begin{subequations}
 \begin{align}
@@ -728,8 +730,8 @@ k^2 (\phi-\psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
 On the right we have introduced several variables for the energy-momentum perturbations $\delta T^\mu{}_\nu$
 (see \cite{maCosmologicalPerturbationTheory1995a} for precise definitions;
 the variables are computed in \cref{sec:boltzmann}):%
-\footnote{Note that $T_{\mu\nu}$ is \emph{not} a perfect fluid at this general level.
-This is only true for the contribution from select species in \cref{sec:fluid}.}
+\footnote{Note that $T_{\mu\nu}$ is not a perfect fluid at this general level!
+This is only true for the contribution from some species in \cref{sec:fluid}.}
 \begin{itemize}
 \item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho$ (from $\delta T^0_0$, i.e. presence of energy) alter the 1st Friedmann equation locally.
 \item Equation \eqref{eq:pertein2} describes how the momentum density divergence $(\rho+P)\theta$ (from $i k^j \delta T^0_j$, i.e. flux of energy) determines the metric in a redundant way.
