@@ -140,6 +140,7 @@ Moreover, we should strive to avoid model-specific approximation schemes and ass
 as they make it harder to implement modifications and are a source of error for modifications.
 
 \section{The standard cosmological model}
+\label{sec:LCDM}
 
 The \LCDM{} model is the current iteration of the standard model in cosmology
 because it is the best explanation we have so far of several observations we have made in the Universe.
@@ -496,6 +497,7 @@ I also go through some improvements that have been made since the initial implem
 before closing with the current status of SymBoltz and an outlook to how it may be used in the future.
 
 \section{Cosmological perturbation theory}
+\label{sec:cpt}
 
 The idea of cosmological perturbation theory is that the universe is \emph{almost} homogeneous and isotropic,
 and to do perturbation theory around a perfectly homogeneous and isotropic FLRW metric $\bar{g}_{\mu\nu} = a^2(\tau) \, \eta_{\mu\nu}$,
@@ -514,6 +516,7 @@ I summarize some general and subtle considerations that make up the theoretical 
 \cite[e.g.][]{dodelsonModernCosmology2021a,baumannNotes}.
 
 \subsection{Scalar-vector-tensor decomposition}
+\label{sec:svt}
 
 By definition, $h_{\mu\nu}$ is a symmetric $4 \times 4$ metric tensor perturbation and thus has 10 independent components.
 If we are too eager and attack the Einstein equations directly with $h_{\mu\nu}$,
@@ -555,6 +558,7 @@ and the growth of large-scale structure.
 %We will here consider only scalar perturbations, that are most important and the only mode currently implemented in SymBoltz.
 
 \subsection{Gauge freedom}
+\label{sec:gauge}
 
 Another concern is that the laws of physics should not depend on our labeling of spacetime coordinates $x^\mu$.
 If we make an infinitesimal coordinate transformation $x^\mu \to \tilde{x}^\mu = x^\mu + \xi^\mu(x)$,
@@ -669,79 +673,98 @@ rather than one big four-dimensional PDE \eqref{eq:pert_real} in position space.
 
 \section{\EB{} equations}
 
-The linearized \EB{} equations describes gravity (Einstein equations) sourced by energy-momentum from a set of \enquote{matter} ingredients (Boltzmann equations).
-With the metric \eqref{eq:flrw_perturbed} in the Newtonian gauge,
-we are in a position to attack this problem.
-We will follow \cite{maCosmologicalPerturbationTheory1995a}.
+Having laid the groundwork in \cref{sec:cpt},
+we move on to the fundamental \EB{} equations of cosmology.
+These coupled equations describe the interplay between gravity (through the Einstein equation)
+and the \enquote{matter} ingredients that make up the universe (through the Boltzmann equation).
+
+Here I summarize how scalar modes (see \cref{sec:svt})
+in the conformal Newtonian gauge \eqref{eq:flrw_perturbed} (see \cref{sec:gauge})
+evolve up to linear order in Fourier space (see \cref{sec:fourier}).
+I largely follow the notation and structure of the seminal work of \cite{maCosmologicalPerturbationTheory1995a}.
+However, I start from the hardest things that require least assumptions,
+then gradually impose assumptions to end up at the easiest things.
+The intention is to better highlight the assumptions of each step.
 
 \subsection{Einstein equations}
 \label{sec:einstein}
 
-The Einstein equations are
+Gravity in \GR{} is described by the Einstein equations
 \begin{equation}
-G_{\mu\nu} = 8\pi T_{\mu\nu}.
+G_{\mu\nu} = 8\pi T_{\mu\nu} .
 \label{eq:einstein}
 \end{equation}
-On the left side, the Einstein tensor $G_{\mu\nu} = R_{\mu\nu} - \frac12 R g_{\mu\nu}$
-is made from the Ricci scalar $R = R^\mu_\mu$ and Ricci tensor $R_{\mu\nu} = R^{\rho}_{\mu\rho\nu}$,
-which is constructed from the Riemann tensor $R^{\rho}_{\sigma\mu\nu}$,
-which in turn is constructed from the Christoffel symbols $\Gamma^{\alpha}_{\beta\gamma}$
-and ultimately from the spacetime metric $g_{\mu\nu}$.
-On the right side, the energy-momentum tensor $T_{\mu\nu}$ describes the \enquote{matter content} of the universe.
-It describes how energy and momentum describes the geometry of spacetime.
+On the left is the Einstein tensor $G_{\mu\nu} = R_{\mu\nu} - \frac12 R g_{\mu\nu}$,
+which is built from the Ricci scalar $R = R^\mu_\mu$,
+Ricci tensor $R_{\mu\nu} = R^{\rho}_{\mu\rho\nu}$,
+Riemann tensor $R^{\rho}_{\sigma\mu\nu}$,
+Christoffel symbols $\Gamma^{\alpha}_{\beta\gamma}$,
+and ultimately the spacetime metric $g_{\mu\nu}$ \cite[e.g.][]{dodelsonModernCosmology2021a}.
+On the right is the energy-momentum tensor $T_{\mu\nu}$ that describes the \enquote{matter} content of the universe.
+Here we absorb the cosmological constant $\Lambda$ into $T_{\mu\nu}$ (see \cref{sec:LCDM}).
 
-Inserting the perturbed spacetime metric \eqref{eq:flrw_perturbed} for scalar perturbations in the Newtonian gauge,
-and computing up to 1st order in perturbation theory, we obtain
-the Friedmann equations \eqref{eq:fried} to 0th order,
-and four overdetermined linear perturbation equations for the metric potentials $\phi$ and $\psi$:
-\TODO{define $\scrH$}
+Now insert the perturbed spacetime metric \eqref{eq:flrw_perturbed}
+and compute up to 1st order in perturbation theory.
+In the background (to 0th order),
+we get the Friedmann equations \eqref{eq:fried} for the scale factor $a(\tau)$ (here in conformal time $\tau$):
+\TODO{$\scrH$ or $\mathcal{H}$?}
+\begin{subequations}
+\begin{align}
+\scrH^2 &= \left( \frac{\dot{a}}{a} \right)^2 = \frac{8\pi}{3} \, a^2 \rho , \label{eq:bgfried1} \\
+\dot{\scrH} &= -\frac{4\pi}{3} \, a^2 (\rho+3P) \label{eq:bgfried2}.
+\end{align}
+\end{subequations}
+In the perturbations (to 1st order),
+we get four (redundant) equations for the metric perturbations $\phi$ and $\psi$:
 \begin{subequations}
 \label{eq:pertein}
 \begin{align}
 k^2 \phi + 3\scrH(\dot{\phi} + \scrH \psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
 k^2 (\dot\phi + \scrH \psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
-\ddot{\phi} + \scrH (\dot{\psi}+2\dot{\phi}) + (2\frac{\ddot{a}}{a}-\scrH^2) \psi + \frac{k^2}{3} (\phi-\psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
+\ddot{\phi} + \scrH (\dot{\psi}+2\dot{\phi}) + (2\dot{\scrH}+\scrH^2) \psi + \tfrac13 k^2 (\phi-\psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
 k^2 (\phi-\psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
 \end{align}
 \end{subequations}
-These are four overdetermined equations for the two metric potentials $\phi$ and $\psi$.
-It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
-and determine $\psi$ algebraically from the constraint \eqref{eq:pertein4}.
-The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ (see \cref{sec:boltzmann})
-\cite[equation 25]{maCosmologicalPerturbationTheory1995a}.
+On the right we have introduced several variables for the energy-momentum perturbations $\delta T^\mu{}_\nu$
+(see \cite{maCosmologicalPerturbationTheory1995a} for precise definitions;
+the variables are computed in \cref{sec:boltzmann}):%
+\footnote{Note that $T_{\mu\nu}$ is \emph{not} a perfect fluid at this general level.
+This is only true for the contribution from select species in \cref{sec:fluid}.}
+\begin{itemize}
+\item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho$ (from $\delta T^0_0$, i.e. presence of energy) alter the 1st Friedmann equation locally.
+\item Equation \eqref{eq:pertein2} describes how the momentum density divergence $(\rho+P)\theta$ (from $i k^j \delta T^0_j$, i.e. flux of energy) determines the metric in a redundant way.
+\item Equation \eqref{eq:pertein3} describes how pressure perturbations $\delta P$ (from the trace part of $\delta T^i_j$) alter the Friedmann acceleration equation locally.
+\item Equation \eqref{eq:pertein4} describes how anisotropic stresses $(\rho+P)\sigma$ (from the traceless part of $\delta T^i_j$) induce a \enquote{slip} $\phi \neq \psi$ between the metric potentials.
+\end{itemize}
 
-\TODO{Energy-momentum tensor definition?}
+From purely geometrical considerations,
+one can derive the Bianchi identity $\nabla_\mu G^{\mu\nu} = 0$ on the left side of the Einstein equations \eqref{eq:einstein}.
+On the right side, it then follows immediately that the total $T_{\mu\nu}$ obeys the conservation law $\nabla_\mu T^{\mu\nu} = 0$.
+This leads to the background continuity equation for the total $\rho$
+in terms of the total equation of state $w = P/\rho$:
 \begin{equation}
-T_{\mu\nu} = \text{\TODO{}}
-\label{eq:energy_momentum_fluid}
+\dot{\rho} = -3\scrH(1+w) \rho.
+\label{eq:bg_cont}
 \end{equation}
-
-The Bianchi identity states that $\nabla_\mu G^{\mu\nu} = 0$,
-and follows from purely geometrical considerations.
-It immediately follows from the Einstein equation \eqref{eq:einstein} that the total energy-momentum tensor is conserved:
-\begin{equation}
-\nabla_\mu T^{\mu\nu} = 0.
-\label{eq:energy_momentum_conservation}
-\end{equation}
-With the energy-momentum tensor \eqref{eq:energy_momentum_fluid},
-this leads to the continuity and Euler equations for the total energy-momentum content
-(here $\delta = \delta\rho/\rho$ and $w = P/\rho$):
+We also get the perturbed continuity and Euler equations for $\delta=\delta\rho/\rho$ and $\theta$:
 \begin{subequations}
-\label{eq:pert_fluid} % TODO: move all labels in subequations before align
+\label{eq:pert_fluid}
 \begin{align}
 \dot{\delta} &= -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
 \dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi. \label{eq:pert_euler}
 \end{align}
 \end{subequations}
-This describes the evolution only of the total energy-momentum contributions.
-However, the \emph{matter content} contains contributions from several different species,
-each of which are described by the Boltzmann equation.
+This describes the evolution of the total energy-momentum contributions,
+but is not a closed system of equations because the Einstein equations do not say anything about $w$, $\delta P/\delta\rho$ and $\sigma$.
+To close the system,
+we will describe individual contributions from different species with the Boltzmann equation.
 
 \subsection{Boltzmann equation}
 \label{sec:boltzmann}
 
 The total energy-momentum content $T_{\mu\nu} = \sum_s T_{\mu\nu}^s$ is described as a sum of contributions from several species $s$.
-The variables in \eqref{eq:pertein} are additive in the following way:
+The variables in \eqref{eq:pertein} are additive in the following way
+($\delta_s$, $\theta_s$ and $\sigma_s$ are \emph{not} additive):
 \begin{equation}
 \label{eq:totalT}
 \begin{aligned}
@@ -754,7 +777,6 @@ P &= \sum_s P_s, \qquad &
 \end{aligned}
 \end{equation}
 These are the only quantities that the Einstein equations respond to.
-Note that $\delta_s$, $\theta_s$ and $\sigma_s$ are \emph{not} additive.
 \TODO{role of each in the Einstein equations}
 
 In the following subsections,
@@ -941,6 +963,13 @@ the \LCDM{} model results in a very large system of ODEs and algebraic relations
 \subsubsection{Gravity (\texorpdfstring{$G$}{G})}
 Gravity is described by General Relativity with the Einstein equations in \cref{sec:einstein},
 sourced by the total background energy density $\rho$, perturbed energy density $\delta\rho$ and shear $(\rho+P)\sigma$:
+\TODO{
+These are four overdetermined equations for the two metric potentials $\phi$ and $\psi$.
+It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
+and determine $\psi$ algebraically from the constraint \eqref{eq:pertein4}.
+The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ (see \cref{sec:boltzmann})
+\cite[equation 25]{maCosmologicalPerturbationTheory1995a}.
+}
 \begin{equation}
 \label{eq:eb_gravity}
 \begin{aligned}
@@ -2937,7 +2966,9 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 
 \TODO{state that papers are in chronological order}
 
-\TODO{fix tensor notation such as $T^\mu_\mu$}
+\TODO{fix tensor notation such as $T^\mu_\mu$; use $T^\mu{}_\mu$ instead}
+
+\TODO{move all labels in subequations before align}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
