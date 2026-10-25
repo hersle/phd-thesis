@@ -684,10 +684,8 @@ and the \enquote{matter} ingredients that make up the universe (through the Bolt
 Here I summarize how scalar modes (see \cref{sec:svt})
 in the conformal Newtonian gauge \eqref{eq:flrw_perturbed} (see \cref{sec:gauge})
 evolve up to linear order in Fourier space (see \cref{sec:fourier}).
-I largely follow the notation and structure of the seminal work of \cite{maCosmologicalPerturbationTheory1995a}.
-However, I start from the hardest things that require least assumptions,
-then gradually impose assumptions to end up at the easiest things.
-The intention is to better highlight the assumptions of each step.
+I highlight the general structure of the equations in the seminal work of \cite{maCosmologicalPerturbationTheory1995a},
+starting with general considerations and then simplifying the equations in special cases.
 
 \subsection{Einstein equations}
 \label{sec:einstein}
@@ -735,7 +733,7 @@ the variables are computed in \cref{sec:boltzmann}):%
 \footnote{Note that $T_{\mu\nu}$ is not a perfect fluid at this general level!
 This is only true for the contribution from some species in \cref{sec:fluid}.}
 \begin{itemize}
-\item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho \propto \delta T^0_0$, (i.e. presence of energy) alter the 1st Friedmann equation locally.
+\item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho \propto \delta T^0_0$ (i.e. presence of energy) alter the 1st Friedmann equation locally.
 \item Equation \eqref{eq:pertein2} describes how the momentum density divergence $(\rho+P)\theta \propto i k^j \delta T^0_j$ (i.e. flux of energy) determines the metric in a redundant way.
 \item Equation \eqref{eq:pertein3} describes how pressure perturbations $\delta P$ (from the trace part of $\delta T^i_j$) alter the Friedmann acceleration equation locally.
 \item Equation \eqref{eq:pertein4} describes how anisotropic stresses $(\rho+P)\sigma$ (from the traceless part of $\delta T^i_j$) induce a \enquote{slip} $\phi \neq \psi$ between the metric potentials.
@@ -750,7 +748,7 @@ in terms of the total equation of state $w = P/\rho$:
 \dot{\rho} = -3\scrH(1+w) \rho.
 \label{eq:bg_cont}
 \end{equation}
-We also get the perturbed continuity and Euler equations for $\delta=\delta\rho/\rho$ and $\theta$:
+We also get the perturbed continuity and Euler equations for $\delta=\delta\rho/\rho$ and $\theta$:
 \begin{subequations}
 \label{eq:pert_fluid}
 \begin{align}
@@ -811,6 +809,7 @@ T^i{}_j = a^{-4} \int \diff^3{q} \, \frac{q_i q_j}{\epsilon} \, f ,
 with the comoving energy
 \begin{equation}
 \epsilon(\tau, q) = \sqrt{q^2 + a(\tau)^2 m^2} .
+\label{eq:comoving_energy}
 \end{equation}
 
 The Boltzmann equation describes the evolution of the distribution in phase space
@@ -829,12 +828,14 @@ the geodesic equation can be used to show that the comoving momentum $q$ is cons
 The Boltzmann equation is then just
 \begin{equation}
 \pdv{f_0}{\tau} = C_0[f_0].
+\label{eq:boltzmann_bg}
 \end{equation}
 Notably, it means that we can write $f_0(\tau, q) = f_0(q)$ for non-interacting species.
 From the energy-momentum tensor \eqref{eq:Tgeneral}, the background density and pressure are:
 \begin{equation}
 \rho = 4\pi a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \epsilon , \qquad
 P = \frac{4\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} .
+\label{eq:energy_momentum_integrals_bg}
 \end{equation}
 
 For the perturbation $\Psi$,
@@ -852,7 +853,7 @@ The perturbed Boltzmann equation \eqref{eq:boltzmann_linear}
 depends on $\mathbf{k}$ and $\mathbf{q}$ only through their magnitudes $k$ and $q$
 and relative direction $\mu = \hat{\mathbf{k}} \cdot \hat{\mathbf{q}} \in [-1, 1]$.
 The same is true for $\delta\rho$, $\delta P$, $\theta$ and $\sigma$,
-which are the energy-momentum integrals \eqref{eq:Tgeneral} weighted by zero, one or two wavenumber components $k^i$
+which are the energy-momentum integrals \eqref{eq:Tgeneral} weighted by zero, one or two wavenumber components $k^i$,
 and thus in the form $\int \diff^3{q} = 2\pi \int \diff{q} \, q^2 \int \diff{\mu}$.
 
 Due to this azimuthal symmetry,
@@ -873,7 +874,7 @@ in terms of only the monopole $\Psi_0$, dipole $\Psi_1$ and quadrupole $\Psi_2$:
 \delta P &= \frac{4\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_0, &
 (\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_2 .
 \end{align}%
-\label{eq:energy_momentum_integrals}%
+\label{eq:energy_momentum_integrals_pert}%
 \end{subequations}
 
 With the multipole expansion, the linearized Boltzmann equation \eqref{eq:boltzmann_linear}
@@ -893,14 +894,14 @@ and that there is one differential equation for every $q$.
 Although the Einstein equations only need $l \leq 2$,
 the time evolution still couples all $l \geq 0$.
 
-This treatment is valid for arbitrary species, $f_0$ and $m$.
+This treatment is valid for arbitrary species, $f_0$ and $m$ (here in the non-interacting case).
 It is necessary for massive neutrinos, which transition from ultra-relativistic to non-relativistic limits
 as the expansion slows their momenta.
 Other species fall into limiting regimes where it is possible to integrate out $q$ or cut the multipole evolution at a finite $l$.
 
 \subsubsection{Hierarchy with multipoles: the relativistic treatment}
 
-For species that are relativistic with $q/a \gg m$,
+For species that are relativistic with $m=0$ (or $q/a \gg m$),
 we can analytically integrate out the $q$-dependence of $\Psi$
 to obtain a simpler and smaller set of equations.
 
@@ -921,37 +922,55 @@ Ultimately:
 \end{subequations}
 The reduced hierarchy for $F_l(\tau, k)$ is still infinite over $l$,
 but $q$ has been fully integrated out.
-Also note that $w = P/\rho = \delta P/\delta\rho = 1/3$.
+We also get $w = P/\rho = \delta P/\delta\rho = 1/3$, $\delta = F_0$, $\theta = 3 k F_1 / 4$ and $\sigma = F_2 / 2$.
 
 \subsubsection{Fluid treatment}
 \label{sec:fluid}
 
-The simplest way to model a species is to describe it as a \enquote{fluid}.
-A fluid is a species whose individual energy-momentum contribution in \eqref{eq:totalT}
-evolves in the same way as the total conservation equations \eqref{eq:pert_fluid}.
-In the literature, this is commonly explained from the Einstein equations.
+The simplest way to model a species is to describe it as a \enquote{fluid},
+as defined at the end of this section.
+The goal is to get the equations in a form where $q$ is integrated out for any $m$,
+and to finally truncate the hierarchy at low $l$.
 
-On the other hand, it is equally possible and more principled to derive their evolution from the Boltzmann equation \eqref{eq:boltzmann}.
-Starting with the general $(q,l)$-hierarchy \eqref{eq:hierarchy_ql},
-integrate the $l=0$ equation over $\int \diff{q}\,q^2 f_0 \, \epsilon$,
-use $\dot{\epsilon} = \scrH a^2 m^2 / \epsilon = \scrH (\epsilon - q^2 / \epsilon)$,
-integrate the term with $\odv{\log f_0}/{\log q}$ by parts,
-and collect terms with the right sides of expressions \eqref{eq:energy_momentum_integrals}
-This gives the continuity equation:
+Let us start with the background Boltzmann equation \eqref{eq:boltzmann_bg}.
+Multiply it by $\epsilon$
+and use the product rule $\dot{f}_0 \, \epsilon = \dot{(f_0 \, \epsilon)} - f_0 \, \dot{\epsilon}$.
+Then use that the time derivative of the comoving energy \eqref{eq:comoving_energy}
+is $\dot{\epsilon} = \scrH a^2 m^2 / \epsilon = \scrH(\epsilon - q^2/\epsilon)$.
+Finally integrate over $4\pi \int \diff{q} \, q^2$,
+and reverse-engineer $\rho$ and $P$ from the integrals \eqref{eq:energy_momentum_integrals_bg}.
+Ignoring interactions, this gives the background continuity equation:
+\TODO{$Q$?}
+\begin{equation}
+\dot{\rho} = -3 \scrH (\rho + P) = -3 \scrH (1+w) \rho .
+\label{eq:fluid_continuity_bg}
+\end{equation}
+It has the analytical solution $\rho \propto a^{-3(1+w)}$
+if $w=P/\rho$ is constant in time.
+
+Now follow a similar strategy with the general perturbed $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}.
+Integrate the $l=0$ equation over $\int \diff{q}\,q^2 f_0 \, \epsilon$
+and use the product rule and $\dot{\epsilon}$ from above again.
+Integrate the term with $\odv{\log f_0}/{\log q}$ by parts in $q$,
+and collect the right sides of the integrals \eqref{eq:energy_momentum_integrals_pert}.
+This gives the perturbed continuity equation:
+\TODO{$\delta Q$ etc?}
 \begin{subequations}
 \label{eq:fluid}
 \begin{equation}
 \dot{\delta} = -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
 \label{eq:fluid_continuity}
 \end{equation}
-Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
+Do the same with the $l=1$ equation,
+but integrate over $\int \diff{q}\,q^2 f_0 q$ instead.
+This gives the perturbed Euler equation:
 \begin{equation}
 \dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi .
 \label{eq:fluid_euler}
 \end{equation}
-One can continue even with the $l=2$ equation
-integrated over $\int \diff{q} \, q^2 f_0 \, q^2 / \epsilon$
-to get a differential equation for the shear
+The same can be done for $l \geq 2$.
+Integrating the $l=2$ equation over $\int \diff{q} \, q^2 f_0 \, q^2 / \epsilon$
+gives a differential equation for the anisotropic stress $\sigma$
 \cite[e.g.][]{nascimentoGeneralizedBoltzmannHierarchy2021,lesgourguesCosmicLinearAnisotropy2011f}:
 \begin{equation}
 \begin{aligned}
@@ -964,16 +983,19 @@ to get a differential equation for the shear
 \label{eq:fluid_shear}
 \end{equation}
 \end{subequations}
+This is consistent with the conservation \eqref{eq:pert_fluid} of the Einstein equations but for \emph{individual} species,
+and also allows us to understand how the fluid variables arise from the distribution function.
+We also get equations for $\sigma$ and all other $l \geq 2$,
+which gravity cannot give us.
+We could also have obtained interaction terms in terms of similar integrals over the collision term,
+had we not ignored them.
 
-A \enquote{fluid} refers to any species where the $q$-dependence is integrated out,
-and where only $\delta$, $\theta$ and $\sigma$ are necessary (i.e. the hierarchy is cut off $l \geq 3$).
-For perfect fluids one sets $\sigma=0$ and cuts off $l \geq 2$,
-while viscous (imperfect) fluids keep $\sigma \neq 0$ and must find a way to cut off $l \geq 3$.
-The fluid equations do not close on their own,
-and must be specified with
-additional equations of state for $w = P/\rho$ and $c_s^2 = \delta P / \delta\rho$.
+A \enquote{fluid} refers to a species where the $q$-dependence is integrated out in this way
+\emph{and} the equations are closed with additional equations of state $w$,
+sound speed $\delta P/\delta \rho$ and shear $\sigma$.
+This effectively truncates the hierarchy at $l \leq 1$ or $l \leq 2$ (if $\sigma$ is evolved).
 %The fluid approximation works well for cold dark matter and baryons, for example.
-Its validity is discussed by \cite{shojiMassiveNeutrinosCosmology2010}.
+%Its validity is discussed by \cite{shojiMassiveNeutrinosCosmology2010}.
 
 \subsection{Fully coupled \EB{} system}
 
@@ -1013,7 +1035,7 @@ The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ 
 Baryons are modeled as a fluid \eqref{eq:fluid} in the non-relativistic limit $am \gg q$,
 which makes $P$, $\delta P$ and $\sigma$ small.
 It is usually modeled with $w=0$ in the background and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
-but $c_s^2 = \delta P/\delta \rho \neq 0$ in the Euler equation \eqref{eq:pert_euler} because it is multiplied by $k^2$ (see \cref{sec:modify_baryons}).
+but $c_s^2 = \delta P/\delta \rho \neq 0$ in the Euler equation \eqref{eq:fluid_euler} because it is multiplied by $k^2$ (see \cref{sec:modify_baryons}).
 In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
 which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ that follow from recombination and reionization physics (see \cref{sec:modify_recombination}):
 \begin{equation}
@@ -1086,7 +1108,7 @@ but have no interactions:
 
 Massive neutrinos are modeled as a full $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}.
 It is cut off at some $\lmax$ in a similar way as the photons and massless neutrinos.
-Since $q$ is not integrated out in the energy-momentum contributions \eqref{eq:energy_momentum_integrals},
+Since $q$ is not integrated out in the energy-momentum contributions \eqref{eq:energy_momentum_integrals_bg} and \eqref{eq:energy_momentum_integrals_pert},
 the $q$-dependence of $\Psi_l$ under the integral must also be evolved.
 The idea is to assume a numerical quadrature scheme $I[g(x)] = \int \diff{q}\,q^2 f_0(q) g(x) \approx \sum_{i=1}^{N_q} W_i \, g(q_i)$
 to reduce the problem to the evolution of a finite number of $q_i$ points (as few as possible!) and to evaluate these integrals.
@@ -1598,7 +1620,7 @@ Self-interacting (fluid-like) dark radiation: \href{https://arxiv.org/abs/1703.1
 All standard \EB{} codes treat baryons inconsistently, as pointed out by \cite{pookkillathBaryonPhysicsTight2019} for example.
 The seminal work of \cite[section 5.6]{maCosmologicalPerturbationTheory1995a} (rightfully) treat baryons as a non-relativistic fluid with $\delta P/\delta \rho = w \ll 1$.
 They set $\delta P/\delta \rho = \omega$ in the continuity equation \eqref{eq:pert_cont},
-but inconsistently set $w=\dot{w}=0$ and $\delta P/\delta \rho \neq w$ in the Euler equation \eqref{eq:pert_euler}.
+but inconsistently set $w=\dot{w}=0$ and $\delta P/\delta \rho \neq w$ in the Euler equation \eqref{eq:fluid_euler}.
 The $\delta P/\delta \rho$ is preserved only in the Euler equation because it is multiplied by $k^2$ there, and thus important at small scales.
 This is a good approximation for the solution of the equations viewed from a purely numerical perspective,
 but from a physical perspective it is inconsistent and breaks gauge-covariance and energy-momentum conservation \eqref{eq:energy_momentum_conservation}.
@@ -2637,7 +2659,7 @@ As \cref{tab:spectral} illustrates, approximation-free \EB{} codes open the door
 
 In fact, spectral methods are already used in some places in \EB{} codes.
 For example, the multipole expansion \eqref{eq:decompose_legendre} is spectral on $\mu \in [-1, 1]$,
-and the use of Gaussian quadrature for the $q$-integrals \eqref{eq:energy_momentum_integrals} is spectral on $q \in [0, \infty)$%
+and the use of Gaussian quadrature for the $q$-integrals \eqref{eq:energy_momentum_integrals_bg} and \eqref{eq:energy_momentum_integrals_pert} is spectral on $q \in [0, \infty)$%
 \footnote{COSMICS used 8th order Newton-Cotes quadrature (a local method) and needed 128 $q$-points \cite{maCosmologicalPerturbationTheory1995a},
 while CLASS uses Gaussian quadrature (a spectral method) with only 5 $q$-points \cite{lesgourguesCosmicLinearAnisotropy2011f}!}.
 
