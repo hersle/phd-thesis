@@ -786,12 +786,14 @@ As far as gravity is concerned,
 these are the only quantities we need to compute for each species.
 
 We use statistical mechanics to describe the distribution function $f(\tau, \mathbf{x}, \mathbf{q})$ of each species in phase space of (comoving) positions $\mathbf{x}$ and momenta $\mathbf{q}$,
-and track time $\tau$ explicitly as the first argument.
-The relativistic energy function is
-\TODO{right place to put it here?}
-\begin{equation}
-E = \frac{\epsilon}{a} = \frac{\sqrt{q^2 + a^2 m^2}}{a} .
-\end{equation}
+and track time $\tau$ explicitly as the first argument.%
+\footnote{There are many subtleties in the full theoretical derivation here,
+such as the distinction between the 4-momentum $P^\mu$ which enters the geodesic equation,
+the conjugate variables $x^i$ and $P_i$ in Hamiltonian mechanics in curved spacetime,
+and the comoving momentum $\mathbf{q} = a \mathbf{p}$.
+See \cite[section 5.1]{maCosmologicalPerturbationTheory1995a} for more details.
+The end result is that we may write $f(\tau, \mathbf{x}, \mathbf{q})$.
+}
 To do perturbation theory,
 we split it into a homogeneous and isotropic background term $f_0(\tau, q)$ and perturbation:
 \begin{equation}
@@ -799,10 +801,22 @@ f(\tau, \mathbf{x}, \mathbf{q}) = f_0(\tau, q) \, \big(1 + \Psi(\tau, \mathbf{x}
 \qquad (\Psi \ll 1) .
 \label{eq:distribution}
 \end{equation}
+The distribution function in turn determines the energy-momentum
+\begin{equation}
+T^0{}_0 = -a^{-4} \int \diff^3{q} \, \epsilon \, f , \ \ \quad
+T^0{}_i = a^{-4} \int \diff^3{q} \, q_i \, f , \ \ \quad
+T^i{}_j = a^{-4} \int \diff^3{q} \, \frac{q_i q_j}{\epsilon} \, f ,
+\label{eq:Tgeneral}
+\end{equation}
+with the comoving energy
+\begin{equation}
+\epsilon(\tau, q) = \sqrt{q^2 + a(\tau)^2 m^2} .
+\end{equation}
+
 The Boltzmann equation describes the evolution of the distribution in phase space
 for the total time derivative along a trajectory $(\tau, \mathbf{x}(\tau), \mathbf{q}(\tau))$:
 \begin{equation}
-\odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x} \odv{x}{\tau} + \pdv{f}{q} \odv{q}{\tau} = C[f] .
+\odv{f}{\tau} = \pdv{f}{\tau} + \pdv{f}{x_i} \odv{x_i}{\tau} + \pdv{f}{q_i} \odv{q_i}{\tau} = C[f] .
 \label{eq:boltzmann}
 \end{equation}
 The collision term $C[f]$ says how the density of particles at each point in phase space
@@ -817,29 +831,30 @@ The Boltzmann equation is then just
 \pdv{f_0}{\tau} = C_0[f_0].
 \end{equation}
 Notably, it means that we can write $f_0(\tau, q) = f_0(q)$ for non-interacting species.
+From the energy-momentum tensor \eqref{eq:Tgeneral}, the background density and pressure are:
+\begin{equation}
+\rho = 4\pi a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \epsilon , \qquad
+P = \frac{4\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} .
+\end{equation}
 
 For the perturbation $\Psi$,
 expressing $\odv{q}/{\tau}$ with the geodesic equation,
 collecting terms to first order and going to Fourier space gives:
 \begin{equation}
-\pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\phi} - i k \mu \frac{\epsilon}{q} \psi \right) = \frac{\delta C[f]}{f_0}.
+\pdv{\Psi}{\tau} + i \, \frac{\mathbf{k} \cdot \mathbf{q}}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left(\dot{\phi} - i \, \mathbf{k} \cdot \mathbf{q} \, \frac{\epsilon}{q^2} \psi \right) = \frac{\delta C[f]}{f_0}.
 \label{eq:boltzmann_linear}
 \end{equation}
+This perturbed Boltzmann equation is solved in different ways for different species.
 
-\TODO{example $C[f]$ for same-place collision of $1+2 \leftrightarrow 3+4$ with momentum and energy conservation? see Dodelson. then easy to include Thomson scattering later?}
-
-\TODO{a lot of subtleties in the derivation; focus on the high level idea}
-\TODO{distinction $p$ vs $q$? $p$ is physical momentum and decays with $1/a$ for noninteracting species in the background. $q=ap$ is comoving momentum and is constant in background.}
-
-\subsubsection{Hierarchy with multipoles and momenta}
+\subsubsection{Hierarchy with multipoles and momenta: the general treatment}
 
 The perturbed Boltzmann equation \eqref{eq:boltzmann_linear}
 depends on $\mathbf{k}$ and $\mathbf{q}$ only through their magnitudes $k$ and $q$
-and relative direction $\mu = \cos (\hat{\mathbf{k}} \cdot \hat{\mathbf{q}})$.
-The same is true for the integrals for the energy-momentum contributions \eqref{eq:totalT},
-which are over momenta in the form $\int \diff^3{q} = 2\pi \int \diff{q} \, q^2 \int \diff{\mu}$
-weighted by appropriate factors of $\mu$, $q$, $\epsilon$ and $\Psi$
-\cite[see][equation (36)]{maCosmologicalPerturbationTheory1995a}.
+and relative direction $\mu = \hat{\mathbf{k}} \cdot \hat{\mathbf{q}} \in [-1, 1]$.
+The same is true for $\delta\rho$, $\delta P$, $\theta$ and $\sigma$,
+which are the energy-momentum integrals \eqref{eq:Tgeneral} weighted by zero, one or two wavenumber components $k^i$
+and thus in the form $\int \diff^3{q} = 2\pi \int \diff{q} \, q^2 \int \diff{\mu}$.
+
 Due to this azimuthal symmetry,
 it is natural to redefine $\Psi(\tau, \mathbf{k}, \mathbf{q}) \to \Psi(\tau, k, q, \mu)$
 and then expand it in Legendre polynomials $P_l(\mu)$:
@@ -848,65 +863,65 @@ and then expand it in Legendre polynomials $P_l(\mu)$:
 \label{eq:decompose_legendre}
 \end{equation}
 
-After the multipole expansion, the energy-momentum contributions \eqref{eq:totalT}
-are given only by the monopole $\Psi_0$, dipole $\Psi_1$ and quadrupole $\Psi_2$:
+The variables that source gravity
+are found from the energy-momentum \eqref{eq:Tgeneral}
+in terms of only the monopole $\Psi_0$, dipole $\Psi_1$ and quadrupole $\Psi_2$:
 \begin{subequations}
 \begin{align}
-\rho &= 4\pi a^{-4} \int \diff{q}\,q^2 f_0 \, \epsilon , \\
-P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} , \\
-\delta\rho &= 4\pi a^{-4} \int \diff{q}\,q^2 f_0 \, \epsilon \, \Psi_0, \\
-\delta P &= \frac{4\pi}{3} a^{-4} \int \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_0, \\
-(\rho + P)\theta &= 4\pi k a^{-4} \int \diff{q}\,q^2 f_0 \, q \, \Psi_1, \\
-(\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_2 .
+\delta\rho &= 4\pi a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \epsilon \, \Psi_0, &
+(\rho + P)\theta &= 4\pi k a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, q \, \Psi_1, \\
+\delta P &= \frac{4\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_0, &
+(\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_2 .
 \end{align}%
 \label{eq:energy_momentum_integrals}%
 \end{subequations}
 
-The linearized Boltzmann equation \eqref{eq:boltzmann_linear} with the multipole expansion
+With the multipole expansion, the linearized Boltzmann equation \eqref{eq:boltzmann_linear}
 becomes a \enquote{hierarchy} for the evolution of each multipole $\Psi_l(\tau, k, q)$.
-Ignoring interactions with $\delta C = 0$, we get:
+Ignoring interactions and using the identity $\mu P_l(\mu) = (l P_{l-1}(\mu) + (l+1) P_{l+1}(\mu)) / (2l+1)$,
+we get:
 \begin{subequations}
 \label{eq:hierarchy_ql}
 \begin{align}
 \dot{\Psi}_0 &= -k \frac{q}{\epsilon} \Psi_1 - \dot{\phi}\,\odv{\log f_0}{\log q} , \\
-\dot{\Psi}_1 &= \frac{k}{3} \frac{q}{\epsilon} (\Psi_0 - 2\Psi_2) - \frac{k}{3} \frac{\epsilon}{q} \psi \odv{\log f_0}{\log q} , \\
-\dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}(l \Psi_{l-1} - (l+1) \Psi_{l+1}) \qquad\quad (l \geq 2) .
+\dot{\Psi}_1 &= \frac{k}{3} \frac{q}{\epsilon} \big(\Psi_0 - 2\Psi_2\big) - \frac{k}{3} \frac{\epsilon}{q} \psi \odv{\log f_0}{\log q} , \\
+\dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}\big(l \Psi_{l-1} - (l+1) \Psi_{l+1}\big) \qquad\quad (l \geq 2) .
 \end{align}
 \end{subequations}
-Here we used the identity $\mu P_l(\mu) = (l P_{l-1}(\mu) + (l+1) P_{l+1}(\mu)) / (2l+1)$.
-Note that the multipole expansion couples $l$ to only $l \pm 1$,
+Note that the multipole expansion couples $l$ to just $l \pm 1$,
 and that there is one differential equation for every $q$.
 Although the Einstein equations only need $l \leq 2$,
-the time evolution couples all $l \geq 0$.
+the time evolution still couples all $l \geq 0$.
 
-This treatment is valid for arbitrary species and is necessary for massive neutrinos,
-which are neither ultra-relativistic or non-relativistic at all times.
-Other species fall into limiting regimes where it is possible to integrate out $q$ or cut $l < \infty$.
+This treatment is valid for arbitrary species, $f_0$ and $m$.
+It is necessary for massive neutrinos, which transition from ultra-relativistic to non-relativistic limits
+as the expansion slows their momenta.
+Other species fall into limiting regimes where it is possible to integrate out $q$ or cut the multipole evolution at a finite $l$.
 
-\subsubsection{Hierarchy with multipoles}
+\subsubsection{Hierarchy with multipoles: the relativistic treatment}
 
-For species that are relativistic with $q \gg am$,
+For species that are relativistic with $q/a \gg m$,
 we can analytically integrate out the $q$-dependence of $\Psi$
 to obtain a simpler and smaller set of equations.
 
 Define the momentum-averaged distribution function multipoles
 \begin{equation}
-F_l(\tau, k) = \frac{\int \diff{q} \, q^2 f_0 \, q \, \Psi_l(\tau, k, q)}{\int \diff{q} \, q^2 f_0 \, q} .
+F_l(\tau, k) = \frac{\int_0^\infty \diff{q} \, q^2 f_0 \, q \, \Psi_l(\tau, k, q)}{\int_0^\infty \diff{q} \, q^2 f_0 \, q} .
 \end{equation}
-Then set $\epsilon = q$,
-integrate the hierarchy \eqref{eq:hierarchy_ql} over $4\pi \int \diff{q} \, q^2 f_0 \, q$
+Then integrate the hierarchy \eqref{eq:hierarchy_ql} with $\epsilon=q$ over $4\pi \int \diff{q} \, q^2 f_0 \, q$
 and use that $\int \diff{q} \, q^3 f_0 \odv{\log f_0}/{\log q} = \int \diff{q} \, q^4 \odv{f_0}/{q} = -4 \int \diff{q} \, q^3 f_0$ by parts.
 Ultimately:
 \begin{subequations}
 \begin{align}
 \dot{F}_0 &= -k F_1 + 4 \dot{\phi} , \\
-\dot{F}_1 &= \frac{k}{3} (F_0 - 2 F_2 + 4\psi) , \\
-\dot{F}_l &= \frac{k}{2l+1} (l F_{l-1} - (l+1) F_{l+1}) , \quad (l \geq 2) .
+\dot{F}_1 &= \frac{k}{3} \big(F_0 - 2 F_2 + 4\psi\big) , \\
+\dot{F}_l &= \frac{k}{2l+1} \big(l F_{l-1} - (l+1) F_{l+1}\big) , \quad (l \geq 2) .
 \end{align}%
 \label{eq:hierarchy_l}%
 \end{subequations}
-The reduced hierarchy for $F_l(\tau, k)$ goes only over $l$, whereas $q$ has been fully integrated out.
-Also note that $P/\rho = \delta P/\delta\rho = 1/3$.
+The reduced hierarchy for $F_l(\tau, k)$ is still infinite over $l$,
+but $q$ has been fully integrated out.
+Also note that $w = P/\rho = \delta P/\delta\rho = 1/3$.
 
 \subsubsection{Fluid treatment}
 \label{sec:fluid}
@@ -929,7 +944,7 @@ This gives the continuity equation:
 \dot{\delta} = -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
 \label{eq:fluid_continuity}
 \end{equation}
-Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
+Following the same strategy with the $l=1$ equation integrated over $\int \diff{q}\,q^2 f_0 q$ gives the Euler equation:
 \begin{equation}
 \dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi .
 \label{eq:fluid_euler}
@@ -2118,7 +2133,7 @@ Only baryon--photon interactions are part of the standard \LCDM{} model.
 The implementation of massive neutrinos in \EB{} codes is complicated by their generally nonzero mass.
 It is necessary to solve for perturbations $\Psi$ to their phase-space distribution function (in Fourier space)
 $f(\tau, k, q) = f_0(q) (1 + \Psi(\tau, k, q, \mu))$
-as a function of their momenta $q$ and direction $\mu = \arccos \vec{k} \cdot \vec{q}$ with the Fourier wavenumber $k$.
+as a function of their momenta $q$ and direction $\mu = \vec{k} \cdot \vec{q}$ with the Fourier wavenumber $k$.
 This leads to a differential equation:
 \begin{equation}
 \pdv{\Psi}{\tau} + i k \mu \frac{q}{\epsilon} \Psi + \odv{\log f_0}{\log q} \left[ \dot{\phi} - i k \mu \frac{\epsilon}{q} \psi \right] = 0 . %\frac{1}{f_0} \pdv{f}{\tau}
