@@ -388,7 +388,8 @@ in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 
 \subsection{Emulators and interpolation methods}
 
-\TODO{happens quite often that we have a long function for computing something from physically accurate simulations, but the dependence on the output of the input is relatively simple}
+\TODO{happens quite often that we have a long function for computing something from physically accurate simulations, yet the dependence on the output of the input is relatively simple.
+has developed a \enquote{sport} of emulators, using whatever (dirty) tricks necessary to approximate the function with as few samples as possible.}
 
 \EB{} and, to a much greater extent, $N$-body simulations are expensive to run.
 To estimate cosmological parameters using Bayesian inference,
@@ -927,10 +928,10 @@ We also get $w = P/\rho = \delta P/\delta\rho = 1/3$, $\delta = F_0$, $\theta = 
 \subsubsection{Fluid treatment}
 \label{sec:fluid}
 
-The simplest way to model a species is to describe it as a \enquote{fluid},
-as defined at the end of this section.
-The goal is to get the equations in a form where $q$ is integrated out for any $m$,
-and to finally truncate the hierarchy at low $l$.
+The simplest way to model a species is to describe it as a \enquote{fluid}.
+The goal is to integrate out $q$ for any $m$,
+and finally truncate the hierarchy at low $l$
+by closing the system with additional equations of state.
 
 Let us start with the background Boltzmann equation \eqref{eq:boltzmann_bg}.
 Multiply it by $\epsilon$
@@ -993,13 +994,18 @@ had we not ignored them.
 A \enquote{fluid} refers to a species where the $q$-dependence is integrated out in this way
 \emph{and} the equations are closed with additional equations of state $w$,
 sound speed $\delta P/\delta \rho$ and shear $\sigma$.
+For example, for standard species with fluid descriptions,
+$w$ is a constant or simple function of time,
+$\delta P = w$ and $\sigma = 0$
+(see \cref{sec:eb_full}).
 This effectively truncates the hierarchy at $l \leq 1$ or $l \leq 2$ (if $\sigma$ is evolved).
 %The fluid approximation works well for cold dark matter and baryons, for example.
 %Its validity is discussed by \cite{shojiMassiveNeutrinosCosmology2010}.
 
 \subsection{Fully coupled \EB{} system}
+\label{sec:eb_full}
 
-The basic treatment of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
+The basic treatment of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
 However, there are several nuances in the treatment of each species that would be too lengthy to include in this thesis,
 for example related to baryon-photon interactions.
 Ultimately, what I wish to highlight is that
