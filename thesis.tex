@@ -13,7 +13,6 @@
 
 \usepackage{amsmath}
 \usepackage{amssymb}
-\usepackage{mathrsfs} % \mathscr
 
 \usepackage{babel}
 \usepackage{csquotes}
@@ -52,7 +51,7 @@
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
 \newcommand\Mpc{\ensuremath{\mathrm{Mpc}}}
 \newcommand\const{\ensuremath{\mathrm{const}}}
-\newcommand\scrH{\mathscr{H}}
+\newcommand\calH{\mathcal{H}}
 \newcommand\deltaf{{\delta\mkern-2mu f}} % perturbation \delta f with tighter spacing
 \newcommand\pprime{{\prime\prime}}
 \newcommand\Hy{\ensuremath{\mathrm{H}}} % Hydrogen
@@ -710,11 +709,10 @@ and compute up to 1st order in perturbation theory.
 In the background (to 0th order),
 we get the Friedmann equations \eqref{eq:fried} for the scale factor $a(\tau)$
 with respect to conformal time $\tau$:%
-\TODO{$\scrH$ or $\mathcal{H}$?}
 \begin{subequations}
 \begin{align}
-\scrH^2 &= \left( \frac{\dot{a}}{a} \right)^2 = \frac{8\pi}{3} \, a^2 \rho , \label{eq:bgfried1} \\
-\dot{\scrH} &= -\frac{4\pi}{3} \, a^2 (\rho+3P) \label{eq:bgfried2}.
+\calH^2 &= \left( \frac{\dot{a}}{a} \right)^2 = \frac{8\pi}{3} \, a^2 \rho , \label{eq:bgfried1} \\
+\dot{\calH} &= -\frac{4\pi}{3} \, a^2 (\rho+3P) \label{eq:bgfried2}.
 \end{align}
 \end{subequations}
 In the perturbations (to 1st order),
@@ -722,9 +720,9 @@ we get four (redundant) equations for the metric perturbations $\phi$ and $\psi$
 \begin{subequations}
 \label{eq:pertein}
 \begin{align}
-k^2 \phi + 3\scrH(\dot{\phi} + \scrH \psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
-k^2 (\dot\phi + \scrH \psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
-\ddot{\phi} + \scrH (\dot{\psi}+2\dot{\phi}) + (2\dot{\scrH}+\scrH^2) \psi + \tfrac13 k^2 (\phi-\psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
+k^2 \phi + 3\calH(\dot{\phi} + \calH \psi) &= -4\pi a^2 \delta\rho, \label{eq:pertein1} \\
+k^2 (\dot\phi + \calH \psi) &= 4\pi a^2 (\rho+P)\theta, \label{eq:pertein2} \\
+\ddot{\phi} + \calH (\dot{\psi}+2\dot{\phi}) + (2\dot{\calH}+\calH^2) \psi + \tfrac13 k^2 (\phi-\psi) &= 4\pi a^2 \delta P , \label{eq:pertein3} \\
 k^2 (\phi-\psi) &= 12 \pi a^2 (\rho+P)\sigma. \label{eq:pertein4}
 \end{align}
 \end{subequations}
@@ -746,15 +744,15 @@ On the right side, it then follows immediately that the total $T_{\mu\nu}$ obeys
 This leads to the background continuity equation for the total $\rho$
 in terms of the total equation of state $w = P/\rho$:
 \begin{equation}
-\dot{\rho} = -3\scrH(1+w) \rho.
+\dot{\rho} = -3\calH(1+w) \rho.
 \label{eq:bg_cont}
 \end{equation}
 We also get the perturbed continuity and Euler equations for $\delta=\delta\rho/\rho$ and $\theta$:
 \begin{subequations}
 \label{eq:pert_fluid}
 \begin{align}
-\dot{\delta} &= -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
-\dot{\theta} &= -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi. \label{eq:pert_euler}
+\dot{\delta} &= -(1+w)(\theta-3\dot{\phi}) - 3\calH \left( \frac{\delta P}{\delta \rho} - w \right) \delta, \label{eq:pert_cont} \\
+\dot{\theta} &= -(1-3w)\calH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi. \label{eq:pert_euler}
 \end{align}
 \end{subequations}
 This describes the evolution of the total energy-momentum contributions,
@@ -937,13 +935,13 @@ Let us start with the background Boltzmann equation \eqref{eq:boltzmann_bg}.
 Multiply it by $\epsilon$
 and use the product rule $\dot{f}_0 \, \epsilon = \dot{(f_0 \, \epsilon)} - f_0 \, \dot{\epsilon}$.
 Then use that the time derivative of the comoving energy \eqref{eq:comoving_energy}
-is $\dot{\epsilon} = \scrH a^2 m^2 / \epsilon = \scrH(\epsilon - q^2/\epsilon)$.
+is $\dot{\epsilon} = \calH a^2 m^2 / \epsilon = \calH(\epsilon - q^2/\epsilon)$.
 Finally integrate over $4\pi \int \diff{q} \, q^2$,
 and reverse-engineer $\rho$ and $P$ from the integrals \eqref{eq:energy_momentum_integrals_bg}.
 Ignoring interactions, this gives the background continuity equation:
 \TODO{$Q$?}
 \begin{equation}
-\dot{\rho} = -3 \scrH (\rho + P) = -3 \scrH (1+w) \rho .
+\dot{\rho} = -3 \calH (\rho + P) = -3 \calH (1+w) \rho .
 \label{eq:fluid_continuity_bg}
 \end{equation}
 It has the analytical solution $\rho \propto a^{-3(1+w)}$
@@ -959,14 +957,14 @@ This gives the perturbed continuity equation:
 \begin{subequations}
 \label{eq:fluid}
 \begin{equation}
-\dot{\delta} = -(1+w)(\theta-3\dot{\phi}) - 3\scrH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
+\dot{\delta} = -(1+w)(\theta-3\dot{\phi}) - 3\calH \left( \frac{\delta P}{\delta \rho} - w \right) \delta .
 \label{eq:fluid_continuity}
 \end{equation}
 Do the same with the $l=1$ equation,
 but integrate over $\int \diff{q}\,q^2 f_0 q$ instead.
 This gives the perturbed Euler equation:
 \begin{equation}
-\dot{\theta} = -(1-3w)\scrH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi .
+\dot{\theta} = -(1-3w)\calH\theta - \frac{\dot{w}}{1+w}\theta + \frac{\delta P/\delta \rho}{1+w}k^2\delta - k^2\sigma + k^2 \psi .
 \label{eq:fluid_euler}
 \end{equation}
 The same can be done for $l \geq 2$.
@@ -975,9 +973,9 @@ gives a differential equation for the anisotropic stress $\sigma$
 \cite[e.g.][]{nascimentoGeneralizedBoltzmannHierarchy2021,lesgourguesCosmicLinearAnisotropy2011f}:
 \begin{equation}
 \begin{aligned}
-\dot\sigma &= -\scrH\,(2-3w)\,\sigma - \frac{\dot w}{1+w}\,\sigma \\
+\dot\sigma &= -\calH\,(2-3w)\,\sigma - \frac{\dot w}{1+w}\,\sigma \\
 &+ \frac{8\pi\,a^{-4}}{\rho+ P}\left[
-\frac{\scrH}{3}\int\!\diff{q}\,q^2 f_0\,\frac{q^4}{\epsilon^3}\,\Psi_2
+\frac{\calH}{3}\int\!\diff{q}\,q^2 f_0\,\frac{q^4}{\epsilon^3}\,\Psi_2
 + \frac{k}{15}\int\!\diff{q}\,q^2 f_0\,\frac{q^3}{\epsilon^2}\big(2\Psi_1 - 3\Psi_3\big)
 \right] .
 \end{aligned}
@@ -1028,7 +1026,7 @@ These equations are sourced by the total $\rho$, $P$, $\delta\rho$ and $(\rho+P)
 \dot{a}(\tau) &= a^2 \sqrt{\tfrac{8\pi}{3} \rho} , \\
 \rho(\tau) &= \rho_b + \rho_c + \rho_\gamma + \rho_\nu + \rho_h + \rho_\Lambda , \\
 P(\tau) &= P_\gamma + P_\nu + P_h + P_\Lambda , \\
-\dot{\phi}(\tau, k) &= -\scrH \psi - \frac{k^2}{3\scrH}\phi - \frac{4\pi a^2}{3\scrH}\delta\rho , \\
+\dot{\phi}(\tau, k) &= -\calH \psi - \frac{k^2}{3\calH}\phi - \frac{4\pi a^2}{3\calH}\delta\rho , \\
 \psi(\tau, k) &= \phi - \frac{12\pi a^2}{k^2} (\rho+P)\sigma , \\
 \delta\rho(\tau, k) &= \delta\rho_b + \delta\rho_c + \delta\rho_\gamma + \delta\rho_\nu + \delta\rho_h , \\
 \sigma(\tau, k) &= \frac{(\rho_\gamma+P_\gamma)\sigma_\gamma + (\rho_\nu+P_\nu)\sigma_\nu + (\rho_h+P_h)\sigma_h}{\rho+P} .
@@ -1043,7 +1041,7 @@ Cold dark matter is modeled as a collisionless and pressureless perfect (non-vis
 \begin{aligned}
 \rho_c(\tau) &= \rho_c(\tau_0) \, a^{-3}, \\
 \dot{\delta}_c(\tau, k) &= -\theta_c + 3\dot{\phi} , \\
-\dot{\theta}_c(\tau, k) &= -\scrH \theta_c + k^2 \psi , \\
+\dot{\theta}_c(\tau, k) &= -\calH \theta_c + k^2 \psi , \\
 \delta\rho_c(\tau, k) &= \rho_c \, \delta_c .
 \end{aligned}
 \end{equation}
@@ -1061,12 +1059,12 @@ and momentum exchange in the perturbations:
 \label{eq:eb_baryons}
 \begin{aligned}
 \rho_b(\tau) &= \rho_b(\tau_0) \, a^{-3} , \\
-\dot{T}_b(\tau) &= -2\scrH T_b + \frac{8 \sigma_T a \rho_\gamma}{3 m_e} \frac{x_e}{1+f_\mathrm{He}+x_e} (T_\gamma - T_b) , \\
+\dot{T}_b(\tau) &= -2\calH T_b + \frac{8 \sigma_T a \rho_\gamma}{3 m_e} \frac{x_e}{1+f_\mathrm{He}+x_e} (T_\gamma - T_b) , \\
 \dot{x}_e(\tau) &= \dot{x}_e(a, H, x_e, T_b, T_\gamma, \ldots) , \\
 \dot{\kappa}(\tau) &= a\, x_e\, n_H\, \sigma_T , \\
-c_s^2(\tau) &= \frac{T_b}{\mu m_H} \left( 1 - \frac{\dot{T}_b}{3 \scrH T_b} \right) , \\
+c_s^2(\tau) &= \frac{T_b}{\mu m_H} \left( 1 - \frac{\dot{T}_b}{3 \calH T_b} \right) , \\
 \dot{\delta}_b(\tau, k) &= -\theta_b + 3\dot{\phi} , \\
-\dot{\theta}_b(\tau, k) &= -\scrH \theta_b + c_s^2 k^2 \delta_b + k^2 \psi + \frac{4\rho_\gamma}{3\rho_b} \dot\kappa (\theta_\gamma - \theta_b) , \\
+\dot{\theta}_b(\tau, k) &= -\calH \theta_b + c_s^2 k^2 \delta_b + k^2 \psi + \frac{4\rho_\gamma}{3\rho_b} \dot\kappa (\theta_\gamma - \theta_b) , \\
 \delta\rho_b(\tau, k) &= \rho_b \, \delta_b .
 \end{aligned}
 \end{equation}
@@ -1178,7 +1176,7 @@ P_\Lambda(\tau) &= -\rho_\Lambda .
 \subsubsection{Initial conditions}
 
 We start integration at small $\tau$ in the early universe,
-where we can initialize $a(\tau)$ from the radiation-dominated Friedmann equation $\scrH \approx 1/\tau$.
+where we can initialize $a(\tau)$ from the radiation-dominated Friedmann equation $\calH \approx 1/\tau$.
 
 For the perturbations we ensure that $k\tau \ll 1$,
 so each $k$-mode is still \enquote{outside the horizon}
@@ -1221,7 +1219,7 @@ This only has to be performed once if all parameters directly determine the init
 In some cases, the parameters instead determine an mixed set of initial and final conditions (i.e. a boundary value problem (BVP)),
 and the \textbf{shooting method} is wrapped around the background solve to determine the correct initial conditions that produce the desired final conditions.
 For many models (but not in general), the background ODEs decouple into several blocks that can be solved sequentially,
-such as the expansion history for $\scrH(\tau)$ followed by thermodynamics for $x_e(\tau)$ and $\kappa(\tau)$.
+such as the expansion history for $\calH(\tau)$ followed by thermodynamics for $x_e(\tau)$ and $\kappa(\tau)$.
 The background ODE is usually quite small with 1-10 ODE variables,
 but can be highly stiff due to the recombination and baryon thermodynamics (more in this in \cref{sec:approx}).
 \label{eb:bg}
@@ -1630,7 +1628,7 @@ This is so because they remove $\Lambda$ from the left side of the Einstein equa
 
 The scalar field evolves in conformal time according to the Klein-Gordon equation:
 \begin{equation}
-\ddot{\varphi} = -2\scrH\dot{\varphi} - a^2 V^\prime(\varphi)
+\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi)
 \end{equation}
 in a freely specified potential function $V(\varphi)$.
 It contributes to the total energy-momentum with energy density, pressure and equation of state
@@ -1645,7 +1643,7 @@ we need $\varphi$ to roll slowly in $V(\varphi)$ with $\dot\varphi \ll \sqrt{V}$
 
 Perturbations of the scalar field also evolve with the perturbed Klein-Gordon equation:
 \begin{equation}
-\ddot{\delta\varphi} = -2 \scrH \dot{\delta\varphi} - (k^2 + a^2 V^\pprime) \delta\varphi + \dot\varphi (\dot{\psi} + 3\dot{\phi}) - 2 a^2 V^\prime \psi.
+\ddot{\delta\varphi} = -2 \calH \dot{\delta\varphi} - (k^2 + a^2 V^\pprime) \delta\varphi + \dot\varphi (\dot{\psi} + 3\dot{\phi}) - 2 a^2 V^\prime \psi.
 \end{equation}
 They contribute energy density and pressure perturbations
 \begin{equation}
@@ -1696,7 +1694,7 @@ For example, $P = nT$ assuming an ideal gas.
 This makes $w_b \neq 0$ a generally time-dependent function that is coupled to thermodynamical variables like $T_b$ and $X_e$,
 so a fully consistent treatment should really solve the continuity equation
 \begin{equation}
-\dot{\rho}_b = -3\scrH(1+w_b)\rho_b
+\dot{\rho}_b = -3\calH(1+w_b)\rho_b
 \end{equation}
 numerically with a \emph{coupled} \enquote{background} and \enquote{thermodynamics}.
 It seems to me that a fully consistent implementation is not available anywhere.
@@ -1799,7 +1797,7 @@ This can happen in one of two ways.
 First, the decay $2p \to 1s$ is allowed and emits a Lyman-$\alpha$ photon,
 but the photon is likely to reexcite $1s \to 2p$ in a nearby atom \emph{unless} it first redshifts to lower energy.
 This is modeled by the decay rate $A_{2p\to1s}$ and \enquote{escape} probability $P_\text{esc}$ with the Sobolev approximation,
-which depends on $\scrH$ and cosmology and avoids solving the radiative transfer equations.
+which depends on $\calH$ and cosmology and avoids solving the radiative transfer equations.
 Second, the decay $2s \to 1s$ is forbidden with one emitted photon because it violates the $\Delta l = \pm 1$ selection rule,
 but occurs at rate $\Lambda_{2s\to1s}$ through two-photon emission, neither of which can be reabsorbed by nearby atoms.
 
@@ -2143,7 +2141,7 @@ The antisymmetric flow ensures that the total is conserved: $\sum_s \nabla_\mu T
 Such models lead to modification of the background (including thermodynamics) and perturbation equations.
 For example, it may modify the continuity equations in the background to
 \begin{equation}
-\dot{\rho}_a = -3\scrH\,(1+w_a)\rho_a + Q_a.
+\dot{\rho}_a = -3\calH\,(1+w_a)\rho_a + Q_a.
 \end{equation}
 They no longer have analytical solutions $\rho \propto a^{-3(1+w_a)}$ with constant $w_a$ for arbitrary $Q_a$,
 so they must instead integrated numerically.
@@ -2155,9 +2153,9 @@ The perturbation equations must also be modified \cite[e.g.][appendix A]{figueru
 \begin{subequations}
 \begin{align}
 \delta_b &= -\theta_b + 3 \dot{\phi}, \\
-\theta_b &= -\scrH \theta_c + k^2 \psi + c_s^2 k^2 \delta_b + \dot{\kappa} \frac{4 \rho_\gamma}{3 \rho_b} (\theta_\gamma - \theta_b) + \frac{\gamma}{a^2} (\rho_c - \rho_b) , \\
+\theta_b &= -\calH \theta_c + k^2 \psi + c_s^2 k^2 \delta_b + \dot{\kappa} \frac{4 \rho_\gamma}{3 \rho_b} (\theta_\gamma - \theta_b) + \frac{\gamma}{a^2} (\rho_c - \rho_b) , \\
 \delta_c &= -\theta_c + 3 \dot{\phi}, \\
-\theta_b &= -\scrH \delta_c + k^2 \psi - \frac{\gamma}{a^2} \frac{\rho_b}{\rho_c} (\theta_c - \theta_b) .
+\theta_b &= -\calH \delta_c + k^2 \psi - \frac{\gamma}{a^2} \frac{\rho_b}{\rho_c} (\theta_c - \theta_b) .
 \end{align}
 \end{subequations}
 Such modifications frequently touch the approximation schemes in \EB{} codes.
@@ -2420,7 +2418,7 @@ For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$
 in the \EB{} equations \eqref{eq:eb} into a modified pair:
 \begin{subequations}
 \begin{align}
-\dot\theta_b &= -\frac{1}{1+R}\left(\scrH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right) + k^2\psi, \\
+\dot\theta_b &= -\frac{1}{1+R}\left(\calH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right) + k^2\psi, \\
 \dot\theta_\gamma &= \dot\theta_b + \dot\Theta_{\gamma b}^{\mathrm{tca}},
 \end{align}
 \end{subequations}
