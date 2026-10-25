@@ -1177,18 +1177,15 @@ P_\Lambda(\tau) &= -\rho_\Lambda .
 
 \subsubsection{Initial conditions}
 
-We start integration at a small $\tau$ in the early universe,
-where it is radiation-dominated
-and we can initialize $a(\tau)$ from the radiation-dominated Friedmann equation $\scrH \approx 1/\tau$.
+We start integration at small $\tau$ in the early universe,
+where we can initialize $a(\tau)$ from the radiation-dominated Friedmann equation $\scrH \approx 1/\tau$.
 
-For the perturbations we choose $\tau$ so early that $k\tau \ll 1$,
+For the perturbations we ensure that $k\tau \ll 1$,
 so each $k$-mode is still \enquote{outside the horizon}
 and there is not yet any causal connection at the corresponding distance scale $1/k$.
 One may then derive initial conditions of the perturbation equations
 for \enquote{adiabatic} or \enquote{isocurvature} perturbations
 \cite[e.g.][section 7]{maCosmologicalPerturbationTheory1995a}.
-To keep the focus on the high-level equations,
-we do not pursue this in greater detail here.
 
 Note that the perturbation equations are linear,
 so their initial conditions and hence their solution are only determined up to a constant rescaling.
@@ -1200,6 +1197,9 @@ P_0(k) = \frac{2\pi^2}{k^3} \, A_s \, \left( \frac{k}{k_\mathrm{pivot}} \right)^
 parameterized by the amplitude $A_s$ and tilt $n_s$.
 Thus, the perturbations in the \EB{} system are best interpreted as transfer functions
 from the early to the late universe.
+
+Our focus here is on the high-level \EB{} equations,
+so we do not go in great detail here.
 
 \section{\EB{} codes}
 \label{sec:eb_codes}
