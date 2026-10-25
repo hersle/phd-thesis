@@ -1005,30 +1005,29 @@ This effectively truncates the hierarchy at $l \leq 1$ or $l \leq 2$ (if $\sigma
 \subsection{Fully coupled \EB{} system}
 \label{sec:eb_full}
 
-The basic treatment of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
-However, there are several nuances in the treatment of each species that would be too lengthy to include in this thesis,
-for example related to baryon-photon interactions.
-Ultimately, what I wish to highlight is that
-the \LCDM{} model results in a very large system of ODEs and algebraic relations that must be evolved in time \cite[e.g.][]{maCosmologicalPerturbationTheory1995a,sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}:
+The fundamentals of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
+However, there are several nuances in the treatment of each species that would be far too lengthy to include in this thesis,
+such as the detailed treatment of interactions.
+Ultimately, the \LCDM{} results in a large system of ODEs and algebraic relations that must be evolved in time,
+as I highlight here.
 
 \begin{subequations}
 \label{eq:eb}
 
 \subsubsection{Gravity (\texorpdfstring{$G$}{G})}
-Gravity is described by General Relativity with the Einstein equations in \cref{sec:einstein},
-sourced by the total background energy density $\rho$, perturbed energy density $\delta\rho$ and shear $(\rho+P)\sigma$:
-\TODO{
-These are four overdetermined equations for the two metric potentials $\phi$ and $\psi$.
-It is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
+Gravity is described by the Einstein equations of General Relativity (as in \cref{sec:einstein}).
+The two background Friedmann equations \eqref{eq:fried} are redundant equations for $a$;
+it is most common to use the square root of the 1st equation \eqref{eq:fried1} as a first order ODE.
+Similarly, the four perturbed equations \eqref{eq:pertein} are redunant for $\phi$ and $\psi$;
+it is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
 and determine $\psi$ algebraically from the constraint \eqref{eq:pertein4}.
-The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ (see \cref{sec:boltzmann})
-\cite[equation 25]{maCosmologicalPerturbationTheory1995a}.
-}
+These equations are sourced by the total $\rho$, $P$, $\delta\rho$ and $(\rho+P)\sigma$.
 \begin{equation}
 \label{eq:eb_gravity}
 \begin{aligned}
 \dot{a}(\tau) &= a^2 \sqrt{\tfrac{8\pi}{3} \rho} , \\
 \rho(\tau) &= \rho_b + \rho_c + \rho_\gamma + \rho_\nu + \rho_h + \rho_\Lambda , \\
+P(\tau) &= P_\gamma + P_\nu + P_h + P_\Lambda , \\
 \dot{\phi}(\tau, k) &= -\scrH \psi - \frac{k^2}{3\scrH}\phi - \frac{4\pi a^2}{3\scrH}\delta\rho , \\
 \psi(\tau, k) &= \phi - \frac{12\pi a^2}{k^2} (\rho+P)\sigma , \\
 \delta\rho(\tau, k) &= \delta\rho_b + \delta\rho_c + \delta\rho_\gamma + \delta\rho_\nu + \delta\rho_h , \\
@@ -1036,92 +1035,91 @@ The right hand sides are determined by the energy-momentum content $T_{\mu\nu}$ 
 \end{aligned}
 \end{equation}
 
-\subsubsection{Baryons (\texorpdfstring{$b$}{b})}
-
-Baryons are modeled as a fluid \eqref{eq:fluid} in the non-relativistic limit $am \gg q$,
-which makes $P$, $\delta P$ and $\sigma$ small.
-It is usually modeled with $w=0$ in the background and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
-but $c_s^2 = \delta P/\delta \rho \neq 0$ in the Euler equation \eqref{eq:fluid_euler} because it is multiplied by $k^2$ (see \cref{sec:modify_baryons}).
-In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
-which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ that follow from recombination and reionization physics (see \cref{sec:modify_recombination}):
-\begin{equation}
-\label{eq:eb_baryons}
-\begin{aligned}
-\dot{T}_b(\tau) &= -2\scrH T_b + \frac{8 \sigma_T a \rho_\gamma}{3 m_e} \frac{x_e}{1+f_\mathrm{He}+x_e} (T_\gamma - T_b) , \\
-\dot{x}_e(\tau) &= \dot{x}_e(a, H, T_b, T_\gamma, \ldots) , \\
-\dot{\kappa}(\tau) &= a\, x_e\, n_H\, \sigma_T , \\
-\dot{\delta}_b(\tau, k) &= -\theta_b + 3\dot{\phi} , \\
-\dot{\theta}_b(\tau, k) &= -\scrH \theta_b + c_s^2 k^2 \delta_b + k^2 \psi + \frac{4\rho_\gamma}{3\rho_b} \dot\kappa (\theta_\gamma - \theta_b) , \\
-\delta\rho_b(\tau, k) &= \rho_b \delta_b .
-\end{aligned}
-\end{equation}
-Here $\dot{x}_e(a, H, T_b, T_\gamma, \ldots)$ is used to sweep all recombination and reionization physics under the rug for a simplified treatment.
-Behind it lies a large system of additional equations that ultimately describe the evolution of the free electron fraction.
-
 \subsubsection{Cold dark matter (\texorpdfstring{$c$}{c})}
 
-Cold dark matter is modeled as a non-interacting and pressureless perfect (non-viscous) fluid \eqref{eq:fluid} with $P = \delta P = \sigma = 0$:
+Cold dark matter is modeled as a collisionless and pressureless perfect (non-viscous) fluid \eqref{eq:fluid} with $P = \delta P = \sigma = 0$:
 \begin{equation}
 \label{eq:eb_cold_dark_matter}
 \begin{aligned}
+\rho_c(\tau) &= \rho_c(\tau_0) \, a^{-3}, \\
 \dot{\delta}_c(\tau, k) &= -\theta_c + 3\dot{\phi} , \\
 \dot{\theta}_c(\tau, k) &= -\scrH \theta_c + k^2 \psi , \\
-\delta\rho_c(\tau, k) &= \rho_c \delta_c .
+\delta\rho_c(\tau, k) &= \rho_c \, \delta_c .
 \end{aligned}
 \end{equation}
+
+\subsubsection{Baryons (\texorpdfstring{$b$}{b})}
+
+Baryons are modeled as a fluid (as in \cref{sec:fluid}) in the non-relativistic limit $q/a \ll m$
+with small $P$, $\delta P$ and $\sigma$.
+It is usually done with $w=\sigma=0$ in the background and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
+but $k^2 c_s^2 \neq 0$ in the Euler equation \eqref{eq:fluid_euler}.
+In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
+which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ from recombination and reionization physics (see \cref{sec:modify_recombination}),
+and momentum exchange in the perturbations:
+\begin{equation}
+\label{eq:eb_baryons}
+\begin{aligned}
+\rho_b(\tau) &= \rho_b(\tau_0) \, a^{-3} , \\
+\dot{T}_b(\tau) &= -2\scrH T_b + \frac{8 \sigma_T a \rho_\gamma}{3 m_e} \frac{x_e}{1+f_\mathrm{He}+x_e} (T_\gamma - T_b) , \\
+\dot{x}_e(\tau) &= \dot{x}_e(a, H, x_e, T_b, T_\gamma, \ldots) , \\
+\dot{\kappa}(\tau) &= a\, x_e\, n_H\, \sigma_T , \\
+c_s^2(\tau) &= \frac{T_b}{\mu m_H} \left( 1 - \frac{\dot{T}_b}{3 \scrH T_b} \right) , \\
+\dot{\delta}_b(\tau, k) &= -\theta_b + 3\dot{\phi} , \\
+\dot{\theta}_b(\tau, k) &= -\scrH \theta_b + c_s^2 k^2 \delta_b + k^2 \psi + \frac{4\rho_\gamma}{3\rho_b} \dot\kappa (\theta_\gamma - \theta_b) , \\
+\delta\rho_b(\tau, k) &= \rho_b \, \delta_b .
+\end{aligned}
+\end{equation}
+Here $\dot{x}_e$ must be read as a placeholder for all recombination and reionization equations,
+which would significantly complicate this list if they were included.
 
 \subsubsection{Photons (\texorpdfstring{$\gamma$}{gamma})}
 
-Photons are massless and thus modeled as a relativistic $l$-hierarchy \eqref{eq:hierarchy_l} (with $w=\delta P/\delta\rho=1/3$).
-Taking their polarization into account results in the evolution of two such hierarchies $F_l$ and $G_l$ \cite[section 5.5][]{maCosmologicalPerturbationTheory1995a},
-and their interactions with baryons adds terms proportional to $\dot\kappa$ to the hierarchies.
-Furthermore, the hierarchies are cut off at $l = \lmax$ not with $F_\lmax = 0$,
-but by assuming an approximate analytical solution $F_\ell \propto j_l(k\tau)$:
+Photons are massless and therefore described by a relativistic $l$-hierarchy \eqref{eq:hierarchy_l}.
+However, taking their polarization into account results in the evolution of two such hierarchies $F_l$ and $G_l$ \cite[section 5.5][]{maCosmologicalPerturbationTheory1995a},
+and their interactions with baryons adds collision terms proportional to $\dot\kappa$:
 \begin{equation}
 \label{eq:eb_photons}
 \begin{aligned}
-\dot{F}_0(\tau, k) &= -k F_1 + 4\dot{\phi} , \\
-\dot{F}_1(\tau, k) &= \frac{k}{3}(F_0 - 2F_2) + \frac{4k}{3}\psi + \dot\kappa \left(\frac{4\theta_b}{3k} - F_1\right) , \\
-\dot{F}_l(\tau, k) &= \frac{k}{2l+1}\big(l F_{l-1} - (l+1) F_{l+1}\big) - \dot\kappa \big(F_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
-\dot{F}_{\lmax}(\tau, k) &= k F_{\lmax-1} - \frac{\lmax+1}{\tau} F_{\lmax} - \dot\kappa F_{\lmax} , \\
-\dot{G}_0(\tau, k) &= -k G_1 - \dot\kappa \big(G_0 - \tfrac{1}{2}\Pi\big) , \\
-\dot{G}_1(\tau, k) &= \frac{k}{3}(G_0 - 2G_2) - \dot\kappa\, G_1 , \\
-\dot{G}_l(\tau, k) &= \frac{k}{2l+1}\big(l G_{l-1} - (l+1) G_{l+1}\big) - \dot\kappa \big(G_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
-\dot{G}_{\lmax}(\tau, k) &= k G_{\lmax-1} - \frac{\lmax+1}{\tau} G_{\lmax} - \dot\kappa G_{\lmax} , \\
+\rho_\gamma(\tau) &= \rho_\gamma(\tau_0) \, a^{-4}, \\
+P(\tau) &= \tfrac13 \, \rho_\gamma(\tau), \\
+\dot{F}_0(\tau, k) &= -k \, F_1 + 4\dot{\phi} , \\
+\dot{F}_1(\tau, k) &= \frac{k}{3}\,\big(F_0 - 2 F_2\big) + \frac{4}{3}\,k\psi + \frac43 \, \frac{\dot\kappa}{k} \left( \theta_b - \theta_\gamma \right) , \\
+\dot{F}_l(\tau, k) &= \frac{k}{2l+1}\,\big(l F_{l-1} - (l+1) F_{l+1}\big) - \dot\kappa \, \big(F_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
+\dot{G}_0(\tau, k) &= -k \, G_1 - \dot\kappa \, \big(G_0 - \tfrac{1}{2}\Pi\big) , \\
+\dot{G}_1(\tau, k) &= \frac{k}{3}\,\big(G_0 - 2 G_2\big) - \dot\kappa \, G_1 , \\
+\dot{G}_l(\tau, k) &= \frac{k}{2l+1}\,\big(l \, G_{l-1} - (l+1) G_{l+1}\big) - \dot\kappa \, \big(G_l - \tfrac{1}{10}\, \delta_{l2}\,\Pi \big) , \\
+\dot{F}_{\lmax}(\tau, k) &= k \,F_{\lmax-1} - \frac{\lmax+1}{\tau} \, F_{\lmax} - \dot\kappa \, F_{\lmax} , \\
+\dot{G}_{\lmax}(\tau, k) &= k \, G_{\lmax-1} - \frac{\lmax+1}{\tau} \, G_{\lmax} - \dot\kappa \, G_{\lmax} , \\
 \Pi(\tau, k) &= F_2 + G_0 + G_2 , \\
-\delta\rho_\gamma(\tau, k) &= \rho_\gamma F_0 , \\
+\delta\rho_\gamma(\tau, k) &= \rho_\gamma \, F_0 , \\
+\theta_\gamma(\tau, k) &= \tfrac34 k F_1, \\
 \sigma_\gamma(\tau, k) &= \tfrac{1}{2} F_2 .
 \end{aligned}
 \end{equation}
-
-\subsubsection{Massless neutrinos (\texorpdfstring{$\nu$}{nu})}
-
-Massless neutrinos are also modeled as a relativistic $l$-hierarchy \eqref{eq:hierarchy_l} (with $w=\delta P/\delta\rho=1/3$),
-but have no interactions:
-\begin{equation}
-\label{eq:eb_massless_neutrinos}
-\begin{aligned}
-\dot{N}_0(\tau, k) &= -k N_1 + 4\dot{\phi} , \\
-\dot{N}_1(\tau, k) &= \frac{k}{3}(N_0 - 2N_2) + \frac{4k}{3}\psi , \\
-\dot{N}_l(\tau, k) &= \frac{k}{2l+1}\big(l N_{l-1} - (l+1) N_{l+1}\big) , \\
-\dot{N}_{\lmax}(\tau, k) &= k N_{\lmax-1} - \frac{\lmax+1}{\tau} N_{\lmax} , \\
-\delta\rho_\nu(\tau, k) &= \rho_\nu N_0 , \\
-\sigma_\nu(\tau, k) &= \tfrac{1}{2} N_2 .
-\end{aligned}
-\end{equation}
+The $F_l$ and $G_l$ hierarchies are cut off at a finite $l = \lmax$
+by assuming the analytical solutions $F_l \propto j_l(k\tau)$ and $G_l \propto j_l(k\tau)$
+that are approximately valid for free-streaming photons at sufficiently high $l$ \cite[section 5.3]{maCosmologicalPerturbationTheory1995a}.
+Due to the identity $j_l'(x) = (l\,j_{l-1}(x) - (l+1)\,j_{l+1}(x)) \, / \, (2l+1)$,
+the spherical Bessel functions $j_l(x)$ solve the infinite hierarchy when $\dot\kappa = 0$.
+To close the system we also eliminate $j_{l+1}(x)$
+with another identity $j_{l+1}(x) = (2l+1) j_l(x) / x - j_{l-1}(x)$.
 
 \subsubsection{Massive neutrinos (\texorpdfstring{$h$}{h})}
 
-Massive neutrinos are modeled as a full $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}.
-It is cut off at some $\lmax$ in a similar way as the photons and massless neutrinos.
-Since $q$ is not integrated out in the energy-momentum contributions \eqref{eq:energy_momentum_integrals_bg} and \eqref{eq:energy_momentum_integrals_pert},
-the $q$-dependence of $\Psi_l$ under the integral must also be evolved.
-The idea is to assume a numerical quadrature scheme $I[g(x)] = \int \diff{q}\,q^2 f_0(q) g(x) \approx \sum_{i=1}^{N_q} W_i \, g(q_i)$
-to reduce the problem to the evolution of a finite number of $q_i$ points (as few as possible!) and to evaluate these integrals.
-Only one hierarchy is needed if only one or several degenerate neutrino masses are considered (which is most common),
-but the hierarchy must generally be duplicated per mass.
-Thus, massive neutrinos contribute with $N_m \times N_l \times N_q$ perturbation ODEs!
-This significantly increases the size of the ODE system:
+Massive neutrinos are parameterized by their nonzero mass $m$ and modeled as a full $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}
+with the Fermi-Dirac distribution function $f_0(q) \propto 1 / (\exp(q/T_{h0})+1)$.%
+\footnote{
+The Fermi-Dirac distribution is really $f_0(\tau, q) = 1 / (\exp(E(\tau,q)/T(\tau))+1)$,
+but neutrinos decoupled from the primordial plasma while they were relativistic with $E/T_h \approx q/T_{h0}$.
+From this moment, $f_0(q)$ is frozen in time by the background Boltzmann equation \eqref{eq:boltzmann_bg}.
+}
+Since we cannot integrate out $q$,
+we must effectively evolve $\Psi_l(\tau, k, q)$ inside the momentum integrals \eqref{eq:energy_momentum_integrals_pert} in time.
+To do this in practice, the idea is to assume a numerical quadrature scheme
+$I[g(q)] = \int \diff{q}\,q^2 f_0(q) \, g(q) \approx \sum_{i=1}^{N_q} W_i \, g(q_i)$
+to reduce the problem to the evolution of a finite number of $q_i$ points and to evaluate all integrals by the discrete sum with weights $W_i$:%
+\footnote{Note that we define the weights to absorb $q^2 f_0(q)$, since this factor appears in all integrals.}
 \begin{equation}
 \label{eq:eb_massive_neutrinos}
 \begin{aligned}
@@ -1135,17 +1133,73 @@ P_h(\tau) &= \frac{4\pi}{3} a^{-4} \sum_i W_i \frac{q_i^2}{\epsilon_i} , \\
 \sigma_h(\tau, k) &= \frac{1}{\rho_h+P_h} \frac{8\pi}{3} a^{-4} \sum_i W_i \frac{q_i^2}{\epsilon_i} \Psi_{2,i} .
 \end{aligned}
 \end{equation}
+The $l$-hierarchy cutoff at $\lmax$ is done in the same way as for the photons.
+In principle, we should evolve one such hierarchy for each of the $N_m = 3$ neutrino mass eigenstates.
+Thus, massive neutrinos contribute $N_m \times (\lmax+1) \times N_q$ perturbation ODEs,
+which significantly increases the size of the ODE system compared to $l$-only hierarchies!
+This can be simplified by evolving a single approximate degenerate hierarchy with $m = \sum m_\nu / 3$ instead,
+or by approximating some of them as massless neutrinos.
+
+\subsubsection{Massless neutrinos (\texorpdfstring{$\nu$}{nu})}
+
+Since the lightest neutrino mass eigenstates can remain relativistic until the late universe,
+we may approximate some or all mass eigenstates as relativistic throughout \cite{lesgourguesMassiveNeutrinosCosmology2006}.
+%\cite[e.g.][section 2.1]{planck18parameters}.
+Such \enquote{massless neutrinos} are modeled as a relativistic $l$-hierarchy \eqref{eq:hierarchy_l} without interactions,
+and effectively become a simpler version of the photon equations
+(with $F_l \to N_l$):
+\begin{equation}
+\label{eq:eb_massless_neutrinos}
+\begin{aligned}
+\rho_\nu(\tau) &= \rho_\nu(\tau_0) \, a^{-4}, \\
+\dot{N}_0(\tau, k) &= -k N_1 + 4\dot{\phi} , \\
+\dot{N}_1(\tau, k) &= \frac{k}{3}(N_0 - 2N_2) + \frac{4k}{3}\psi , \\
+\dot{N}_l(\tau, k) &= \frac{k}{2l+1}\big(l N_{l-1} - (l+1) N_{l+1}\big) , \\
+\dot{N}_{\lmax}(\tau, k) &= k N_{\lmax-1} - \frac{\lmax+1}{\tau} N_{\lmax} , \\
+\delta\rho_\nu(\tau, k) &= \rho_\nu N_0 , \\
+\sigma_\nu(\tau, k) &= \tfrac{1}{2} N_2 .
+\end{aligned}
+\end{equation}
+Massless neutrinos have simpler equations than massive ones and reduce the size of the perturbation ODEs.
 
 \subsubsection{Cosmological constant (\texorpdfstring{$\Lambda$}{Lambda})}
 
 The cosmological constant $\Lambda$ is really an additional term $\Lambda g_{\mu\nu}$ on the left side of the Einstein equations \eqref{eq:einstein}.
-We may think of it equivalently as a fluid \eqref{eq:fluid} with $w=-1$ in the background and no perturbations (the perturbations would be ill-defined with $1+w=0$ anyway).
+We can effectively treat it as a fluid \eqref{eq:fluid} with $w=-1$ in the background and no perturbations:
+\begin{equation}
+\begin{aligned}
+\rho_\Lambda(\tau) &= \rho_\Lambda(\tau_0) , \\
+P_\Lambda(\tau) &= -\rho_\Lambda .
+\end{aligned}
+\end{equation}
 
 \end{subequations}
 
 \subsubsection{Initial conditions}
 
-\TODO{discuss ICs very briefly here?}
+We start integration at a small $\tau$ in the early universe,
+where it is radiation-dominated
+and we can initialize $a(\tau)$ from the radiation-dominated Friedmann equation $\scrH \approx 1/\tau$.
+
+For the perturbations we choose $\tau$ so early that $k\tau \ll 1$,
+so each $k$-mode is still \enquote{outside the horizon}
+and there is not yet any causal connection at the corresponding distance scale $1/k$.
+One may then derive initial conditions of the perturbation equations
+for \enquote{adiabatic} or \enquote{isocurvature} perturbations
+\cite[e.g.][section 7]{maCosmologicalPerturbationTheory1995a}.
+To keep the focus on the high-level equations,
+we do not pursue this in greater detail here.
+
+Note that the perturbation equations are linear,
+so their initial conditions and hence their solution are only determined up to a constant rescaling.
+The true power spectrum $P_{XY}(k) = P_0(k) \, X(k) \, Y(k)$ of two perturbation variables
+is found by multiplication with the primordial power spectrum predicted by inflation:
+\begin{equation}
+P_0(k) = \frac{2\pi^2}{k^3} \, A_s \, \left( \frac{k}{k_\mathrm{pivot}} \right)^{n_s-1} ,
+\end{equation}
+parameterized by the amplitude $A_s$ and tilt $n_s$.
+Thus, the perturbations in the \EB{} system are best interpreted as transfer functions
+from the early to the late universe.
 
 \section{\EB{} codes}
 \label{sec:eb_codes}
