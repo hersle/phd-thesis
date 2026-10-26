@@ -904,9 +904,11 @@ For species that are relativistic with $m=0$ (or $q/a \gg m$),
 we can analytically integrate out the $q$-dependence of $\Psi$
 to obtain a simpler and smaller set of equations.
 
-Define the momentum-averaged distribution function multipoles
+Define the momentum-averaged distribution function (multipoles)
 \begin{equation}
+F(\tau, k, \mu) = \frac{\int_0^\infty \diff{q} \, q^2 f_0 \, q \, \Psi(\tau, k, q, \mu)}{\int_0^\infty \diff{q} \, q^2 f_0 \, q} , \quad
 F_l(\tau, k) = \frac{\int_0^\infty \diff{q} \, q^2 f_0 \, q \, \Psi_l(\tau, k, q)}{\int_0^\infty \diff{q} \, q^2 f_0 \, q} .
+\label{eq:Fl}
 \end{equation}
 Then integrate the hierarchy \eqref{eq:hierarchy_ql} with $\epsilon=q$ over $4\pi \int \diff{q} \, q^2 f_0 \, q$
 and use that $\int \diff{q} \, q^3 f_0 \odv{\log f_0}/{\log q} = \int \diff{q} \, q^4 \odv{f_0}/{q} = -4 \int \diff{q} \, q^3 f_0$ by parts.
@@ -1050,10 +1052,10 @@ Cold dark matter is modeled as a collisionless and pressureless perfect (non-vis
 
 Baryons are modeled as a fluid (as in \cref{sec:fluid}) in the non-relativistic limit $q/a \ll m$
 with small $P$, $\delta P$ and $\sigma$.
-It is usually done with $w=\sigma=0$ in the background and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
+It is usually done with $w=0$ in the background and $\sigma=0$ and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
 but $k^2 c_s^2 \neq 0$ in the Euler equation \eqref{eq:fluid_euler}.
 In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
-which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ from recombination and reionization physics (see \cref{sec:modify_recombination}),
+which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ from recombination and reionization (see \cref{sec:modify_recombination}),
 and momentum exchange in the perturbations:
 \begin{equation}
 \label{eq:eb_baryons}
@@ -1197,17 +1199,19 @@ Thus, the perturbations in the \EB{} system are best interpreted as transfer fun
 from the early to the late universe.
 
 Our focus here is on the high-level \EB{} equations,
-so we do not go in great detail here.
+so we do not go in great detail on initial conditions here.
 
 \section{\EB{} codes}
 \label{sec:eb_codes}
 
-The core task of any \EB{} code is to solve the \EB{} equations \eqref{eq:eb}.
+The core task of an \EB{} code is to solve the entire \EB{} system of ODEs \eqref{eq:eb}.
 Afterwards, a range of post-processing steps may or may not be performed,
-in order to compute observables such as distances, matter power spectra and CMB power spectra:
-
+in order to compute observables such as distances, matter power spectra and CMB power spectra.
+The order of computational operations are
+\cite[e.g.][]{callinHowCalculateCMB2006b,lesgourguesCosmicLinearAnisotropy2011d,wintherscoming}:
+\TODO{fix Win citation}
 \begin{enumerate}
-\item \textbf{Background ODEs} are integrated in $\tau$ for variables $f(\tau)$ that depend only on $\tau$
+\item \textbf{Background ODEs} are integrated in $\tau$ for variables $u(\tau)$ that depend only on $\tau$
 (i.e. to 0th order in perturbation theory):
 \begin{equation}
 \odv{u}{\tau} = f(u, \tau),
@@ -1215,16 +1219,16 @@ in order to compute observables such as distances, matter power spectra and CMB 
 u(\tau_\ini) = u_\ini.
 \label{eq:bg_ode}
 \end{equation}
-This only has to be performed once if all parameters directly determine the initial conditions (i.e. an initial value problem (IVP)).
-In some cases, the parameters instead determine an mixed set of initial and final conditions (i.e. a boundary value problem (BVP)),
-and the \textbf{shooting method} is wrapped around the background solve to determine the correct initial conditions that produce the desired final conditions.
-For many models (but not in general), the background ODEs decouple into several blocks that can be solved sequentially,
-such as the expansion history for $\calH(\tau)$ followed by thermodynamics for $x_e(\tau)$ and $\kappa(\tau)$.
-The background ODE is usually quite small with 1-10 ODE variables,
-but can be highly stiff due to the recombination and baryon thermodynamics (more in this in \cref{sec:approx}).
+This only has to be done once if all parameters directly determine the initial conditions (i.e. an initial value problem (IVP)).
+In some cases, the parameters determine a mixed set of initial and final conditions (i.e. a boundary value problem (BVP)),
+and the background solve is wrapped inside the \textbf{shooting method} to find the initial conditions that produce the desired final conditions.
+For most models (but not necessarily in general) the background ODEs decouple into blocks that can be solved sequentially,
+such as the expansion history for $\calH(\tau)$ followed by thermodynamics for $x_e(\tau)$.
+The background ODEs are usually quite small with 1-10 ODE variables,
+but can be highly \textbf{stiff} due to the recombination and thermodynamics (see \cref{sec:approx}).
 \label{eb:bg}
 
-\item \textbf{Perturbation ODEs} are integrated in $\tau$ for variables $f(\tau, k)$ that depend on both time $\tau$ and wavenumber $k$
+\item \textbf{Perturbation ODEs} are integrated in $\tau$ for variables $u(\tau, k)$ that depend on both time $\tau$ and wavenumber $k$
 (i.e. to 1st order in perturbation theory):
 \begin{equation}
 \odv{u}{\tau} = f(u, \tau, k),
@@ -1232,28 +1236,37 @@ but can be highly stiff due to the recombination and baryon thermodynamics (more
 u(\tau_\ini, k) = u_\ini.
 \label{eq:pt_ode}
 \end{equation}
-The perturbations must usually be integrated for 100s-1000s of $k$-modes to resolve the $k$-dependence.
+The perturbations must usually be integrated for 100s of $k$-modes to resolve the $k$-dependence.
 Importantly, linear perturbations in Fourier space are independent (see \cref{sec:fourier}),
-so the same ODE system can be evolved independently for each $k$ and thus be parallelized (instead of solving for all $k$-modes together in one 100-1000$\times$ larger ODE).
+so the same ODE system can be evolved independently for each $k$ and thus be parallelized (instead of solving for all $k$-modes together in a $100\times$ larger ODE).
 The perturbation system for each $k$ usually consists of 10-100s of equations if only photons and massless neutrinos are included (with $\lmax \lesssim 10\text{-}100$),
-and 100s-1000s of equations if massive neutrinos are also included (with similar $\lmax$ and $N_q \lesssim 3\text{-}10$ and $N_m \lesssim 3$ for massive neutrinos).
-The equations are not only large, but also highly stiff, which makes them complicated to solve numerically (see \cref{sec:approx}).
-This is usually the most expensive part of the computation.
+and 100s-1000s of equations if massive neutrinos are also included (with similar $\lmax$ and $N_q \approx 5$ for massive neutrinos).
+The perturbation equations are both \textbf{large} and highly \textbf{stiff},
+particularly at early times,
+which makes them hard to solve numerically (see \cref{sec:approx}).
+It is usually the most expensive part of the computation.
 \label{eb:pt}
 
-\item \textbf{Line-of-sight integrals} are solved for photon multipoles.
+\item \textbf{Line-of-sight integrals} are solved for multipoles today.
 The CMB power spectrum needs the photon hierarchy $F_l(\tau_0,k)$ to very high $l \lesssim 3000$,
 but evolving the perturbation ODEs with $\lmax \lesssim 3000$ is extremely expensive.
-It is much more efficient to compute them from an integral solution,
-where the photon multipoles are found by an integral solution
-\cite{zaldarriagaAnalyticApproachPolarization1995,seljakLineSightApproach1996}:
+Instead, \cite{zaldarriagaAnalyticApproachPolarization1995,seljakLineSightApproach1996}
+found an integral solution to equation \eqref{eq:boltzmann_linear} in the relativistic case \eqref{eq:Fl}.
+Essentially, $F(\tau, k, \mu)$ is expressed as an integral \emph{before} it is expanded in multipoles $F_l(\tau,k)$,
+which is the reverse order of operations compared to how the infinite $l$-hierarchy \eqref{eq:hierarchy_l} was derived for the ODEs.
+It leads to a general method where multipoles $\Delta_l^A$ (such as $F_l$)
+are computed as integrals of a source function $S^A(\tau,k)$ of the perturbations
+weighted by spherical Bessel functions $j_l(x)$:
 \begin{equation}
-\Delta_l^A(\tau_0, k) = \int_{\tau_0}^{\tau_i} \diff{\tau}\,S^A(\tau,k)\,j_l(k(\tau_0-\tau)) ,
+\Delta_l^A(k) = \int_{\tau_i}^{\tau_0} \diff{\tau}\,S^A(\tau,k)\,j_l(k(\tau_0-\tau)) .
 \label{eq:los}
 \end{equation}
-where the source function $S(\tau, k)$ depends only on $l \leq 2$.
-Thus, the perturbation ODEs can be evolved with a small $\lmax$ that is good enough to give an accurate $S(\tau,k)$,
-and then the integrals can be evaluated quickly to get the multipoles $F_l(\tau_0, k)$ for many $(k, l)$.
+The major advantage is that $S^A(\tau,k)$ depends on the perturbations only up to $l \leq 2$
+and only weakly on their $\lmax$-truncation.
+Thus, the perturbation ODEs can be solved with a small $\lmax$ that gives a good enough $S^A(\tau,k)$,
+and then the integrals for $\Delta_l^A(k)$ can be evaluated for many $(k,l)$ by numerical quadrature,
+which is much cheaper than solving ODEs.
+\TODO{requires (ultra)spherical Bessel functions; cite Tram etc.?}
 \label{eb:los}
 
 \iffalse
@@ -1284,8 +1297,8 @@ Similar for polarization.
 \fi
 
 \item \textbf{Power spectra}:
-Matter power spectrum $P(k)$ is output directly from the solutions to the perturbation ODEs.
-CMB power spectrum must integrate the line-of-sight transfer functions over $k$:
+The matter power spectrum $P(k)$ is output directly from the solutions to the perturbation ODEs.
+The CMB power spectrum must integrate the line-of-sight transfer functions over $k$:
 \begin{equation}
 C_l^{AB} \propto \int \diff{k}\,P_0(k)\,k^2\,\Delta_l^A(k)\,\Delta_l^B(k) .
 \label{eq:Cl}
@@ -1293,22 +1306,24 @@ C_l^{AB} \propto \int \diff{k}\,P_0(k)\,k^2\,\Delta_l^A(k)\,\Delta_l^B(k) .
 \label{eb:spectra}
 \end{enumerate}
 
-\TODO{present the \enquote{problem} of stiffness?}
-Interpolation is a crucial operation \emph{between} each step (and of the final spectra).
-The perturbation ODEs step independently of the background solution and must generally query it at arbitrary $\tau$,
-so the background solution is splined and provided as input to the perturbations in order to interpolate it.
-The line-of-sight integrals must be computed on a much denser $k$-grid than what is required by the perturbations to resolve the source function,
-so the perturbations are solved on a coarser $k$-grid and used to interpolate $S(\tau, k)$ in the line-of-sight integrals.
-The final power spectra in either $k$ or $l$ is wanted at arbitrary values,
-so they are computed for as few $k$ and $l$ as possible and can be interpolated to any point.
-This is the topic of \cref{paper:chebyshev},
-which shows that this interpolation can be improved by using Chebyshev polynomials
+\textbf{Interpolation} is a crucial operation \emph{between} each step of the pipeline (and of the final spectra).
+The perturbation ODEs step in time independently of the background solution and must therefore query it at arbitrary $\tau$,
+so the background solution is splined and provided as interpolated input to the perturbations.
+The line-of-sight integrals $\Delta_l(k)$ oscillate rapidly in $k$
+and must be computed on a much denser $k$-grid than what is required resolve $S^A(\tau,k)$ from the perturbations,
+so the perturbations are solved on a coarser $k$-grid and used to interpolate $S^A(\tau, k)$ to a finer $k$-grid for line-of-sight integration.
+The final power spectra in either $k$ or $l$ are wanted at arbitrary values,
+so they are computed for as few $k$ and $l$ as possible and then interpolated.
+Interpolation is the topic of \cref{paper:chebyshev},
+which shows that the interpolation in $k$ and $l$ can be improved by using Chebyshev polynomials
 instead of cubic splines, which is the standard method used in most other codes.
-\TODO{discuss interpolation in SymBoltz section?}
+I also discuss this further in \cref{sec:spectral}.
 
-Further post-processing steps of \EB{} codes can include \enquote{boosting} in order to incorporate nonlinear effects,
-which must come from an external source, such as halo modeling or $N$-body simulations.
-I emphasize, however, that the core of the \EB{} remains the integration of the background, perturbations and line-of-sight integrals.
+Other post-processing steps of \EB{} codes can include \enquote{boosting} in order to incorporate nonlinear effects,
+which is implemented in some \EB{} codes using halo modeling tools calibrated to $N$-body simulations
+(e.g. Halofit \cite{smithStableClusteringHalo2003b,takahashiRevisingHalofitModel2012a}
+and HMCODE \cite{meadAccurateHaloModel2015,meadAccurateHalomodelMatter2016,meadHMcode2020ImprovedModelling2021a}).
+I reiterate, however, that the core task of an \EB{} remains the integration of the background, perturbations and line-of-sight integrals presented above.
 
 \subsection{History of \EB{} codes}
 
@@ -1420,112 +1435,158 @@ I emphasize, however, that the core of the \EB{} remains the integration of the 
 \caption{%
 Development history of major \EB{} codes (excluding modified versions for extended models) at the time of writing.
 The timeline of each code spans the earliest and latest trace of it that I could find online,
-and the publication time of its first research paper (see main text).
+and includes the publication time of its first research paper as given in the main text.
 }
 \label{fig:codes}
 \end{figure}
 
-Several \EB{} codes have been developed over the last few decades.
+Several \EB{} codes have been developed over the last three decades.
 Some are still actively developed,
-while others are abandoned or have grown into other codes that have succeeded them.
-Below and in \cref{fig:codes}, I summarize the history of \EB{} codes in the literature
-while paying special attention to the new advances that were made with each code.
+while others are abandoned or
+have grown into other codes that have succeeded them.
+In \cref{fig:codes} and below, I summarize the historical literature of \EB{} codes
+and highlight the different designs and new advances made with each code.
 
 \subsubsection{COSMICS}
-COSMICS \footnote{\url{https://web.archive.org/web/19961122200110/http://arcturus.mit.edu/cosmics/}} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
-is the first major \EB{} code that accompanied the seminal paper that is still cited as a complete and systematic treatment of linear cosmological perturbation theory
-in the Newtonian and synchronous gauges with general relativity, cold dark matter, massless and massive neutrinos, photons and baryons including a simple treatment of recombination \cite{maCosmologicalPerturbationTheory1995a}.
-It has served as a seminal reference paper and standardized notation and conventions across different codes.
-%It introduced several concepts have been used by later solvers:
-%the background-perturbations split, cubic spline interpolation,
-The code was written in Fortran and was succeeded by CMBFAST.
+COSMICS\footnote{\url{https://web.archive.org/web/19961122200110/http://arcturus.mit.edu/cosmics/}} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
+is the \enquote{Big Bang} of \EB{} codes.
+It is the first major code
+that includes general relativity, cold dark matter, massless and massive neutrinos, photons and baryons with a simplified treatment of recombination physics
+in both the Newtonian and synchronous gauges.
+This seminal work remains the standard reference for the systematic treatment of linear cosmological perturbation theory to this date,
+and has standardized notation and conventions for later codes.
+The code was written in Fortran and was later succeeded by CMBFAST.
 
 \subsubsection{CMBFAST}
 CMBFAST\footnote{\url{https://web.archive.org/web/20050308195517/cfa-www.harvard.edu/~mzaldarr/CMBFAST/cmbfast.html}} \cite{seljakLineSightApproach1996}
-descends from COSMICS and is the code that introduced the line-of-sight integration technique \eqref{eq:los}.
-This sped up the computation by two orders of magnitude at no significant loss in accuracy,
+descends from COSMICS and is the code that introduced the line-of-sight integration method \eqref{eq:los}.
+This sped up the computation by two orders of magnitude at without significant accuracy loss,
 because it allows $\lmax \approx 10$ instead of $\lmax \approx 1500$ in the perturbation ODEs for each $k$,
 and because the perturbation ODEs can be solved on a coarser $k$-grid before interpolation of the source function $S(\tau, k)$.
 It was first made for flat universes,
 but extended to open universes in \cite{zaldarriagaIntegralSolutionMicrowave1998}
 and to closed universes in \cite{zaldarriagaCMBFASTSpatiallyClosed2000}.
 It was also updated to include the effects of gravitational lensing on the CMB power spectra \cite{zaldarriagaGravitationalLensingEffect1998},
-and was used in the first WMAP analysis \cite{verdeFirstYearWilkinson2003,spergelFirstYearWilkinson2003}.
-The code evolved into CMBFAST and CAMB, the latter of which is maintained today.
+and was used in the first WMAP analysis \cite{verdeFirstYearWilkinson2003,spergelFirstYearWilkinson2003} of CMB data.
+The code later evolved into CAMB and CMBEASY.
 
 \subsubsection{CAMB}
 CAMB\footnote{\url{https://camb.info/} and \url{https://github.com/cmbant/CAMB}} \cite{lewisEfficientComputationCMB2000a,lewisCAMBV2Cosmological2026a}
-is a further evolution of CMBFAST and is one of the two most established codes in the cosmological community today, alongside CLASS.
+is built on CMBFAST and is one of the two most established codes in the cosmological community today, alongside CLASS.
 It reimplemented CMBFAST in a new \enquote{1+3 covariant formalism} that evolves gauge-independent covariant variables relative to some four-velocity \cite{challinorCosmicMicrowaveBackground1999}.
-Thus CAMB's conventions depart from the gauge-dependent formalism in \cite{maCosmologicalPerturbationTheory1995a}.
+Thus, CAMB's conventions departs somewhat from the gauge-dependent formalism in \cite{maCosmologicalPerturbationTheory1995a}.
 Its first release targeted the implementation of closed geometries in the line-of-sight integral,
-and the first paper was put on arXiv only one day apart from the corresponding implementation in CMBFAST \cite{lewisEfficientComputationCMB2000a,zaldarriagaCMBFASTSpatiallyClosed2000}.
-CAMB was integrated in the CosmoMC parameter extraction code,
-which popularized MCMC pipelines where the output of \EB{} codes is compared with observations \cite{lewisCosmologicalParametersCMB2002}.
-The core of CAMB remains written in Fortran, but CAMB also features a wrapper for Python.
-Notably, CAMB uses an explicit ODE integrator,
-which makes it necessary to use approximation schemes for the stiff equations that are tuned for the \LCDM{} model.
-These characteristics make CAMB very efficient for the standard model,
-at the cost of being more difficult to extend to some modified models (see \cref{sec:approx}).
-The code is still actively maintained, and has spawned many forks for extended models,
-such as EFTCAMB (for effective field theory) and MGCAMB (for select modified gravity theories) \TODO{cite them}.
+and appeared on arXiv only one day before the corresponding extension of CMBFAST \cite{lewisEfficientComputationCMB2000a,zaldarriagaCMBFASTSpatiallyClosed2000}.
+CAMB was integrated with the parameter extraction code CosmoMC \cite{lewisCosmologicalParametersCMB2002},
+which popularized MCMC pipelines where the output of \EB{} codes is compared with observations.
+CAMB uses an explicit ODE integrator,
+which makes it necessary to treat stiffness in the equations with analytical approximation schemes.
+%The code recently received substantial updates developed with agentic AI under human supervision,
+%including an approximation of hyperspherical Bessel functions that gradually reduce to
+%Notably, CAMB uses an explicit ODE integrator,
+%which makes it necessary to use approximation schemes for the stiff equations that are tuned for the \LCDM{} model.
+%These characteristics make CAMB very efficient for the standard model,
+%at the cost of being more difficult to extend to some modified models (see \cref{sec:approx}).
+The core of CAMB remains written in Fortran,
+but it also features a Python wrapper for accessing results
+and modifying dark energy models without touching internal code.
+CAMB is the most mature \EB{} code with ongoing active development from its over 30 year old roots.
+It has also spawned several forks for extended models (see \cref{sec:modifications}).
+
+\subsubsection{CMBEASY}
+CMBEASY\footnote{\url{https://web.archive.org/web/20080105133830/http://cmbeasy.org/}} \cite{doranCMBEASYObjectOriented2005a,doranSpeedingCosmologicalBoltzmann2005b}
+is a port of CMBFAST to C++.
+It reorganized the code with object-oriented programming features
+in order to facilitate modularity and simpler substitution of cosmological models, different gauge choices and so on,
+and featured a graphical user interface to use the code.
+For example, the object-oriented design was used to implement a variety of quintessence models for dark energy.
+It was also extended with a package for MCMC parameter estimation \cite{doranAnalyzeThisCosmological2004}.
+It is no longer under active development,
+but its philosophy of structuring the code to allow for simple substitution of different submodels has influenced the design of later codes,
+such as ABCMB and SymBoltz.
 
 \subsubsection{CLASS}
 CLASS\footnote{\url{http://class-code.net/} and \url{https://github.com/lesgourg/class_public/}} \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011e,lesgourguesCosmicLinearAnisotropy2011f}
-is the other most established code in use today, together with CAMB.
-It is the first major code that is not from the COSMICS branch (see \cref{fig:codes})
+is the other most established code in use today, alongside CAMB.
+It is the first major code that is not from the COSMICS branch
 and thus works as an independent cross-check of CAMB.
-The two agree for \LCDM{} to $0.01\%$ with high-precision settings \cite{lesgourguesCosmicLinearAnisotropy2011e}.
-It supports both the synchronous and Newtonian gauges presented in \cite{maCosmologicalPerturbationTheory1995a}.
-It is written in C, and also provides a wrapper for use with Python.
-CLASS was made with the motivation of being more flexible and simpler to modify than CAMB and CMBFAST,
+The two agree to $0.01\%$ with high-precision settings \cite{lesgourguesCosmicLinearAnisotropy2011e}.
+CLASS was made to be more flexible and simpler to modify than CAMB and CMBFAST,
 and its modules $\texttt{input} \to \texttt{background} \to \texttt{thermodynamics} \to \texttt{perturbations} \to \ldots \to \texttt{output}$
-rigorously mirror the computational stages of the \EB{} problem in \cref{sec:eb_codes} \cite{lesgourguesCosmicLinearAnisotropy2011d}.
-It offers very fine-grained control for tuning several approximation schemes and precision parameters in order to control the tradeoff between precision and performance \cite{blasCosmicLinearAnisotropy2011c},
-and uses an implicit ODE integrator to allow disabling some approximation schemes (see \cref{sec:approx}).
+directly mirrors the computational structure of the \EB{} problem in \cref{sec:eb_codes}.
+It offers very fine-grained control for tuning approximation schemes and precision parameters
+in order to control the precision-performance tradeoff.
+It is also the first code that makes it possible to disable some approximation schemes
+thanks to an \emph{implicit} \texttt{ndf15} ODE integrator,
+which evaluates the ODE Jacobian numerically
+and finds its sparsity pattern to speed up linear algebra operations.
+This makes it competitive with explicit integrators used by earlier codes.
 It also features a generic implementation of the $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}
-for non-cold dark matter species with arbitrary distribution functions $f_0(q)$ \cite{lesgourguesCosmicLinearAnisotropy2011f}.
-It has been extended into a wide range of modified models and additional computations,
-such as hi\_class and MGCLASS for modified gravity,
-SONG for second order perturbation theory,
-CLASS-PT for modeling mildly nonlinear structure formation with the effective field theory of large-scale structure,
-and ExoCLASS for exotic energy injection (see \cref{sec:modifications}).
+for arbitrary distribution functions $f_0(q)$.
+%It supports both the synchronous and Newtonian gauges.
+It has been updated with algorithms for computing hyperspherical generalizations of the Bessel functions
+that are needed for line-of-sight integration in closed universes,
+using stable recurrence relations in $l$ instead of ODEs in $\tau$
+\cite{lesgourguesFastAccurateCMB2014b,tramComputationHypersphericalBessel2017b}.
+CLASS is written in C, and also provides a wrapper for use with Python.
+It has been extended into a wide range of modified models and additional computations (see \cref{sec:modifications}).
+%SONG for second order perturbation theory,
+%CLASS-PT for modeling mildly nonlinear structure formation with the effective field theory of large-scale structure,
+%and ExoCLASS for exotic energy injection (see \cref{sec:modifications}).
 
 \subsubsection{PyCosmo}
 PyCosmo\footnote{\url{https://pypi.org/project/PyCosmo}} \cite{refregierPyCosmoIntegratedCosmological2017a,tarsitanoPredictingCosmologicalObservables2020a,moserSymbolicImplementationExtensions2021}
 is a third independent code and the first to be written primarily in Python,
-which is a very widely used programming language in the cosmological community today.
-It is the first code that features a symbolic interface (using the sympy library) for specifying equations
-in order to make it simpler to implement modified models.
-The symbolic equations are also used to compile efficient C/C++ code for the numerical solver,
-using the sympy2c utility \cite{schmittSympy2cSymbolicExpressions2022a} that was made in tandem with the code.
-It is also the first code designed with an architecture that avoids approximation schemes:
-it uses the symbolic equations to automatically build analytical and sparse Jacobians for the ODEs and solves them with the implicit BDF2 solver (see \cref{sec:approx}).
+which is a very widely used programming language in cosmology today.
+It is the first code to feature a symbolic interface for specifying equations
+to make it simpler for users to implement modified models.
+The symbolic equations are specified with \texttt{sympy} and then compiled to efficient C/C++ code for the numerical solver,
+using the utility \texttt{sympy2c} \cite{schmittSympy2cSymbolicExpressions2022a} that was made in tandem with the code.
+It is also the first code that is primarily designed to be completely free of approximation schemes:
+the symbolic equations are used to derive the ODE Jacobian \emph{analytically} in sparse form,
+which is then provided to an implicit \texttt{BDF2} ODE solver (see also \cref{sec:approx}).
+With this coupling of a symbolic framework and implicit solvers,
+PyCosmo is competitive with CLASS in terms of both performance and precision.
 
 \subsubsection{Bolt}
 Bolt\footnote{\url{https://github.com/xzackli/Bolt.jl/}} \cite{XzackliBoltjlCitation}
-is the first differentiable \EB{} code and the first code written in Julia.
+is the first differentiable \EB{} code and is the first code written in Julia.
 It can compute gradients of the output, such as matter and CMB power spectra,
 with forward-mode automatic differentiation using ForwardDiff.jl \cite{revelsForwardModeAutomaticDifferentiation2016} (see \cref{sec:differentiability}).
-Unlike older codes that include one or two built-in ODE solvers,
 Bolt is compatible with the very comprehensive OrdinaryDiffEq.jl library of ODE solvers \cite{rackauckasDifferentialEquationsjlPerformantFeatureRich2017a}.
-This makes it straightforward to swap out the numerical solver,
-which is important with stiff ODEs, where the optimal solver is problem-dependent.
+This makes it straightforward to swap out the numerical solver by changing only one line of code,
+which is very important with stiff ODEs, where the optimal solver is highly problem-dependent (see \cref{sec:approx}).
+Older codes include only one or two built-in ODE solvers and do not have this ability.
 At the time of writing, the code has not been actively developed since 2024 and has no accompanying paper.
-However, it has inspired the development of later codes.
 
 \subsubsection{DISCO-EB}
 DISCO-EB\footnote{\url{https://github.com/ohahn/DISCO-EB/}} \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}
 is another differentiable \EB{} code written in the JAX framework in Python \cite{jax}.
-This is a popular framework that extends the numpy library in Python with support for automatic differentiation and GPUs.
-It is compatible with the Diffrax ODE solver library \cite{kidgerNeuralDifferentialEquations2022},
-which offers a suite of implicit ODE solvers that is similar to OrdinaryDiffEq.jl.
+This is a popular framework that extends the \texttt{numpy} library in Python with support for automatic differentiation and GPUs, for example.
+It is the first \EB{} code that targets GPU compatibility,
+which can parallelize the evaluation of independent perturbation ODEs \eqref{eq:pt_ode},
+line-of-sight integrals \eqref{eq:los}
+and entire parameter sets to a greater extent than CPUs.
+GPU solvers like straightforward and branch-free computations,
+so DISCO-EB uses implicit solvers to avoid approximation schemes.
+DISCO-EB is compatible with the Diffrax ODE solver library \cite{kidgerNeuralDifferentialEquations2022},
+which also offers an appreciable suite of implicit ODE solvers similarly to OrdinaryDiffEq.jl in Bolt.
 At the time of writing, development has focused on enabling a fully differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026}.
-Consequently, DISCO-EB currently has a simplified recombination treatment and does not compute CMB observables.
+Consequently, DISCO-EB currently has a simplified recombination treatment and does not compute CMB observables, for example.
 
 \subsubsection{ABCMB}
-ABCMB\footnote{\url{https://github.com/TonyZhou729/ABCMB}} \cite{zhouABCMBPythonJAXPackage2026b} is similar and built on the same Python+JAX platform as DISCO-EB,
-but includes detailed HyRec-2 recombination physics, line-of-sight integration and computation of CMB observables.
+ABCMB\footnote{\url{https://github.com/TonyZhou729/ABCMB}} \cite{zhouABCMBPythonJAXPackage2026b} is
+another differentiable \EB{} code.
+It is built on the same Python+JAX platform as DISCO-EB and also uses Diffrax,
+but also features detailed implementations of recombination, BBN, line-of-sight integration and lensed CMB power spectra.
+Like DISCO-EB, it targets GPU parallelization, avoids approximation schemes
+and reports better runtime scaling with increasing $\lmax$ over CPU-based codes.
+For the whole pipeline to support automatic differentiation,
+ABCMB cannot simply call out to external recombination codes (like CAMB and CLASS can),
+but reimplements HyRec-2 in native JAX (see \cref{sec:modify_recombination}).
+Similarly to CMBEASY, it features an object-oriented interface for adding new species
+by specifying their energy-momentum contributions \eqref{eq:totalT} as a class,
+which makes it convenient to implement modifications when they fit into this form.
 
 \subsubsection{SymBoltz}
 SymBoltz\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
@@ -1681,7 +1742,7 @@ They set $\delta P/\delta \rho = \omega$ in the continuity equation \eqref{eq:pe
 but inconsistently set $w=\dot{w}=0$ and $\delta P/\delta \rho \neq w$ in the Euler equation \eqref{eq:fluid_euler}.
 The $\delta P/\delta \rho$ is preserved only in the Euler equation because it is multiplied by $k^2$ there, and thus important at small scales.
 This is a good approximation for the solution of the equations viewed from a purely numerical perspective,
-but from a physical perspective it is inconsistent and breaks gauge-covariance and energy-momentum conservation \eqref{eq:energy_momentum_conservation}.
+but from a physical perspective it is inconsistent and breaks gauge-covariance and energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$.
 
 Even at the background level, it is common to assume that baryons have $w_b=0$ and evolve as $\rho_b \propto a^{-3}$.
 This assumption is extremely important for the traditional architecture of \EB{} codes,
@@ -1996,6 +2057,8 @@ by considering modifications to the mathematical constant $\pi$ \cite{gammalCirc
 
 \TODO{figure with \url{https://www.tessabaker.space/images/map_slide_v2.pdf}?}
 
+\footnote{\url{https://xkcd.com/1758/}}
+
 \subsubsection{Phenomenologically based}
 
 MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
@@ -2127,7 +2190,7 @@ such as \BD{} gravity, $f(R)$ gravity and covariant Galileons (each of which cor
 
 All species in the standard \LCDM{} model indirectly with each other through gravity,
 but only baryons and photons interact directly through Thomson scattering.
-Total energy-momentum conservation \eqref{eq:conservation} is satisfied
+Total energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$ is satisfied
 by separately conserving $\nabla_\mu T^{\mu\nu}_a = 0$ for noninteracting species.
 Interacting models lift this assumption and allows for a nonzero flow $Q_{ab}$ between pairs $(a,b)$ of species:
 \begin{equation}
@@ -2302,6 +2365,7 @@ and support modern numerical techniques such as automatic differentiation and im
 In this section, I will explain this design in greater detail.
 
 \subsection{Symbolic-numeric interface for easy model specification}
+\label{sec:symbolicnumeric}
 
 \TODO{how can we accomodate modifications such as all the ones in the modifications section with a uniform interface. show what features the symbolic interface has after recent updates to symboltz. shooting, backwards, split bg/pt, auto-spline, auto-observed, ...}
 
@@ -2381,6 +2445,9 @@ Can use autodiff.
 
 \subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
+
+\TODO{document problem-dependent implicit solvers, e.g. \url{https://www.stochasticlifestyle.com/differences-between-methods-for-solving-stiff-odes/} and SciMLBenchmarks?}
+\TODO{stiff not only due to baryons, but also in later universe \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}. implicit solver can take larger steps.}
 
 The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} are \emph{stiff} \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
 This is a property of differential equations that may arise if several timescales coexist in the equations,
@@ -2677,6 +2744,7 @@ but without the precision and stability problems of finite differences.
 \TODO{ultimate goal is gradient-driven MCMCs, but not quite there yet}
 
 \subsection{Exploiting smoothness with spectral methods}
+\label{sec:spectral}
 
 \begin{table}[htbp]
 \begin{center}
@@ -3075,6 +3143,8 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 \TODO{fix tensor notation such as $T^\mu_\mu$; use $T^\mu{}_\mu$ instead}
 
 \TODO{move all labels in subequations before align}
+
+\TODO{i want Figure 1; not fig. 1, etc.}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
