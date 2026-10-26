@@ -1590,65 +1590,89 @@ which makes it convenient to implement modifications when they fit into this for
 
 \subsubsection{SymBoltz}
 SymBoltz\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
-is the code described in this thesis and in \cref{paper:symboltz}.
-It brings together what in my opinion are the successes of other recent \EB{} codes.
-Like PyCosmo, it features a symbolic interface for specifying equations,
-but SymBoltz takes this idea further to provide one common high-level interface to the user for modifying the full \EB{} equations \eqref{eq:eb} without touching internals of the code.
-The code also takes advantage of its \enquote{knowledge} of the symbolic equations to automate tasks that the user would otherwise have to do manually,
-such as separating background/thermodynamics/perturbation equations into different stages, interpolating arbitrary variables from the solution, and simplifying symbolic expressions (see \cref{sec:symbolicnumeric}).
-Like PyCosmo, SymBoltz also generates analytical and sparse ODE Jacobians from the symbolic equations.
-Like Bolt, it is compatible with the OrdinaryDiffEq.jl library for accessing a large suite of implicit ODE solvers,
-and provides the generated ODE Jacobian to the solvers,
-which makes it efficient to solve the ODEs without invoking approximation schemes.
-The symbolic-numeric structure is not custom-built but uses ModelingToolkit.jl,
-which is an independently developed library that continuously receives improvements
-and is tightly integrated with the OrdinaryDiffEq.jl ODE library.
-The development of SymBoltz has contributed significantly back to both libraries.
-Like Bolt and DISCO-EB, SymBoltz is also compatible with forward-mode automatic differentiation to compute accurate gradients without tuning finite-difference step sizes.
-This works through the implicit ODE solvers and the symbolic interface,
-but it requires that SymBoltz solves the full \EB{} equations without calling out to external codes.
-This makes SymBoltz reimplements recombination models inside its symbolic interface,
-while most other codes treat these as external programs and makes it challenging to support automatic differentiation.
-Like Bolt, SymBoltz is written in Julia,
-which I believe is a well suited for solving the two-language problem that is seen in all other codes,
-where the core is implemented in a fast low-level language like Fortran or C
-and a wrapper is available in a slow high-level language like Python
-The design ideas are elaborated in \cref{paper:symboltz}.
+brings together what in my opinion are the successes of the newer \EB{} codes.
+Like PyCosmo, SymBoltz features a symbolic interface for specifying equations that is built on ModelingToolkit.jl \TODO{cite},
+but takes the idea further to expose all variables, parameters, ordinary and algebraic equations and initial conditions
+of the entire \EB{} system \eqref{eq:eb} through one consistent symbolic interface.
+This makes it equally simple to modify any part of the equations.
+Furthermore, the \enquote{knowledge} of the symbolic equations is used to automate as many tasks as possible,
+such as separation of stages, interpolation of arbitrary variables, generation of numerical ODE code, specification of initial conditions and setup of the shooting method.
+Like PyCosmo, SymBoltz generates analytical and sparse ODE Jacobians from the symbolic equations
+and passes them to implicit ODE solvers,
+in order to avoid approximations while remaining performant.
+Like Bolt, it is compatible with OrdinaryDiffEq.jl for testing many different implicit ODE solvers,
+and uses the implicit \texttt{Rodas5P} solver by default which avoids Newton iterations.
+%The symbolic-numeric structure is not custom-built but uses ModelingToolkit.jl,
+%which is an independently developed library that continuously receives improvements
+%and is tightly integrated with the OrdinaryDiffEq.jl ODE library.
+%The development of SymBoltz has contributed significantly back to both libraries.
+Like Bolt, DISCO-EB and ABCMB, SymBoltz is compatible with forward-mode automatic differentiation
+for computing accurate gradients without tuning finite difference step sizes.
+%This works through the implicit ODE solvers and the symbolic interface,
+%but it requires that SymBoltz solves the full \EB{} equations without calling out to external codes.
+%This makes SymBoltz reimplements recombination models inside its symbolic interface,
+%while most other codes treat these as external programs and makes it challenging to support automatic differentiation.
+SymBoltz also features interpolation in $k$ and $l$ using Chebyshev polynomials,
+which can converge faster than cubic splines used in other codes
+due to the smooth output of the approximation-free equations.
+Like Bolt, SymBoltz is written in the Julia programming language,
+which strives to resolve the two-language problem that is prevalent in cosmology \TODO{cite Julia},
+(as seen by the common need of creating Python wrappers around C and Fortran codes).
+The design of SymBoltz is elaborated upon in \cref{paper:symboltz}.
 
-\begin{table}[htbp]
+\begin{table}[t]
 \begin{center}
 \small
 \setlength{\tabcolsep}{2pt}
 \def\arraystretch{1.5}
 \begin{tabular}{lllllll}
 \toprule
- & CAMB & CLASS & PyCosmo & DISCO-EB & Bolt${}^1$ & SymBoltz \\
+& CAMB & CLASS & PyCosmo & \makecell[l]{DISCO-EB\\ABCMB} & Bolt & SymBoltz \\
+\midrule
+Equation interface     & \cellcolor{yellow}Num.        & \cellcolor{yellow}Num.             & \cellcolor{green}Sym.           & \cellcolor{yellow}Num.             & \cellcolor{yellow}Num.             & \cellcolor{green}Sym. \\
 \midrule
 Best implicit solver   & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
-Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^2$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Solver order (stable)  & 6                             & \cellcolor{yellow}1--5 (2)${}^3$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
-Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^5$ \\
+Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^1$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Solver order (stable)  & \cellcolor{green}6            & \cellcolor{yellow}1--5 (2)${}^2$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
+Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^3$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$ \\
 Jacobian method        & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
-Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^6$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^5$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+\midrule
 Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub.  spl.       & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
+\midrule
+Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub. spl.        & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
+\midrule
+Maturity (citations)   & \cellcolor{green}6935         & \cellcolor{green}3429              & \cellcolor{yellow}43            & \cellcolor{red}31/5                & \cellcolor{red}Unpub.              & \cellcolor{red}6 \\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption[Characteristics of SymBoltz compared to other \EB{} codes.]{%
-Characteristics of SymBoltz compared to other \EB{} codes, marked as \textcolor{green}{\enquote{good}}, \textcolor{red}{\enquote{bad}} or \textcolor{yellow}{\enquote{neutral}}.
+\caption[Comparison of technological properties of \EB{} codes.]{%
+A comparison of various technological properties of traditional versus newer \EB{} codes.
+The colors are meant to highlight the relative differences
+and should not be interpreted as \textcolor{green}{\enquote{good}}, \textcolor{yellow}{\enquote{neutral}} or \textcolor{red}{\enquote{bad}}.
 AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
-${}^1$Development appears to have ceased.
-${}^2$Tight-coupling approximation is mandatory, but others can be disabled (\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^3$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order (e.g. \url{https://doi.org/10.1137/S1064827594276424}).
-${}^4$Custom `BDF2` method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ (see \url{https://arxiv.org/abs/1708.05177} eq. (21)).
-${}^5$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ (e.g. \url{https://doi.org/10.1007/s10543-023-00967-x}).
-${}^6$Sparsity found numerically and changes with approximations.
-ABCMB is not included, but has very similar properties to DISCO-EB.
-\TODO{make this appear less \enquote{boastful/arrogant}; it should be understood as a table where green measures how suitable the properties are for attaining approximation-freeness for example.}
+The citation count at the time of writing is looked up online from each code's main citation paper, as given in the text.
+${}^1$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
+${}^2$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order, so their order degrades in stiff regions \TODO{cite \url{https://doi.org/10.1137/S1064827594276424}}.
+${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2017a}.
+${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
+${}^5$Sparsity found numerically and changes with approximations.
+ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
+\TODO{before new sec}
 }
-\label{tab:boltzmann-comparison}
+\label{tab:comparison}
 \end{table}
+
+\subsubsection{Comparison of selected codes}
+
+To end this section,
+I give a comparison of technical aspects of selected codes in \cref{tab:comparison}
+in order to summarize the technological development of \EB{} codes.
+By far, CAMB and CLASS remain the most mature codes that have been used in most other projects,
+but newer codes show potential for more advanced numerical methods,
+such as more efficient integrators and improved ways of computing the ODE Jacobian for avoiding approximations,
+improved interpolation schemes
+and support for automatic differentiation.
 
 \section{Modified models in \EB{} codes}
 \label{sec:modifications}
@@ -2538,7 +2562,7 @@ u_{n+1} &= u_n + \Delta\tau \cdot f(u_{n+1}) \label{eq:euler_implicit}.
 The explicit method \eqref{eq:euler_explicit} finds the ODE state $u_{n+1}$ at the next time step as a straightforward explicit expression in terms of the current state $u_{n}$ only.
 The implicit method \eqref{eq:euler_implicit} instead expresses an implicit system of equations that must be solved for $u_{n+1}$.
 Many implicit ODE solvers,
-including \texttt{ndf15} in CLASS, \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt in \cref{tab:boltzmann-comparison},
+including \texttt{ndf15} in CLASS, \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt in \cref{tab:comparison},
 set up this as a nonlinear equation for $u_{n+1}$ and solve it with a Newton method:
 \begin{equation}
 F(u_{n+1}) = u_{n+1} - \Delta\tau \cdot f(u_{n+1},\tau_{n+1}) - u_n .
