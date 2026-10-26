@@ -1588,39 +1588,7 @@ Similarly to CMBEASY, it features an object-oriented interface for adding new sp
 by specifying their energy-momentum contributions \eqref{eq:totalT} as a class,
 which makes it convenient to implement modifications when they fit into this form.
 
-\subsubsection{SymBoltz}
-SymBoltz\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
-brings together what in my opinion are the successes of the newer \EB{} codes.
-Like PyCosmo, SymBoltz features a symbolic interface for specifying equations that is built on ModelingToolkit.jl \TODO{cite},
-but takes the idea further to expose all variables, parameters, ordinary and algebraic equations and initial conditions
-of the entire \EB{} system \eqref{eq:eb} through one consistent symbolic interface.
-This makes it equally simple to modify any part of the equations.
-Furthermore, the \enquote{knowledge} of the symbolic equations is used to automate as many tasks as possible,
-such as separation of stages, interpolation of arbitrary variables, generation of numerical ODE code, specification of initial conditions and setup of the shooting method.
-Like PyCosmo, SymBoltz generates analytical and sparse ODE Jacobians from the symbolic equations
-and passes them to implicit ODE solvers,
-in order to avoid approximations while remaining performant.
-Like Bolt, it is compatible with OrdinaryDiffEq.jl for testing many different implicit ODE solvers,
-and uses the implicit \texttt{Rodas5P} solver by default which avoids Newton iterations.
-%The symbolic-numeric structure is not custom-built but uses ModelingToolkit.jl,
-%which is an independently developed library that continuously receives improvements
-%and is tightly integrated with the OrdinaryDiffEq.jl ODE library.
-%The development of SymBoltz has contributed significantly back to both libraries.
-Like Bolt, DISCO-EB and ABCMB, SymBoltz is compatible with forward-mode automatic differentiation
-for computing accurate gradients without tuning finite difference step sizes.
-%This works through the implicit ODE solvers and the symbolic interface,
-%but it requires that SymBoltz solves the full \EB{} equations without calling out to external codes.
-%This makes SymBoltz reimplements recombination models inside its symbolic interface,
-%while most other codes treat these as external programs and makes it challenging to support automatic differentiation.
-SymBoltz also features interpolation in $k$ and $l$ using Chebyshev polynomials,
-which can converge faster than cubic splines used in other codes
-due to the smooth output of the approximation-free equations.
-Like Bolt, SymBoltz is written in the Julia programming language,
-which strives to resolve the two-language problem that is prevalent in cosmology \TODO{cite Julia},
-(as seen by the common need of creating Python wrappers around C and Fortran codes).
-The design of SymBoltz is elaborated upon in \cref{paper:symboltz}.
-
-\begin{table}[t]
+\begin{table}[tb]
 \begin{center}
 \small
 \setlength{\tabcolsep}{2pt}
@@ -1658,13 +1626,43 @@ ${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathb
 ${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
 ${}^5$Sparsity found numerically and changes with approximations.
 ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
-\TODO{before new sec}
 }
 \label{tab:comparison}
 \end{table}
 
-\subsubsection{Comparison of selected codes}
+\subsubsection{SymBoltz}
+SymBoltz\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
+brings together what in my opinion are the successes of the newer \EB{} codes.
+Like PyCosmo, SymBoltz features a symbolic interface for specifying equations that is built on ModelingToolkit.jl \TODO{cite},
+but takes the idea further to expose all variables, parameters, ordinary and algebraic equations and initial conditions
+of the entire \EB{} system \eqref{eq:eb} through one consistent symbolic interface.
+This makes it equally simple to modify any part of the equations.
+Furthermore, the \enquote{knowledge} of the symbolic equations is used to automate as many tasks as possible,
+such as separation of stages, interpolation of arbitrary variables, generation of numerical ODE code, specification of initial conditions and setup of the shooting method.
+Like PyCosmo, SymBoltz generates analytical and sparse ODE Jacobians from the symbolic equations
+and passes them to implicit ODE solvers,
+in order to avoid approximations while remaining performant.
+Like Bolt, it is compatible with OrdinaryDiffEq.jl for testing many different implicit ODE solvers,
+and uses the implicit \texttt{Rodas5P} solver by default which avoids Newton iterations.
+%The symbolic-numeric structure is not custom-built but uses ModelingToolkit.jl,
+%which is an independently developed library that continuously receives improvements
+%and is tightly integrated with the OrdinaryDiffEq.jl ODE library.
+%The development of SymBoltz has contributed significantly back to both libraries.
+Like Bolt, DISCO-EB and ABCMB, SymBoltz is compatible with forward-mode automatic differentiation
+for computing accurate gradients without tuning finite difference step sizes.
+%This works through the implicit ODE solvers and the symbolic interface,
+%but it requires that SymBoltz solves the full \EB{} equations without calling out to external codes.
+%This makes SymBoltz reimplements recombination models inside its symbolic interface,
+%while most other codes treat these as external programs and makes it challenging to support automatic differentiation.
+SymBoltz also features interpolation in $k$ and $l$ using Chebyshev polynomials,
+which can converge faster than cubic splines used in other codes
+due to the smooth output of the approximation-free equations.
+Like Bolt, SymBoltz is written in the Julia programming language,
+which strives to resolve the two-language problem that is prevalent in cosmology \TODO{cite Julia},
+(as seen by the common need of creating Python wrappers around C and Fortran codes).
+The design of SymBoltz is elaborated upon in \cref{paper:symboltz}.
 
+\subsubsection{Comparison of selected codes}
 To end this section,
 I give a comparison of technical aspects of selected codes in \cref{tab:comparison}
 in order to summarize the technological development of \EB{} codes.
