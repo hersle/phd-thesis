@@ -1674,6 +1674,132 @@ such as more efficient integrators and improved ways of computing the ODE Jacobi
 improved interpolation schemes
 and support for automatic differentiation.
 
+\section{Modifications of \EB{} codes (new)}
+
+Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.
+These modifications lead to a wide variety of additions or changes to the \EB{} equations \eqref{eq:eb}.
+
+Here I give a list of examples of modified models.
+The list is far from exhaustive,
+but nevertheless serves to illustrate the breadth of extensions across different sectors of the \EB{} equations and codes.
+
+\TODO{all require background, thermodynamics and perturbation modifications}
+
+\subsection{Dark energy models}
+
+Our understanding of the cosmological constant is poor,
+and there is no good reason why dark energy could not have a dynamical and time-dependent nature.
+There is a very large range of modified dark energy models \cite[e.g.][]{copelandDynamicsDarkEnergy2006}.
+
+Dark energy can be modeled as a fluid (\cref{sec:fluid}) with a general and time-dependent equation of state $w$
+(the cosmological constant corresponds to $w = -1$).
+A very popular parameterization is the Chevallier--Polarski--Linder equation of state
+\begin{equation}
+    w(a) = w_0 + w_a (1-a)
+\label{eq:w0wa}
+\end{equation}
+for which the continuity equation \eqref{eq:fluid_continuity_bg} admits the new time-dependent analytical solution
+$\rho_\Lambda(a) = \rho_\Lambda(1) \, a^{-3(1+w_0+w_a)} e^{-3 w_a (1-a)}$
+\cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}.
+Several other parameterizations and reconstruction of the full $w(a)$ from data have also been proposed,
+all of which can be used to probe for deviations from the cosmological constant
+\cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
+%such as a constant $w = w_0$ with only one parameter,
+%$w(a) = w_0 + w_a(a_p-a)$ around a general pivot scale factor $a_p$,
+%$w(z) = w_0 + w_1 z / (1+z)^p$ for $p \in \{1,2\}$ in redshift $z$,
+%similar parameterizations for the density $\rho_\Lambda(a)$,
+%piecewise constant (\enquote{binned}) $w(z) = w_i$ for $z_{i-1} < z \leq z_{i}$
+%and reconstruction of the full $w(a)$ from data using Gaussian processes
+%\cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
+The Chaplygin gas
+is a unified dark energy and dark matter fluid with equation of state $P=-A/\rho$,
+which gives the continuity equation \eqref{eq:fluid_continuity_bg} the analytical solution $\rho = \sqrt{A+B/a^6}$
+that decays like dark matter at early times but stays constant at late times
+\cite{kamenshchikAlternativeQuintessence2001}.
+
+Dark energy can also be described by a scalar field $\varphi$ that rolls in a freely specified potential function $V(\varphi)$.
+Quintessence is the best known class of such models
+\cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013}.
+Here the scalar field follows a \KG{} equation
+\begin{equation}
+\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi)
+\label{eq:kg}
+\end{equation}
+and contributes $\rho = \dot{\varphi}^2 / 2 a^2 + V(\varphi)$ and $P = \dot{\varphi}^2 / 2 a^2 - V(\varphi)$.
+If $V(\varphi)$ is chosen so $\varphi$ rolls slowly, then $w \rightarrow -1$.
+A similar \KG{} equation must be solved in the perturbations.
+Scalar fields have been used to build Early Dark Energy (EDE) models,
+which speed up expansion in the early universe to lower the sound horizon
+while preserving the late-time evolution
+in order to alleviate the $H_0$ tension
+\cite[e.g.][]{doranEarlyDarkEnergy2006,kamionkowskiDarkEnergyString2014,poulinCosmologicalImplicationsUltralight2018,poulinEarlyDarkEnergy2019,kamionkowskiHubbleTensionEarly2022,poulinUpsDownsEarly2023}.
+Quintessence can also be generalized to larger classes of models,
+such as $k$-essence and Horndeski theories (\cref{sec:modify_gravity}).
+
+These models require modified or new background and perturbation equations
+(the cosmological constant has no perturbations)
+and additional parameters and initial conditions.
+%Models without analytical solutions must use the shooting method
+%but can integrate by pure quadrature if w = w(a) alone
+%to determine the initial conditions that give the right $\Omega_{\Lambda 0} = 1 - \sum_{s \neq \Lambda} \Omega_{s 0}$,
+%or can integrate backwards in time if that is stable.
+
+\subsection{Dark matter models}
+
+\subsection{Recombination, reionization and baryon physics}
+
+\subsection{Modified gravity theories}
+
+Just like Newton's laws of gravity and motion works great in many cases,
+it could be the case that Einstein's theory of \GR{} is a limit or approximation to the true theory of gravity.
+In principle, modified gravity theories also explain phenomena
+such as galaxy rotation curves, enhanced clustering and the late-time acceleration
+without dark matter and dark energy, which we do not understand the nature of anyway.\footnote{\url{https://xkcd.com/1758/}}
+Several (classes of) modified gravity theories have bene implemented in \EB{} codes.
+
+MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
+MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstraintsSubhorizon2022}
+modify the perturbed Einstein equations \eqref{eq:eb_gravity}
+with the phenomenological parameterizations
+\begin{subequations}
+\begin{align}
+k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
+k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} .
+\end{align}%
+\label{eq:mg}%
+\end{subequations}
+with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$.
+Derivatives like $\dot\phi$ are still needed by the continuity equation \eqref{eq:pert_cont},
+and must be found by differentiating the above expressions.
+
+$\mathcal{H}$-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014,yeHEFTCAMBCobayaIntegratedPythonWrapped2026} and
+hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a}
+implement general classes of modified gravity theories.
+For example, they both support the popular class of Horndeski theories.
+This is the most general class theories with second order equations of motion
+for a metric tensor $g_{\mu\nu}$ and scalar field $\varphi$.
+A Horndeski theory is specified by symbolic expressions for four free functions
+$G_2(\varphi, X)$, $G_3(\varphi, X)$, $G_4(\varphi, X)$ and $G_5(\varphi, X)$
+of $\varphi$ and the kinetic term $X = -\frac12(\partial_\mu \varphi)^2$ in its Lagrangian.
+The background gets an additional \KG{} equation that must be solved together with modified Friedmann equations.
+Notably, the 1st Friedmann equation can become a constraint equation that cannot be solved for $\calH$ directly,
+so the acceleration equation must be integrated instead with \enquote{constraint damping} of the 1st equation in order to accurately satisfy both.
+The perturbed Einstein equations are also modified and must be solved together with a perturbed \KG{} equation.
+The coefficients in the perturbation equations are given in terms of four general functions
+$\alpha_K(\tau)$, $\alpha_B(\tau)$, $\alpha_T(\tau)$ and $\alpha_M(\tau)$,
+which have general expressions in terms of $G_i$ and its derivatives with respect to $\varphi$ and $X$
+\cite{belliniMaximalFreedomMinimum2014a}.
+
+Modified gravity theories introduce new and modified background and perturbation equations.
+Symbolic work is frequently necessary to specify the equations
+(e.g. turning expressions for $\psi$ and $\phi$ into $\dot\psi$ and $\dot\phi$,
+or computation of $\alpha_i$ from $G_i$),
+so integration with a symbolic library could make it easier to specify the theories from high-level equation input.
+They also introduce additional stiffness in the \EB{} system,
+which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
+
+\subsection{Interacting models}
+
 \section{Modifications in \EB{} codes}
 \label{sec:modifications}
 
@@ -1716,7 +1842,7 @@ $w(a) = w_0 + w_a(a_p-a)$ around a general pivot scale factor $a_p$,
 $w(z) = w_0 + w_1 z / (1+z)^p$ for $p \in \{1,2\}$ in redshift $z$,
 similar parameterizations for the density $\rho_\Lambda(a)$,
 piecewise constant (\enquote{binned}) $w(z) = w_i$ for $z_{i-1} < z \leq z_{i}$
-and reconstruction of the full $w(a)$ from data using Gaussian processes
+and reconstruction of the full $w(a)$ from data using Gaussian processes
 \cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
 
 \subsubsection{Dark energy models}
