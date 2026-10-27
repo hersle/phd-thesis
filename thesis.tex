@@ -1595,7 +1595,7 @@ which makes it convenient to implement modifications when they fit into this for
 \def\arraystretch{1.5}
 \begin{tabular}{lllllll}
 \toprule
-& CAMB & CLASS & PyCosmo & \makecell[l]{DISCO-EB\\ABCMB} & Bolt & SymBoltz \\
+& CAMB & CLASS & PyCosmo & \makecell[l]{DISCO-EB\\ABCMB${}^6$} & Bolt & SymBoltz \\
 \midrule
 Equation interface     & \cellcolor{yellow}Num.        & \cellcolor{yellow}Num.             & \cellcolor{green}Sym.           & \cellcolor{yellow}Num.             & \cellcolor{yellow}Num.             & \cellcolor{green}Sym. \\
 \midrule
@@ -1621,11 +1621,11 @@ and should not be interpreted as \textcolor{green}{\enquote{good}}, \textcolor{y
 AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
 The citation count at the time of writing is looked up online from each code's main citation paper, as given in the text.
 ${}^1$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^2$BDF methods are \enquote{A-stable} and \enquote{L-stable} only to 2nd order, so their order degrades in stiff regions \TODO{cite \url{https://doi.org/10.1137/S1064827594276424}}.
+${}^2$BDF methods are \enquote{A-stable} (and \enquote{L-stable}) only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order degrades in stiff regions.
 ${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2017a}.
 ${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
 ${}^5$Sparsity found numerically and changes with approximations.
-ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
+${}^6$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
 }
 \label{tab:comparison}
 \end{table}
@@ -1633,7 +1633,7 @@ ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Di
 \subsubsection{SymBoltz}
 SymBoltz\footnote{\url{https://github.com/hersle/SymBoltz.jl/}} \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}
 brings together what in my opinion are the successes of the newer \EB{} codes.
-Like PyCosmo, SymBoltz features a symbolic interface for specifying equations that is built on ModelingToolkit.jl \TODO{cite},
+Like PyCosmo, SymBoltz features a symbolic interface for specifying equations that is built on ModelingToolkit.jl \cite{maModelingToolkita},
 but takes the idea further to expose all variables, parameters, ordinary and algebraic equations and initial conditions
 of the entire \EB{} system \eqref{eq:eb} through one consistent symbolic interface.
 This makes it equally simple to modify any part of the equations.
@@ -1658,7 +1658,7 @@ SymBoltz also features interpolation in $k$ and $l$ using Chebyshev polynomials,
 which can converge faster than cubic splines used in other codes
 due to the smooth output of the approximation-free equations.
 Like Bolt, SymBoltz is written in the Julia programming language,
-which strives to resolve the two-language problem that is prevalent in cosmology \TODO{cite Julia},
+which strives to resolve the two-language problem that is prevalent in cosmology \cite{bezansonJuliaFreshApproach2015a},
 (as seen by the common need of creating Python wrappers around C and Fortran codes).
 The design of SymBoltz is elaborated upon in \cref{sec:symboltz}.
 
