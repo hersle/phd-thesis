@@ -1167,6 +1167,7 @@ Massless neutrinos have simpler equations than massive ones and reduce the size 
 The cosmological constant $\Lambda$ is really an additional term $\Lambda g_{\mu\nu}$ on the left side of the Einstein equations \eqref{eq:einstein}.
 We can effectively treat it as a fluid \eqref{eq:fluid} with $w=-1$ in the background and no perturbations:
 \begin{equation}
+\label{eq:cc}
 \begin{aligned}
 \rho_\Lambda(\tau) &= \rho_\Lambda(\tau_0) , \\
 P_\Lambda(\tau) &= -\rho_\Lambda .
@@ -1672,75 +1673,96 @@ such as more efficient integrators and improved ways of computing the ODE Jacobi
 improved interpolation schemes
 and support for automatic differentiation.
 
-\section{Modified models in \EB{} codes}
+\section{Modifications in \EB{} codes}
 \label{sec:modifications}
 
-\TODO{rewrite to much more compact, so it becomes more like a compact summary before the SymBoltz section}
+Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.
+These modifications lead to a wide variety of additions or changes to the \EB{} equations \eqref{eq:eb}.
 
-Over the years, a plethora of modified models have been implemented into \EB{} codes.
-We give a non-exhaustive list of this, in an attempt to illustrate what common modifications are made in \EB{} codes.
-The purpose is not to give an exhaustive list of all modifications ever made,
-but it is to showcase the breadth of the possible modifications and how they affect nearly every \enquote{sector} of the \EB{} equations.
+Here I give a list of examples of modified models.
+The list is far from exhaustive,
+but nevertheless serves to illustrate the breadth of extensions across different sectors of the \EB{} equations and codes.
 
+\TODO{rewrite much more compactly, so it becomes more like a compact summary before the SymBoltz section}
 \TODO{see \cite{valentinoRealmHubbleTension2021,abdallaCosmologyIntertwinedReview2022,schonebergH0OlympicsFair2022} for an overview of some different extended models?}
 
-\subsection{\texorpdfstring{$w_0 w_a$}{w0wa} dark energy}
+\subsection{Time-dependent dark energy}
 
-One of the most popular modifications to the cosmological constant as dark energy in \LCDM{} is to switch its equation of state from $w = -1$ to
+The cosmological constant is an \enquote{ad-hoc} modification of the Einstein equations
+that effectively adds a time-independent density \eqref{eq:cc} to the energy-momentum.
+Dark energy is mostly inferred from the accelerating late-time expansion,
+but our understanding of it is poor and there is no fundamental theoretical argument for why it must have a time-independent nature.
+Theoretical models and time-dependent parameterizations for dark energy are therefore a natural and popular class of \LCDM{} extensions.
+
+\subsubsection{Dark energy parameterizations}
+
+One approach is to parameterize the time-dependence of dark energy as a fluid (\cref{sec:fluid}).
+A popular parameterization is the Chevallier--Polarski--Linder equation of state
 \cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}
 \begin{equation}
-w(a) = w_0 + w_a (1-a).
+w(a) = w_0 + w_a (1-a),
 \end{equation}
-With this equation of state, the continuity equation admits a new analytical solution \TODO{}.
-It also means that dark energy receive perturbations, so the continuity and Euler equations \eqref{eq:pert_fluid} that must be integrated numerically in time \cite{putterMeasuringSpeedDark2010}.
-This is the simplest model that probes a time-dependent (dynamical) nature of dark energy, but it adds two additional parameters to the model.
-The Taylor expansion around $a$ in particular is one of several choice: other parameterizations such as $w(z) = w_0 + w_a z$ are also possible, but not as stable because they blow up at early times \cite{linderExploringExpansionHistory2003}.
+which is just a first-order Taylor expansion around $a=1$ with two free parameters $w_0$ and $w_a$.
+It modifies the continuity equation \eqref{eq:fluid_continuity_bg} in the background
+with a new analytical solution in the absence of interactions.
+New perturbation equations \eqref{eq:fluid} for $\delta$ and $\theta$ are also needed \cite[e.g.][]{putterMeasuringSpeedDark2010},
+as the pure cosmological constant does not have perturbations by definition.
 
-Note that it is possible to have both $w < -1$ and $w > -1$, but not $w = -1$ exactly.
-\TODO{how to handle phantom crossing? PPF expansion?}
+Many other parameterizations have also been proposed, such as
+a single-parameter $w = w_0$,
+$w(a) = w_0 + w_a(a_p-a)$ around a general pivot scale factor $a_p$,
+$w(z) = w_0 + w_1 z / (1+z)^p$ for $p \in \{1,2\}$ in redshift $z$,
+similar parameterizations for the density $\rho_\Lambda(a)$,
+piecewise constant (\enquote{binned}) $w(z) = \{\text{$w_1$ if $z > z_1$, \text{$w_2$ if $z > z_2$}}, \ldots$,
+and reconstruction of the full $w(\tau)$ from data using Gaussian processes
+\cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
 
-\TODO{cover arbitrary time-dependence in this point?}
+\subsubsection{Dark energy theories}
 
-\subsection{Quintessence (scalar field)}
+The \enquote{ad-hoc} nature of the cosmological constant
+is avoided by theoretical approaches to dark energy \cite[e.g.][for a review]{copelandDynamicsDarkEnergy2006}.
 
-Another common model for dark energy is a time-varying scalar field $\varphi$ that slowly rolls down a potential $V(\varphi)$ \cite{tsujikawaQuintessenceReview2013}.
-Although this class of models was first introduced by \cite{ratraCosmologicalConsequencesRolling1988},
-the term \enquote{quintessence} was later coined by \cite{caldwellCosmologicalImprintEnergy1998}.
-It means \enquote{the fifth essence} in Spanish, and is named in the hope of being the next fundamental contribution to the energy-momentum of \enquote{matter} after baryons, dark matter, photons and neutrinos.
-This is so because they remove $\Lambda$ from the left side of the Einstein equations \eqref{eq:einstein}, and rather incorporate a fifth component into the energy-momentum tensor on the right side.
-
-The scalar field evolves in conformal time according to the Klein-Gordon equation:
+A large class of models introduce a scalar field $\varphi$ (alongside the metric tensor $g_{\mu\nu}$)
+that rolls in a freely specified potential function $V(\varphi)$.
+Quintessence%
+\footnote{\enquote{The fifth essence}, named in the hope of being the final contributor to $T_{\mu\nu}$ after baryons, dark matter, photons and neutrinos).}
+\cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013}
+is the most purest and most well-known type,
+where the kinetic term $X = -\frac12 (\nabla\varphi)^2$ and potential term $V(\varphi)$ enters the Lagrangian density in the canonical form $X - V(\varphi)$.
+This results in a Klein--Gordon \TODO{KG macro} equation that must be evolved for $\varphi$ in the background,
+and the scalar field contributes to the total energy and pressure:
 \begin{equation}
-\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi)
+\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi) , \qquad
+\rho = \frac12 \dot{\varphi}^2 + V(\varphi) , \qquad
+P = \frac12 \dot{\varphi}^2 - V(\varphi) .
 \end{equation}
-in a freely specified potential function $V(\varphi)$.
-It contributes to the total energy-momentum with energy density, pressure and equation of state
-\begin{equation}
-\rho = \frac12 \dot{\varphi}^2 + V(\varphi), \quad
-P = \frac12 \dot{\varphi}^2 + V(\varphi), \quad
-w = \frac{P}{\rho} = \frac{\frac12\dot{\varphi}^2 - V(\varphi)}{\frac12\dot{\varphi}^2 + V(\varphi)}.
-\end{equation}
-Note that $-1 \leq w \leq 1$.
-To mimic dark energy and enable the accelerated late-time expansion with $w \lesssim -1$,
-we need $\varphi$ to roll slowly in $V(\varphi)$ with $\dot\varphi \ll \sqrt{V}$.
+A Klein--Gordon equation for perturbations $\delta\varphi$ must also be solved.
 
-Perturbations of the scalar field also evolve with the perturbed Klein-Gordon equation:
-\begin{equation}
-\ddot{\delta\varphi} = -2 \calH \dot{\delta\varphi} - (k^2 + a^2 V^\pprime) \delta\varphi + \dot\varphi (\dot{\psi} + 3\dot{\phi}) - 2 a^2 V^\prime \psi.
-\end{equation}
-They contribute energy density and pressure perturbations
-\begin{equation}
-\delta\rho = \frac{1}{a^2}\dot{\varphi} \, \dot{\delta\varphi} - \frac{1}{a^2}\dot{\varphi}^2 \psi + V^\prime \delta\varphi, \quad
-\delta P   = \frac{1}{a^2}\dot{\varphi} \, \dot{\delta\varphi} - \frac{1}{a^2}\dot{\varphi}^2 \psi - V^\prime \delta\varphi.
-\end{equation}
+$k$-essence generalizes quintessence
+to Lagrangian densities where $X$ and $\varphi$ enter in a general \enquote{non-canonical} way $p(X, \varphi)$.
+It leads to a more general set of Klein--Gordon equations in the background and perturbations.
+It is also a subclass of Horndeski theories,
+which is a general class of modified gravity theories (see \cref{sec:modify_gravity}).
 
-\subsection{Early dark energy}
+Another interesting model is the Chaplygin gas \cite{kamenshchikAlternativeQuintessence2001},
+which is a fluid that transitions from dark matter to dark energy.
+It has the equation of state
+\begin{equation}
+P = -\frac{A}{\rho} ,
+\end{equation}
+for which the continuity equation (without interactions) \eqref{eq:fluid_continuity_bg} integrates analytically to
+\begin{equation}
+\rho = \sqrt{A + \frac{B}{a^6}} = \begin{cases} \sqrt{B} \, a^{-3} & \text{if $a \ll (b/A)^{1/6}$}, \\ \sqrt{A} & \text{if $a \gg (B/A)^{1/6}$} . \end{cases}
+\end{equation}
+Thus, the Chaplygin gas transitions from dark matter in the early universe
+to dark energy similar to the cosmological constant in the late universe.
+It is attractive because it unifies two poorly understood sectors of the \LCDM{} model.
 
-Also a scalar field, but has effective fluid description.
-\TODO{also scalar field?}
-\cite{kamionkowskiDarkEnergyString2014}
-\cite{poulinCosmologicalImplicationsUltralight2018}
-\cite{poulinEarlyDarkEnergy2019}
+Other dark energy models include Early Dark Energy \cite[e.g.][]{doranEarlyDarkEnergy2006,kamionkowskiDarkEnergyString2014,poulinCosmologicalImplicationsUltralight2018,poulinEarlyDarkEnergy2019,kamionkowskiHubbleTensionEarly2022,poulinUpsDownsEarly2023},
+which accelerates the expansion in the early universe with an exotic dark energy fluid.
+Dark energy could also interact with other species and thus become time-dependent (see \cref{sec:modify_interacting}).
+Modifications of gravity, such as Horndeski theories,
+also introduce scalar fields that play the role of dark energy and additionally modify the Einstein equations (see \cref{sec:modify_gravity}).
 
 \subsection{Dark matter models}
 
@@ -2262,23 +2284,23 @@ These factors complicate the implementation of interacting models.
  & \textbf{b} & $\boldsymbol{\nu}$ & \textbf{DM} & \textbf{DR} & \textbf{DE} \\
 \midrule
 $\boldsymbol{\gamma}$ &
-Scattering, recombination \newline \cite{maCosmologicalPerturbationTheory1995a,seagerNewCalculationRecombination1999b} &
+Thomson scattering, recombination \newline \cite{maCosmologicalPerturbationTheory1995a,seagerNewCalculationRecombination1999b} \newline Rayleigh scattering \cite{lewisRayleighScatteringBlue2013,alipourEffectsRayleighScattering2015} &
 -- &
-Scattering \newline \cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018} &
+Scattering \newline \cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018,beckerCosmologicalConstraintsMultiinteracting2021a} &
 -- &
-Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022} \\ \midrule%\cmidrule{2-6}
+Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022,muraiIsotropicCosmicBirefringence2023} \\ \midrule%\cmidrule{2-6}
 \textbf{b} & &
 -- &
-Scattering \newline \cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,figuerueloDarkMatterbaryonsElastic2026} &
+Scattering \newline \cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,boddyCriticalAssessmentCMB2018,figuerueloDarkMatterbaryonsElastic2026} &
 -- &
 Scattering \newline \cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBaryonsdark2020a} \\ \midrule%\cmidrule{3-6}
 $\boldsymbol{\nu}$ & &
-See \cref{sec:neutrinos} &
-Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021} &
-Majoron, decay \newline \cite{escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
-Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006} \\ \midrule%\cmidrule{4-6}
+\cite{cyr-racineLimitsNeutrinoNeutrinoScattering2014,oldengottInteractingNeutrinosCosmology2017a,kreischNeutrinoPuzzleAnomalies2020a}, see \cref{sec:neutrinos} &
+Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021,braxExtendedAnalysisNeutrinoDark2023} &
+Majoron, decay \newline \cite{escuderoCosmologicalConstraintsInvisible2019,escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
+Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006,motaNeutrinoClusteringGrowing2008} \\ \midrule%\cmidrule{4-6}
 \textbf{DM} & & & &
-Scattering, decay \newline \cite{lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,leeCosmologicalEvolutionDecaying2026} &
+Scattering, decay \newline \cite{diamantiDarkRadiationInteracting2013,buen-abadNonAbelianDarkMatter2015,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,cyr-racineETHOSEffectiveTheory2016,audrenStrongestModelindependentBound2014,leeCosmologicalEvolutionDecaying2026} &
 Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021} \\ \bottomrule
 \end{tabular}
 \end{center}
@@ -2286,6 +2308,7 @@ Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityIntera
 Examples of interactions that have been implemented in \EB{} codes between pairs of species:
 photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
 Only baryon--photon interactions are part of the standard \LCDM{} model.
+\TODO{DR-DR: \cite{smithConstraintsNeutrinoDark2012a,brinckmannConfrontingInteractingDark2023}}
 }
 \label{tab:interactions}
 \end{table}
@@ -2540,6 +2563,8 @@ as several approximation schemes effectively truncate the hierarchies \eqref{eq:
 to effective fluid treatments \eqref{eq:fluid}.
 Together, they help both speed and stability of the equations,
 but they are not the only way to handle stiffness.
+
+\TODO{spawned literature on more and more approximation schemes: 2nd order TCA, ...}
 
 \subsubsection{Implicit integrators without approximation schemes}
 
