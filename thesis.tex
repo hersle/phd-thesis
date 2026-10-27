@@ -58,6 +58,7 @@
 \newcommand\He{\ensuremath{\mathrm{He}}} % Helium
 \newcommand\lmax{{\ensuremath{l_\mathrm{max}}}}
 \newcommand\GR{General Relativity}
+\newcommand\KG{Klein--Gordon}
 \newcommand\BD{Brans--Dicke}
 \DeclareMathOperator{\sign}{sign} % sign function
 
@@ -1729,18 +1730,18 @@ Quintessence%
 \cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013}
 is the most purest and most well-known type,
 where the kinetic term $X = -\frac12 (\nabla\varphi)^2$ and potential term $V(\varphi)$ enters the Lagrangian density in the canonical form $X - V(\varphi)$.
-This results in a Klein--Gordon \TODO{KG macro} equation that must be evolved for $\varphi$ in the background,
+This results in a \KG{} equation that must be evolved for $\varphi$ in the background,
 and the scalar field contributes to the total energy and pressure:
 \begin{equation}
 \ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi) , \qquad
 \rho = \frac12 \dot{\varphi}^2 + V(\varphi) , \qquad
 P = \frac12 \dot{\varphi}^2 - V(\varphi) .
 \end{equation}
-A Klein--Gordon equation for perturbations $\delta\varphi$ must also be solved.
+A \KG{} equation for perturbations $\delta\varphi$ must also be solved.
 
 $k$-essence generalizes quintessence
 to Lagrangian densities where $X$ and $\varphi$ enter in a general \enquote{non-canonical} way $p(X, \varphi)$.
-It leads to a more general set of Klein--Gordon equations in the background and perturbations.
+It leads to a more general set of \KG{} equations in the background and perturbations.
 It is also a subclass of Horndeski theories,
 which is a general class of modified gravity theories (see \cref{sec:modify_gravity}).
 
@@ -2159,7 +2160,7 @@ The background gravity equations are schematically modified as \cite[e.g.][]{bel
 The 1st Friedmann equation \eqref{eq:hifried1} turns into a cubic constraint equation for the Hubble function $H(\tau)$,
 which is impractical to solve explicitly for $H$.
 The 2nd Friedmann (acceleration) equation \eqref{eq:hifried2} remains a first order ODE for $H(\tau)$ (or second order for $a(\tau)$).
-The Klein-Gordon equation \eqref{eq:hikg} is a new second order ODE for the scalar field.
+The \KG{} equation \eqref{eq:hikg} is a new second order ODE for the scalar field.
 These equations are solved differently than in \LCDM{},
 where the constraint \eqref{eq:fried1} has the form $C_2 H^2 + C_0 = 0$ and is usually integrated directly as $H = +\sqrt{-C_0/C_2}$ without using the acceleration equation.
 Instead, equations \eqref{eq:hifried2} and \eqref{eq:hikg} are integrated as ODEs, but with a few nuances:
@@ -2182,7 +2183,7 @@ as not all choices of $H_0$ (treated as a free parameter), $\varphi(\tau_\ini)$ 
 
 The gravitational perturbation equations are also modified.
 They can be arranged schematically as four redundant Einstein equations
-and one perturbed Klein-Gordon equation for the metric potentials $\phi$ and $\psi$
+and one perturbed \KG{} equation for the metric potentials $\phi$ and $\psi$
 and the scalar field perturbation $v_X = -a\,\delta\varphi / \dot{\varphi}$
 \cite{belliniMaximalFreedomMinimum2014a}:
 \begin{subequations}
