@@ -1698,70 +1698,69 @@ Theoretical models and time-dependent parameterizations for dark energy are ther
 \subsubsection{Dark energy parameterizations}
 
 One approach is to parameterize the time-dependence of dark energy as a fluid (\cref{sec:fluid}).
-A popular parameterization is the Chevallier--Polarski--Linder equation of state
-\cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}
+A popular parameterization is the Chevallier--Polarski--Linder equation of state,
+for which the background continuity equation \eqref{eq:fluid_continuity_bg} admits a new analytical solution
+\cite{chevallierAcceleratingUniversesScaling2001,linderExploringExpansionHistory2003}:
 \begin{equation}
-w(a) = w_0 + w_a (1-a),
+w(a) = w_0 + w_a (1-a)
+\quad \implies \quad
+\rho_\Lambda(a) = \rho_\Lambda(1) \, a^{-3(1+w_0+w_a)} e^{-3 w_a (1-a)}.
 \end{equation}
-which is just a first-order Taylor expansion around $a=1$ with two free parameters $w_0$ and $w_a$.
-It modifies the continuity equation \eqref{eq:fluid_continuity_bg} in the background
-with a new analytical solution in the absence of interactions.
+This is just a first-order Taylor expansion of the equation of state around $a=1$ with two free parameters $w_0$ and $w_a$.
 New perturbation equations \eqref{eq:fluid} for $\delta$ and $\theta$ are also needed \cite[e.g.][]{putterMeasuringSpeedDark2010},
-as the pure cosmological constant does not have perturbations by definition.
+as the pure cosmological constant has no perturbations by definition.
 
 Many other parameterizations have also been proposed, such as
 a single-parameter $w = w_0$,
 $w(a) = w_0 + w_a(a_p-a)$ around a general pivot scale factor $a_p$,
 $w(z) = w_0 + w_1 z / (1+z)^p$ for $p \in \{1,2\}$ in redshift $z$,
 similar parameterizations for the density $\rho_\Lambda(a)$,
-piecewise constant (\enquote{binned}) $w(z) = \{\text{$w_1$ if $z > z_1$, \text{$w_2$ if $z > z_2$}}, \ldots$,
-and reconstruction of the full $w(\tau)$ from data using Gaussian processes
+piecewise constant (\enquote{binned}) $w(z) = w_i$ for $z_{i-1} < z \leq z_{i}$
+and reconstruction of the full $w(a)$ from data using Gaussian processes
 \cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
 
-\subsubsection{Dark energy theories}
-
-The \enquote{ad-hoc} nature of the cosmological constant
-is avoided by theoretical approaches to dark energy \cite[e.g.][for a review]{copelandDynamicsDarkEnergy2006}.
+\subsubsection{Dark energy models}
 
 A large class of models introduce a scalar field $\varphi$ (alongside the metric tensor $g_{\mu\nu}$)
-that rolls in a freely specified potential function $V(\varphi)$.
+that rolls in a freely specified potential function $V(\varphi)$ \cite[e.g.][]{copelandDynamicsDarkEnergy2006}.
 Quintessence%
-\footnote{\enquote{The fifth essence}, named in the hope of being the final contributor to $T_{\mu\nu}$ after baryons, dark matter, photons and neutrinos).}
+\footnote{\enquote{The fifth essence}, named in the hope of being the final contributor to $T_{\mu\nu}$ after baryons, dark matter, photons and neutrinos.}
 \cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013}
-is the most purest and most well-known type,
+is the purest and best known type,
 where the kinetic term $X = -\frac12 (\nabla\varphi)^2$ and potential term $V(\varphi)$ enters the Lagrangian density in the canonical form $X - V(\varphi)$.
 This results in a \KG{} equation that must be evolved for $\varphi$ in the background,
 and the scalar field contributes to the total energy and pressure:
 \begin{equation}
 \ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi) , \qquad
-\rho = \frac12 \dot{\varphi}^2 + V(\varphi) , \qquad
-P = \frac12 \dot{\varphi}^2 - V(\varphi) .
+\rho = \frac{\dot{\varphi}^2}{2 a^2} + V(\varphi) , \qquad
+P = \frac{\dot{\varphi}^2}{2 a^2} - V(\varphi) .
 \end{equation}
 A \KG{} equation for perturbations $\delta\varphi$ must also be solved.
 
 $k$-essence generalizes quintessence
 to Lagrangian densities where $X$ and $\varphi$ enter in a general \enquote{non-canonical} way $p(X, \varphi)$.
-It leads to a more general set of \KG{} equations in the background and perturbations.
+It leads to modified \KG{} equations in the background and perturbations.
 It is also a subclass of Horndeski theories,
 which is a general class of modified gravity theories (see \cref{sec:modify_gravity}).
 
-Another interesting model is the Chaplygin gas \cite{kamenshchikAlternativeQuintessence2001},
-which is a fluid that transitions from dark matter to dark energy.
-It has the equation of state
+The Chaplygin gas \cite{kamenshchikAlternativeQuintessence2001}
+treats dark energy not as a scalar field,
+but as a fluid that transitions from dark matter to dark energy.
+With the equation of state
 \begin{equation}
 P = -\frac{A}{\rho} ,
 \end{equation}
-for which the continuity equation (without interactions) \eqref{eq:fluid_continuity_bg} integrates analytically to
+the continuity equation \eqref{eq:fluid_continuity_bg} integrates analytically (without interactions) to
 \begin{equation}
-\rho = \sqrt{A + \frac{B}{a^6}} = \begin{cases} \sqrt{B} \, a^{-3} & \text{if $a \ll (b/A)^{1/6}$}, \\ \sqrt{A} & \text{if $a \gg (B/A)^{1/6}$} . \end{cases}
+\rho = \sqrt{A + \frac{B}{a^6}} = \begin{cases} \sqrt{B} \, a^{-3} & \text{if $a \ll (B/A)^{1/6}$}, \\ \sqrt{A} & \text{if $a \gg (B/A)^{1/6}$} . \end{cases}
 \end{equation}
 Thus, the Chaplygin gas transitions from dark matter in the early universe
 to dark energy similar to the cosmological constant in the late universe.
 It is attractive because it unifies two poorly understood sectors of the \LCDM{} model.
 
 Other dark energy models include Early Dark Energy \cite[e.g.][]{doranEarlyDarkEnergy2006,kamionkowskiDarkEnergyString2014,poulinCosmologicalImplicationsUltralight2018,poulinEarlyDarkEnergy2019,kamionkowskiHubbleTensionEarly2022,poulinUpsDownsEarly2023},
-which accelerates the expansion in the early universe with an exotic dark energy fluid.
-Dark energy could also interact with other species and thus become time-dependent (see \cref{sec:modify_interacting}).
+which is a scalar field that activates briefly in the early universe and then dies out.
+Dark energy could also interact with other species (see \cref{sec:modify_interacting}).
 Modifications of gravity, such as Horndeski theories,
 also introduce scalar fields that play the role of dark energy and additionally modify the Einstein equations (see \cref{sec:modify_gravity}).
 
