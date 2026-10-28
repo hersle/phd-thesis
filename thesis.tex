@@ -1810,11 +1810,11 @@ of which there are many other examples (see \cref{sec:modify_interacting}).
 
 The rate of change of the free electron fraction $\dot{x}_e$ in the baryon equations \eqref{eq:eb_baryons}
 is determined by recombination and reionization physics.
-The CMB power spectrum requires accurate modeling of recombination in particular,
-which has been increasingly refined over the last 30 years.
+The CMB power spectrum needs accurate modeling particularly of recombination,
+which has been increasingly refined over the last decades.
 Recombination is often outsourced to one of several \enquote{recombination codes},
-but in my opinion it should be understood as an integral part of the \EB{} system \eqref{eq:eb}
-on equal footing with all other equations.
+but in my opinion it should be understood as a part of the \EB{} system \eqref{eq:eb}
+on equal footing with other equations.
 
 The basic recombination picture was established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
 It is an effective three-state model of Hydrogen with
@@ -1843,6 +1843,25 @@ Peebles' model describes all these processes \emph{effectively}
 without invoking all details of atomic physics and resolving all the atomic states.
 It is the recombination model that was implemented in COSMICS \cite{maCosmologicalPerturbationTheory1995a},
 but it is not accurate enough for modern data.
+
+\textbf{RECFAST} \cite{seagerNewCalculationRecombination1999b}
+refines Peebles' effective model.
+Most notably, it adds some free \enquote{fudge factors} to it,
+and fits them to reproduce the output of an expensive multi-level simulation of the detailed atomic recombination physics
+(using hundreds of states of $\Hy$, $\Hy^+$, $\He$, $\He^+$, $\He^{++}$, $e^-$, $\Hy^-$, $\Hy_2$ and $\Hy_2^+$).
+This is then compressed into Peebles-like equations \eqref{eq:peebles} for $\Hy$ and $\He$ and Saha's equation for $\He^+$,
+but with a recombination coefficient $\alpha_\Hy(T_b) \to F \cdot \alpha_\Hy(T_b)$ fudged by the unphysical number $F=1.14$.
+In this way, it combines the accuracy of the multi-level computation with the speed of Peebles' equation,
+but the fitting assumes a fiducial \LCDM{} model and is less trustworthy for extended models.
+RECFAST has been updated and re-fudged several times since the original version
+to account for more effects and reproduce newer and increasingly accurate recombination results
+%for example with corrections to \He{} recombination through distinct singlet and triplet channels,
+%and by running multi-level simulations that resolve both $(n,l)$ instead of just $n$.
+\cite{wongHowWellWe2007,rubino-martinEstimatingImpactRecombination2010,chlubaRadiativeTransferEffects2012a,collaborationPlanck2013Results2014,lewisCAMBV2Cosmological2026a}.
+Its ad-hoc nature has motivated development of more physically principled recombination models,
+but RECFAST remains the default recombination model in CAMB
+and has been re-calibrated to the output of CosmoRec (see below)
+\cite{lewisCAMBV2Cosmological2026a}.
 
 \TODO{recombination models}
 
