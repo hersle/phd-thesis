@@ -1746,6 +1746,61 @@ and additional parameters and initial conditions.
 
 \subsection{Dark matter models}
 
+One plausible explanation for dark matter is that it is some elementary particle that we have not yet discovered,
+and that the cold dark matter equations \eqref{eq:eb_cold_dark_matter} are simply good approximations to it on cosmological scales.
+One example is axions,
+which are ultralight particles that can mimic both dark matter and dark energy
+\cite[e.g.][]{marshAxionCosmology2016}.
+They are implemented in the modified \EB{} solvers
+AxionCAMB \cite{hlozekSearchUltralightAxions2015} and
+AxiCLASS \cite{poulinCosmologicalImplicationsUltralight2018}.
+Here a massive scalar field $\varphi$ must be evolved in a \KG{} equation
+$\ddot{\varphi} + 2 \calH \dot\varphi + a^2 m^2 \varphi = 0$ in the background.
+In the perturbations, the \KG{} equations are oscillatory, stiff and expensive to solve exactly,
+but its energy-momentum contributions can be mapped exactly onto
+a generalized dark matter (GDM) fluid description \cite{huStructureFormationGeneralized1998},
+which is easier to evolve in time.
+Depending on their mass $m$,
+Axions mimics dark energy at early times when $H \gg m$ with slow rolling,
+and transitions to dark matter at late times when $H \lesssim m$ and the field starts to oscillate around the minimum of the potential.
+
+Non-cold dark matter (NCDM) models
+relax the assumptions that dark matter is cold (CDM) with non-relativistic velocity and negligible velocity dispersion.
+For example, massive neutrinos are non-relativistic and make up a small fraction of the dark matter content today,
+but were relativistic in the early universe and thus a form of hot dark matter (HDM).
+CLASS has an elegant implementation of non-cold dark matter models
+that reads an arbitrary distribution function $f(q)$,
+either specified analytically or interpolated from a data table.
+It then automatically uses $f(q)$ to determine quadrature points $q_i$ and weights $W_i$
+for the general $(q,l)$-hierarchy \eqref{eq:eb_massive_neutrinos}
+(which is valid for general $f(q)$; massive neutrinos are just a special case with $f(q) = 1/(e^{q/T}+1)$).
+For example, this framework has been used to study NCDM models from
+evaporation of primordial black holes \cite{baldesNonColdDarkMatter2020},
+sterile neutrinos \cite{venumadhavSterileNeutrinoDark2016,schneiderAstrophysicalConstraintsResonantly2016}
+and from a variety of out-of-equilibrium decay and scattering processes \cite{ballesterosHowWarmAre2021}.
+
+Decaying dark matter is another class of models,
+where dark matter gradually decays into some species.
+For example, some models assume that dark matter (a fluid with $w=0$) decays with rate $\Gamma$
+into an unknown \enquote{dark radiation} (DR) component (a relativistic fluid with $w=1/3$ which is neither photons nor neutrinos)
+\cite[e.g]{audrenStrongestModelindependentBound2014a,poulinFreshLookLinear2016,bringmannConvertingNonrelativisticDark2018}.
+This requires new and modified continuity equations
+\begin{equation}
+\dot\rho_\mathrm{DM} = -3\calH \rho_\mathrm{DM} - a \, \Gamma \rho_\mathrm{DM},
+\qquad
+\dot\rho_\mathrm{DR} = -4\calH \rho_\mathrm{DR} + a \, \Gamma \rho_\mathrm{DM}.
+\end{equation}
+The perturbed continuity and Euler equations require similar modifications,
+and another full $l$-hierarchy \eqref{eq:hierarchy_l} must be evolved for the dark radiation species.
+If the decay involves a visible component such as photons or baryons,
+it can also affect recombination and reionization \cite[e.g.][]{chenParticleDecaysCosmic2004}
+and must be treated with \enquote{exotic injection} into the recombination codes (see \cref{sec:modify_baryons}).
+In general, this couples the background and thermodynamics physics,
+which are hardcoded to be distinct sequential stages of the background equations.
+
+Such a decaying type of dark matter is an example of interacting dark matter models,
+of which there are many other examples (see \cref{sec:modify_interacting}).
+
 \subsection{Recombination, reionization and baryon physics}
 
 \subsection{Modified gravity theories}
@@ -2426,7 +2481,7 @@ Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFul
 Majoron, decay \newline \cite{escuderoCosmologicalConstraintsInvisible2019,escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
 Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006,motaNeutrinoClusteringGrowing2008} \\ \midrule%\cmidrule{4-6}
 \textbf{DM} & & & &
-Scattering, decay \newline \cite{diamantiDarkRadiationInteracting2013,buen-abadNonAbelianDarkMatter2015,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,cyr-racineETHOSEffectiveTheory2016,audrenStrongestModelindependentBound2014,leeCosmologicalEvolutionDecaying2026} &
+Scattering, decay \newline \cite{diamantiDarkRadiationInteracting2013,buen-abadNonAbelianDarkMatter2015,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,cyr-racineETHOSEffectiveTheory2016,audrenStrongestModelindependentBound2014a,leeCosmologicalEvolutionDecaying2026} &
 Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021} \\ \bottomrule
 \end{tabular}
 \end{center}
