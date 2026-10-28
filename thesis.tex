@@ -1808,7 +1808,7 @@ of which there are many other examples (see \cref{sec:modify_interacting}).
 \subsection{Recombination, reionization and baryon physics}
 \label{sec:modify_baryons}
 
-The rate of change of the free electron fraction $\dot{x}_e$ in the baryon equations \eqref{eq:eb_baryons}
+The rate of change $\dot{x}_e$ of the free electron fraction in the baryon equations \eqref{eq:eb_baryons}
 is determined by recombination and reionization physics.
 The CMB power spectrum needs accurate modeling particularly of recombination,
 which has been increasingly refined over the last decades.
@@ -1816,17 +1816,17 @@ Recombination is often outsourced to one of several \enquote{recombination codes
 but in my opinion it should be understood as a part of the \EB{} system \eqref{eq:eb}
 on equal footing with other equations.
 
-The basic recombination picture was established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
+\textbf{Peebles' equation} gives the basic recombination picture established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
 It is an effective three-state model of Hydrogen with
 the continuum of ions and electrons ($n=\infty$),
 the ground state 1s ($n=1$),
 and all excited states assumed to be in equilibrium with 2s and 2p ($n=2$).
-Direct transitions between $1 \leftrightarrow \infty$ have no net effect and are ignored,
+Direct $1 \leftrightarrow \infty$ transitions have no net effect and are ignored,
 as combination directly to the ground state emits a photon with $E \geq 13.6\,\mathrm{eV}$ that immediately reionizes a nearby atom and cancels the effect.
-\textbf{Peebles' equation} therefore describes the rate of change of the \Hy{} ionization fraction $x_\Hy = n_{\Hy^+} / n_\Hy$
-only through the two transitions $1 \leftrightarrow 2 \leftrightarrow \infty$:
+Peebles' equation therefore describes the rate of change of the \Hy{} ionization fraction $x_\Hy = n_{\Hy^+} / n_\Hy$
+only through the two transitions $1 \leftrightarrow 2 \leftrightarrow \infty$ \cite{maCosmologicalPerturbationTheory1995a}:
 \begin{equation}
-\dot{x}_\Hy = -a \, C_r \left[ \alpha^{(2)}(T_b) n_\Hy x_e x_\Hy - \beta(T_\gamma) (1-x_\Hy) \right].
+\dot{x}_\Hy = -a \, C_r \left[ \alpha^{(2)}(T_b) \, n_\Hy \, x_e \, x_\Hy - \beta(T_\gamma) (1-x_\Hy) \right].
 \label{eq:peebles}
 \end{equation}
 In brackets is the net rate of combination from $n=\infty$ to $n=2$,
@@ -1834,8 +1834,7 @@ which depends on the densities of $e^-$, $\Hy{}^+$ and neutral \Hy{},
 baryon temperature $T_b$ and photon temperature $T_\gamma$.
 This is multiplied by the reduction factor $C_r$,
 which describes the probability of decaying $2 \to 1$ instead of reionizing $2 \to \infty$.
-This is necessary because the ground state is \enquote{bottlenecked}
-and must be reached through one of two slowed decays:
+This is necessary because the ground state can only be reached through one of two \enquote{bottlenecked} decays:
 $2p \to 1s$ if the emitted Lyman-$\alpha$ photon redshifts to a larger wavelength before it has time to re-excite $1s \to 2p$ (\enquote{Sobolev escape}),
 or $2s \to 1s$ with two-photon emission.
 In contrast, the path $2s \to 1s$ with one-photon emission is prohibited because it violates the selection rule $\Delta l = \pm 1$.
@@ -1849,11 +1848,11 @@ refines Peebles' effective model.
 Most notably, it adds some free \enquote{fudge factors} to it,
 and fits them to reproduce the output of an expensive multi-level simulation of the detailed atomic recombination physics
 (using hundreds of states of $\Hy$, $\Hy^+$, $\He$, $\He^+$, $\He^{++}$, $e^-$, $\Hy^-$, $\Hy_2$ and $\Hy_2^+$).
-This is then compressed into Peebles-like equations \eqref{eq:peebles} for $\Hy$ and $\He$ and Saha's equation for $\He^+$,
-but with a recombination coefficient $\alpha_\Hy(T_b) \to F \cdot \alpha_\Hy(T_b)$ fudged by the unphysical number $F=1.14$.
+This is then compressed into Peebles-like equations \eqref{eq:peebles} for $\Hy \leftrightarrow \Hy^+$ and $\He \leftrightarrow \He^+$ and Saha's equation for $\He^+ \leftrightarrow \He^{++}$,
+but with a recombination coefficient $\alpha_\Hy(T_b) \to F \cdot \alpha_\Hy(T_b)$ fudged by the empirical number $F=1.14$.
 In this way, it combines the accuracy of the multi-level computation with the speed of Peebles' equation,
 but the fitting assumes a fiducial \LCDM{} model and is less trustworthy for extended models.
-RECFAST has been updated and re-fudged several times since the original version
+RECFAST has been updated and \enquote{re-fudged} several times since the original version
 to account for more effects and reproduce newer and increasingly accurate recombination results
 %for example with corrections to \He{} recombination through distinct singlet and triplet channels,
 %and by running multi-level simulations that resolve both $(n,l)$ instead of just $n$.
@@ -1863,7 +1862,66 @@ but RECFAST remains the default recombination model in CAMB
 and has been re-calibrated to the output of CosmoRec (see below)
 \cite{lewisCAMBV2Cosmological2026a}.
 
-\TODO{recombination models}
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.6\textwidth]{media/emla}
+\caption{\label{fig:emla}
+The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two categories.
+\enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
+\enquote{Interior states} are other excited states that are only indirectly connected to the ground state, and are expensive to solve but cosmology-independent,
+so their effect can be precomputed once and for all.
+It is an exact generalization of Peebles' effective three-level recombination model.
+The figure is reproduced from \cite{ali-haimoudHyRecFastHighly2011a}.
+}
+\end{figure}
+
+\textbf{CosmoRec} \cite{chlubaCompleteTreatmentCosmological2010} and
+\textbf{HyRec} \cite{ali-haimoudHyRecFastHighly2011a}
+are more physically principled recombination codes that avoid the fudge factors of RECFAST.
+They both use a new method called the effective multi-level atom (EMLA) \cite{ali-haimoudUltrafastEffectiveMultilevel2010}
+for treating the transitions between atomic states.
+As explained in \cref{fig:emla}, the EMLA splits the excited atomic states into \enquote{interior} and \enquote{interface} states.
+Its central result is that the effect of the \enquote{interior states}
+can be accounted for \emph{exactly} by effective combination and ionization coefficients $A_i(T_b, T_\gamma)$ and $B_i(T_\gamma)$
+to the \enquote{interface states}.
+These coefficients depend on $T_b$ and $T_\gamma$ but \emph{not on cosmology},
+so they can be precomputed once with an expensive simulation.
+The problem then reduces to looking up $A_i$ and $B_i$ with interpolation,
+and tracking occupation fractions $x_i$ for only a few cosmology-dependent \enquote{interface states} $i$,
+at most $\{2s, 2p, 3s, 3p, 3d, 4s, 4p, 4d\}$:
+\begin{equation}
+\dot{x}_e = -\sum_i \big( n_\Hy x_e^2 A_i(T_b, T_\gamma) - x_i B_i(T_\gamma) \big) .
+\label{eq:hyrec}
+\end{equation}
+These codes also treat the photon field more carefully
+by solving for its intensity distribution $J(\tau, \nu)$ both in time and frequency,
+instead of using Peebles' simplified reduction factor with the Sobolev approximation.
+This is a performance bottleneck that makes HyRec and CosmoRec slower than RECFAST,
+although they are more accurate and physically principled.
+%In some sense, the EMLA is a definitive and elegant exact generalization of Peebles' original three-level atom.
+%This elegantly ends the recombination problem by circling back to the original treatments and solving them exactly.
+
+\textbf{HyRec-2} \cite{leeHYREC2HighlyAccurate2020}
+resolves this performance bottleneck.
+Starting with an approximate base model of the ground state transition rate
+similar to Peebles' $2s \to 1s$ and $2p \to 1s$ treatment,
+HyRec-2 adds on top a tabulated correction function from an accurate (but slower) full HyRec simulation.
+This is similar to the fudge factors in RECFAST and sacrifices some generality,
+but it is far less severe because it is applied on top of a more accurate base model,
+and the correction function also includes derivatives around the Planck 2018 parameters.
+With the EMLA and this trick, HyRec-2 avoids solving for the frequency-dependence of the photon field,
+and is both more accurate and faster than RECFAST.
+
+%Using the original RECFAST over HyRec and CosmoRec can give $1\%$-$3\%$-$4\%$ error in $x_e$ and up to $4\%$ error in $C_l$ at high $l \approx 3000$,
+%which in turn noticeably biases extracted parameters from Planck \cite{shawPreciseCosmologicalParameter2011}.
+%The latest RECFAST with updated fudge factors and fit functions resolve this problem,
+%but the fit to a \LCDM{} remains less safe for extended models than with HyRec and CosmoRec.
+%HyRec-2 is now the standard recombination code in CLASS,
+%while CAMB can optionally be compiled for it but still defaults to RECFAST recalibrated against HyRec and CosmoRec.
+%SymBoltz also offers both RECFAST and HyRec-2.
+
+%\TODO{this exactly generalizes ...} the effective recombination coefficient $\alpha_B$ to $2 \leq n < \infty$ in Peebles' equation \eqref{eq:peebles}
+%\TODO{rename $\alpha^{(2)} \to \alpha_B$ in Peebles eq.?}
 
 \TODO{reionization models}
 
