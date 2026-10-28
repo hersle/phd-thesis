@@ -1808,6 +1808,48 @@ of which there are many other examples (see \cref{sec:modify_interacting}).
 \subsection{Recombination, reionization and baryon physics}
 \label{sec:modify_baryons}
 
+The rate of change of the free electron fraction $\dot{x}_e$ in the baryon equations \eqref{eq:eb_baryons}
+is determined by recombination and reionization physics.
+The CMB power spectrum requires accurate modeling of recombination in particular,
+which has been increasingly refined over the last 30 years.
+Recombination is often outsourced to one of several \enquote{recombination codes},
+but in my opinion it should be understood as an integral part of the \EB{} system \eqref{eq:eb}
+on equal footing with all other equations.
+
+The basic recombination picture was established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
+It is an effective three-state model of Hydrogen with
+the continuum of ions and electrons ($n=\infty$),
+the ground state 1s ($n=1$),
+and all excited states assumed to be in equilibrium with 2s and 2p ($n=2$).
+Direct transitions between $1 \leftrightarrow \infty$ have no net effect and are ignored,
+as combination directly to the ground state emits a photon with $E \geq 13.6\,\mathrm{eV}$ that immediately reionizes a nearby atom and cancels the effect.
+\textbf{Peebles' equation} therefore describes the rate of change of the \Hy{} ionization fraction $x_\Hy = n_{\Hy^+} / n_\Hy$
+only through the two transitions $1 \leftrightarrow 2 \leftrightarrow \infty$:
+\begin{equation}
+\dot{x}_\Hy = -a \, C_r \left[ \alpha^{(2)}(T_b) n_\Hy x_e x_\Hy - \beta(T_\gamma) (1-x_\Hy) \right].
+\label{eq:peebles}
+\end{equation}
+In brackets is the net rate of combination from $n=\infty$ to $n=2$,
+which depends on the densities of $e^-$, $\Hy{}^+$ and neutral \Hy{},
+baryon temperature $T_b$ and photon temperature $T_\gamma$.
+This is multiplied by the reduction factor $C_r$,
+which describes the probability of decaying $2 \to 1$ instead of reionizing $2 \to \infty$.
+This is necessary because the ground state is \enquote{bottlenecked}
+and must be reached through one of two slowed decays:
+$2p \to 1s$ if the emitted Lyman-$\alpha$ photon redshifts to a larger wavelength before it has time to re-excite $1s \to 2p$ (\enquote{Sobolev escape}),
+or $2s \to 1s$ with two-photon emission.
+In contrast, the path $2s \to 1s$ with one-photon emission is prohibited because it violates the selection rule $\Delta l = \pm 1$.
+Peebles' model describes all these processes \emph{effectively}
+without invoking all details of atomic physics and resolving all the atomic states.
+It is the recombination model that was implemented in COSMICS \cite{maCosmologicalPerturbationTheory1995a},
+but it is not accurate enough for modern data.
+
+\TODO{recombination models}
+
+\TODO{reionization models}
+
+\TODO{modified baryon physics, e.g. consistent baryons}
+
 \subsection{Modified gravity theories}
 \label{sec:modify_gravity}
 
@@ -1947,6 +1989,14 @@ even in the limit of massive neutrinos.
 Background continuity equation modified, breaks analytical solution.
 New and modified perturbation equations,
 can require revisions to the TCA.
+
+\subsection{Other modifications}
+
+Variation of fundamental constants.
+
+Other approaches to the equations,
+such as generalized Boltzmann hierarchy.
+CLASSIER.
 
 \section{Modifications in \EB{} codes}
 \label{sec:modifications}
