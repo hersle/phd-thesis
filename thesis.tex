@@ -534,7 +534,7 @@ h_{ij} &= 2 C \delta_{ij} + 2 \big( \partial_i \partial_j - \tfrac13 \delta_{ij}
 \end{subequations}
 Here $\{A,B,C,E\}$ are scalars (i.e. 4 free functions),
 $\{B_i,E_i\}$ are transverse (divergence-free) vectors with $\partial^i B_i = \partial^i E_i = 0$ (i.e. $6-2=4$ free functions),
-and $E_{ij}$ is a symmetric transverse-traceless tensor with $\partial^i E_{ij} = E^i_{\ i} = 0$ (i.e. $6-4=2$ free functions).
+and $E_{ij}$ is a symmetric transverse-traceless tensor with $\partial^i E_{ij} = E^i{}_i = 0$ (i.e. $6-4=2$ free functions).
 Such a decomposition is mathematically always possible.%
 \footnote{The vector decomposition is also called the Helmholtz decomposition, and is familiar from electromagnetism.
 The tensor decomposition is the same idea generalized to one higher rank.}
@@ -697,9 +697,9 @@ G_{\mu\nu} = 8\pi T_{\mu\nu} .
 \label{eq:einstein}
 \end{equation}
 On the left is the Einstein tensor $G_{\mu\nu} = R_{\mu\nu} - \frac12 R g_{\mu\nu}$,
-which is built from the Ricci scalar $R = R^\mu_\mu$,
-Ricci tensor $R_{\mu\nu} = R^{\rho}_{\mu\rho\nu}$,
-Riemann tensor $R^{\rho}_{\sigma\mu\nu}$,
+which is built from the Ricci scalar $R = R^\mu{}_\mu$,
+Ricci tensor $R_{\mu\nu} = R^{\rho}{}_{\mu\rho\nu}$,
+Riemann tensor $R^{\rho}{}_{\sigma\mu\nu}$,
 Christoffel symbols $\Gamma^{\alpha}_{\beta\gamma}$,
 and ultimately the spacetime metric $g_{\mu\nu}$ \cite[e.g.][]{dodelsonModernCosmology2021a}.
 On the right is the energy-momentum tensor $T_{\mu\nu}$ that describes the \enquote{matter} content of the universe.
@@ -733,10 +733,10 @@ the variables are computed in \cref{sec:boltzmann}):%
 \footnote{Note that $T_{\mu\nu}$ is not a perfect fluid at this general level!
 This is only true for the contribution from some species in \cref{sec:fluid}.}
 \begin{itemize}
-\item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho \propto \delta T^0_0$ (i.e. presence of energy) alter the 1st Friedmann equation locally.
-\item Equation \eqref{eq:pertein2} describes how the momentum density divergence $(\rho+P)\theta \propto i k^j \delta T^0_j$ (i.e. flux of energy) determines the metric in a redundant way.
-\item Equation \eqref{eq:pertein3} describes how pressure perturbations $\delta P$ (from the trace part of $\delta T^i_j$) alter the Friedmann acceleration equation locally.
-\item Equation \eqref{eq:pertein4} describes how anisotropic stresses $(\rho+P)\sigma$ (from the traceless part of $\delta T^i_j$) induce a \enquote{slip} $\phi \neq \psi$ between the metric potentials.
+\item Equation \eqref{eq:pertein1} describes how energy density perturbations $\delta\rho \propto \delta T^0{}_0$ (i.e. presence of energy) alter the 1st Friedmann equation locally.
+\item Equation \eqref{eq:pertein2} describes how the momentum density divergence $(\rho+P)\theta \propto i k^j \delta T^0{}_j$ (i.e. flux of energy) determines the metric in a redundant way.
+\item Equation \eqref{eq:pertein3} describes how pressure perturbations $\delta P$ (from the trace part of $\delta T^i{}_j$) alter the Friedmann acceleration equation locally.
+\item Equation \eqref{eq:pertein4} describes how anisotropic stresses $(\rho+P)\sigma$ (from the traceless part of $\delta T^i{}_j$) induce a \enquote{slip} $\phi \neq \psi$ between the metric potentials.
 \end{itemize}
 
 From purely geometrical considerations,
@@ -2786,7 +2786,7 @@ G_{\mu\nu} &= \frac{8\pi}{\varphi} T_{\mu\nu}
 \end{subequations}
 where $(\nabla \varphi)^2 = g^{\mu\nu} \, \nabla_\mu \varphi \, \nabla_\nu \varphi$,
 $\nabla^2 = g^{\mu\nu} \, \nabla_\mu \nabla_\nu$,
-and $T = T^\mu_\mu = g^{\mu\nu} \, T_{\mu\nu}$
+and $T = T^\mu{}_\mu =g^{\mu\nu} \, T_{\mu\nu}$
 is the trace of the energy-momentum tensor $T_{\mu\nu}$ of the matter action $S_M$.
 \GR{} and the Einstein equations \eqref{eq:einstein} are recovered in the limit $\omega \rightarrow \infty$ with $\varphi = 1$.
 
@@ -2956,8 +2956,6 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 \TODO{remove conflicting page numbers on pages with papers?}
 
 \TODO{state that papers are in chronological order}
-
-\TODO{fix tensor notation such as $T^\mu_\mu$; use $T^\mu{}_\mu$ instead}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
