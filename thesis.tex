@@ -29,7 +29,7 @@
 \usetikzlibrary{arrows.meta, backgrounds}
 
 \usepackage[nospace]{varioref}
-\usepackage{cleveref}
+\usepackage[noabbrev]{cleveref} % "figure 1" with \cref, "Figure 1" with \Cref (not "fig. 1")
 \crefname{part}{paper}{papers} % use \cref{paper:...} to refer to \uiopaper's as "Paper I" etc.
 \Crefname{part}{Paper}{Papers}
 %\renewcommand\thepart{\arabic{part}} % uncomment for Paper 1, 2, 3, ... instead of I, II, III
@@ -2960,8 +2960,6 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 \TODO{fix tensor notation such as $T^\mu_\mu$; use $T^\mu{}_\mu$ instead}
 
 \TODO{move all labels in subequations before align}
-
-\TODO{i want Figure 1; not fig. 1, etc.}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
