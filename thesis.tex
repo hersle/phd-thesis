@@ -282,7 +282,7 @@ parameterized as a first-order Taylor expansion in the scale factor around its v
 
 \item
 The DESI results also constrain the total neutrino mass by an \emph{upper} bound
-that is in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments.
+that is in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments.
 However, when the time-varying dark energy model is used instead of the \LCDM{} model,
 the constraints become compatible.
 \cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
@@ -661,7 +661,7 @@ the corresponding equation for $\deltaf(\tau, \mathbf{k})$ becomes
 %\partial_\tau \, \deltaf(\tau, \mathbf{x}) \to \partial_\tau \, \deltaf(\tau, \mathbf{k}) , \qquad
 %\partial_{x_i} \, \deltaf(\tau, \mathbf{x}) \to (i k_i) \, \deltaf(\tau, \mathbf{k}) .
 %\end{equation}
-%In other words, equation \eqref{eq:pert_real} in Fourier space is
+%In other words, equation \eqref{eq:pert_real} in Fourier space is
 \begin{equation}
 \sum_i C_i(\tau) \, (i k_x)^{b_i} (i k_y)^{c_i} (i k_z)^{d_i} \, \partial_\tau^{a_i} \, \deltaf_i(\tau, \mathbf{k}) = 0.
 \label{eq:pert_fourier}
@@ -1446,7 +1446,7 @@ and includes the publication time of its first research paper as given in the ma
 \label{fig:codes}
 \end{figure}
 
-Several \EB{} codes have been developed over the last three decades.
+Several \EB{} codes have been developed over the last three decades.
 Some are still actively developed,
 while others are abandoned or
 have grown into other codes that have succeeded them.
@@ -1455,7 +1455,7 @@ and highlight the different designs and new advances made with each code.
 
 \subsubsection{COSMICS}
 COSMICS\footnote{\url{https://web.archive.org/web/19961122200110/http://arcturus.mit.edu/cosmics/}} \cite{maCosmologicalPerturbationTheory1995a,bertschingerCOSMICSCosmologicalInitial1995}
-is the \enquote{Big Bang} of \EB{} codes.
+is the \enquote{Big Bang} of \EB{} codes.
 It is the first major code
 that includes general relativity, cold dark matter, massless and massive neutrinos, photons and baryons with a simplified treatment of recombination physics
 in both the Newtonian and synchronous gauges.
@@ -1684,7 +1684,7 @@ Over the years, a plethora of modified cosmological models have been implemented
 \footnote{For example, \url{https://www.google.com/search?q=("modified+CAMB"+OR+"modified+CLASS"+OR+"modified+version+of+CAMB"+OR+"modified+version+of+CLASS")+site:arxiv.org} gives 4500 results at the time of writing.}
 Here I give a list of examples of modified models, which is far from exhaustive.
 My intention is to use a representative sample to show
-how \emph{all} parts of the \EB{} equations \eqref{eq:eb}
+how \emph{all} parts of the \EB{} equations \eqref{eq:eb}
 (background, thermodynamics and perturbations for all components)
 are subject to modification, and what type of changes they lead to.
 It is not my objective to explain the physics and observational status of every modification in detail.
@@ -1762,7 +1762,7 @@ AxionCAMB \cite{hlozekSearchUltralightAxions2015} and
 AxiCLASS \cite{poulinCosmologicalImplicationsUltralight2018}.
 Here a massive scalar field $\varphi$ must be evolved in a \KG{} equation
 $\ddot{\varphi} + 2 \calH \dot\varphi + a^2 m^2 \varphi = 0$ in the background.
-In the perturbations, the \KG{} equations are oscillatory, stiff and expensive to solve exactly,
+In the perturbations, the \KG{} equations are oscillatory, stiff and expensive to solve exactly,
 but its energy-momentum contributions can be mapped exactly onto
 a generalized dark matter (GDM) fluid description \cite{huStructureFormationGeneralized1998},
 which is easier to evolve in time.
@@ -2054,7 +2054,7 @@ it corresponds to allowing a flow $Q^\nu_a \neq$ into every species'
 \end{equation}
 for example with $Q^\nu_a = \sum_b Q^\nu_{ab}$ and $Q^\nu_{ab} = -Q^\nu_{ba}$ for pairwise interactions $a \leftrightarrow b$.
 
-In \cref{tab:interactions}, I consider every pair of species in \LCDM{} with the addition of dark radiation (mentioned in \cref{sec:modify_dm}),
+In \cref{tab:interactions}, I consider every pair of species in \LCDM{} with the addition of dark radiation (mentioned in \cref{sec:modify_dm}),
 and list examples of works that have implemented interactions between them by modifying \EB{} codes.
 This includes both pairwise interactions and some self-interactions.
 
@@ -2073,7 +2073,7 @@ Some interactions require thermodynamics additions to account for Thomson-like s
 Interactions involving photons may modify the expressions for the CMB source functions \cite[e.g.][]{wilkinsonUsingCMBAngular2014,muraiIsotropicCosmicBirefringence2023}.
 Dark radiation and neutrino interactions require additional or modified $l$-hierarchies \eqref{eq:hierarchy_l} and/or $(q,l)$-hierarchies \eqref{eq:hierarchy_ql} \cite[e.g.][]{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017}.
 
-\Cref{paper:interactions} in this thesis also deals with the implementation of models with interactions
+\Cref{paper:interactions} in this thesis also deals with the implementation of models with interactions
 between baryons, dark matter and dark energy,
 and shows how the symbolic-numeric interface and approximation-free structure makes this easy in SymBoltz.
 
@@ -2134,7 +2134,7 @@ Modifies source functions.
 Modifies thermodynamics; need additional Thomson-like scattering.
 
 Neutrino self-interactions lead to modified hierarchies,
-where the moemntum $q$ cannot be integrated out
+where the moemntum $q$ cannot be integrated out
 even in the limit of massive neutrinos.
 \cite{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017}
 
@@ -2147,7 +2147,7 @@ can require revisions to the TCA.
 \subsection{Other modifications}
 \label{sec:modify_other}
 
-This is far from a complete list of modified \EB{} codes.
+This is far from a complete list of modified \EB{} codes.
 Spatial curvature for modeling flat, open and closed universes has been incorporated as standard functionality in CMBFAST, CAMB and CLASS \cite{zaldarriagaIntegralSolutionMicrowave1998,zaldarriagaCMBFASTSpatiallyClosed2000,lewisEfficientComputationCMB2000a,lesgourguesFastAccurateCMB2014,pitrouOptimalBoltzmannHierarchies2020a}.
 Variation of fundamental constants has also been investigated for the
 fine-structure constant $\alpha$ and electron mass $m_e$ \cite[e.g.][]{hartNewConstraintsTimedependent2018,chlubaVaryingFundamentalConstants2023},
@@ -2266,7 +2266,7 @@ Can use autodiff.
 The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} are \emph{stiff} \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
 This is a property of differential equations that may arise if several timescales coexist in the equations,
 and is very common in cosmology where the universe expands on a slow timescale while the photons and baryons interact on a very fast timescale, for example.
-Understanding this property is crucial to numerically solving the \EB{} equations,
+Understanding this property is crucial to numerically solving the \EB{} equations,
 and there are two different ways of handling it.
 
 \subsubsection{Explicit integrators with approximation schemes}
@@ -2292,11 +2292,11 @@ tight coupling approximation (TCA),
 radiation streaming approximation (RSA),
 ultra-relativistic fluid approximation (UFA) and
 non-cold dark matter fluid approximation (NCDMFA) \cite{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
-All of them involve switching between different variations of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
+All of them involve switching between different variations of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
 The first three are illustrated by \cref{fig:approximations}.
 
 For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=3kF_1/4$
-in the \EB{} equations \eqref{eq:eb} into a modified pair:
+in the \EB{} equations \eqref{eq:eb} into a modified pair:
 \begin{subequations}
 \begin{align}
 \dot\theta_b &= -\frac{1}{1+R}\left(\calH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right) + k^2\psi, \\
@@ -2316,7 +2316,7 @@ which call for a way of deactivating them anyway.
 Suppose that one goes through all the trouble of correctly deriving, implementing, tuning and validating
 all the necessary approximation schemes for the \LCDM{} model, and leans back to relax.
 In the next moment, someone enters the room and wants to implement an extended model
-in the \EB{} code that requires modifications of the equations.
+in the \EB{} code that requires modifications of the equations.
 It is not unlikely that the modifications will touch one or more of the approximation schemes
 and require the whole process to be repeated for the modified equations.
 Strictly speaking, this is true even for the modifications that do not touch the approximated equations directly,
@@ -2338,12 +2338,12 @@ but they are not the only way to handle stiffness.
 
 SymBoltz and PyCosmo handle stiffness in a different way,
 by instead embracing it and solving the full stiff equations with implicit ODE solvers.
-This completely avoids approximation schemes and lets users specify \emph{one} \EB{} system to evolve at all times.
+This completely avoids approximation schemes and lets users specify \emph{one} \EB{} system to evolve at all times.
 However, it comes with some additional challenges that are related to the numerics of the code instead of the physics of the equations.
 
 Implicit ODE solvers are designed precisely to handle stiffness.
 A pedagogical way of introducing them is to contrast the explicit and implicit Euler methods:%
-\footnote{These are \emph{not} the methods used in SymBoltz or any other \EB{} code,
+\footnote{These are \emph{not} the methods used in SymBoltz or any other \EB{} code,
 but they offer a simple way to explain implicit ODE methods without complicating the high-level picture with multiple stages and coefficients.}
 \begin{subequations}
 \begin{align}
@@ -2351,7 +2351,7 @@ u_{n+1} &= u_n + \Delta\tau \cdot f(u_{n  }) \label{eq:euler_explicit}, \\
 u_{n+1} &= u_n + \Delta\tau \cdot f(u_{n+1}) \label{eq:euler_implicit}.
 \end{align}
 \end{subequations}
-The explicit method \eqref{eq:euler_explicit} finds the ODE state $u_{n+1}$ at the next time step as a straightforward explicit expression in terms of the current state $u_{n}$ only.
+The explicit method \eqref{eq:euler_explicit} finds the ODE state $u_{n+1}$ at the next time step as a straightforward explicit expression in terms of the current state $u_{n}$ only.
 The implicit method \eqref{eq:euler_implicit} instead expresses an implicit system of equations that must be solved for $u_{n+1}$.
 Many implicit ODE solvers,
 including \texttt{ndf15} in CLASS, \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt in \cref{tab:comparison},
@@ -2382,7 +2382,7 @@ However, Rosenbrock methods also work for nonlinear ODEs such as the background 
 Higher-order Rosenbrock methods have multiple stages whose coefficients are carefully designed whose coefficients to cancel the linearization error up to some desired order.
 For example, the \texttt{Rodas5P} method that SymBoltz uses by default is a 5th order Rosenbrock method that is both stable, accurate and efficient \cite{steinebachConstructionRosenbrockWanner2023}.
 
-A challenge with implicit methods is that the Jacobian $J$ must be evaluated in addition to $f$.
+A challenge with implicit methods is that the Jacobian $J$ must be evaluated in addition to $f$.
 For example, in CLASS the source code is used to specify $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
 and the Jacobian $J$ is found by evaluating $f(u)$ several times with finite differences.
 This is sensitive to the finite difference step and not always reliable, and is also unnecessarily inefficient.
@@ -2421,7 +2421,7 @@ This is traditionally performed with finite differences,
 but automatic differentiation is a more robust way of doing it,
 as I explain below.
 
-Any computer program, including an \EB{} code,
+Any computer program, including an \EB{} code,
 can be interpreted as a mathematical function $F: \mathbb{R}^m \rightarrow \mathbb{R}^n$
 that takes $m$ input parameters and computes $n$ output numbers.
 No matter how complicated the program is, it can always be reduced to a composite function
@@ -2487,7 +2487,7 @@ The Jacobian $J_i = \pdv{f_i}/{f_{i-1}}$ is propagated through every elementary 
 \enquote{Automatic} means that the code for $F$ is automatically translated into different code for evaluating $J_i$ without extra user input.
 This requires a flexible programming language or compiler, such as Julia or JAX in Python.
 The method is numerically exact with no additional hyperparameters to tune
-(but still depends on other precision parameters in the code, of course).
+(but still depends on other precision parameters in the code, of course).
 
 While the program \eqref{eq:program} must evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
 this is not required for the chain rule \eqref{eq:ad}.
@@ -2520,7 +2520,7 @@ This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i
 then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $(i+1)$-th line by the forward chain rule \eqref{eq:ad_forward}.
 By starting at $i=0$, evaluating the program with dual numbers accumulate both $F$ and $\pdv{F}/{P}$ at the final line $i=N$.
 
-It requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
+It requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
 For example, the function $\sin(x)$ must be overloaded to return $\sin(x)$ when called with real $z$,
 but $\sin(x) + \epsilon \, y \cos(x)$ when called with dual $z = x + \epsilon \, y$.
 This is a problem in the space of programming language design and compiler architecture,
@@ -2671,13 +2671,13 @@ and even more so when considering modified models.
 B(z, k/h; \mathbf{p}) = \frac{P_\mathrm{BD}(z,k/h; \mathbf{p})}{P_\mathrm{GR}(z,k/h; \mathbf{p})}
 \label{eq:boost_intro}
 \end{equation}
-of the nonlinear matter power spectra $P(z,k)$ \BD{} gravity
+of the nonlinear matter power spectra $P(z,k)$ \BD{} gravity
 -- a modified theory of gravity --
 compared to \GR{} as a function of cosmological parameters $\mathbf{p}$.
 This is achieved by running a cheap form of $N$-body simulations using the COLA method
 in order to probe parameter space dependence.
 The paper shows how one may exploit the freedom of parameterization of the boost \eqref{eq:boost_intro}
-in a way that makes it possible to compute it solely using linear theory and \EB{} codes from \cref{chap:lin}.
+in a way that makes it possible to compute it solely using linear theory and \EB{} codes from \cref{chap:lin}.
 
 \TODO{cite previous HMCODE fitting function of the boost calibrated to COLA/RAMSES \cite{joudakiTestingGravityCosmic2022a}?}
 
@@ -2731,7 +2731,7 @@ before linearity breaks down and shell crossing is a problem.
 Thus, a modified theory in an $N$-body code also needs a corresponding implementation in an \EB{} code.
 Furthermore, $N$-body simulations usually only account for cold dark matter.
 To incorporate the effects of baryons, massive neutrinos, dark energy perturbations and other things that are not in the $N$-body code,
-it is common to evolve the \EB{} code until today and output its matter power spectrum,
+it is common to evolve the \EB{} code until today and output its matter power spectrum,
 and then \enquote{backscale} using linear growth factors to the start of the $N$-body simulation \TODO{cite backscaling IC paper}.
 They are thus far from independent on the linear theory.
 
@@ -2798,11 +2798,11 @@ The Poisson equation \eqref{eq:poisson_gr} in the matter-dominated late universe
 \mu(\tau) = \frac{2\omega+4}{2\omega+3} \frac{1}{\bar\varphi(\tau)} .
 \label{eq:poisson_bd}
 \end{equation}
-It shows that \BD{} gravity effectively promotes Newton's constant $\mu=1$ in \GR{}
+It shows that \BD{} gravity effectively promotes Newton's constant $\mu=1$ in \GR{}
 to a time-dependent gravitational coupling $\mu(\tau)$.
 
 Why are we interested in \BD{}, in particular?
-In fact, \BD{} might appear as a non-viable modification of gravity,
+In fact, \BD{} might appear as a non-viable modification of gravity,
 as Table 1 in \cref{paper:bransdicke} shows that $\omega$ has been constrained to increasingly higher values over time.
 The first point is that a subset of all Horndeski theories of modified gravity
 reduce to \BD{} on cosmological distance scales.
@@ -2866,7 +2866,7 @@ if we use the value of $\sigma_8$, $\varphi_\ini h^2$, $\rho_{m0}$ and $\rho_{r0
 and we compare spectra at equal $z$ and $k/h$;
 then the boost of the \emph{nonlinear} spectra (from $N$-body simulations)
 very closely (to $1$-$2\,\%$ match the boost of the \emph{linear} spectra (from \EB{} codes).
-We show this by running a few $N$-body simulations and comparing the boosts to those from \EB{} codes.
+We show this by running a few $N$-body simulations and comparing the boosts to those from \EB{} codes.
 \TODO{summarize the \emph{physical} understanding of this argument}
 Thus, instead of going through the trouble of running many expensive $N$-body simulations or training emulator from a suite of them,
 we can compute the boost efficiently by only two calls to cheap \EB{} solvers.
