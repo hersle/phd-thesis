@@ -1529,7 +1529,7 @@ for arbitrary distribution functions $f_0(q)$.
 It has been updated with algorithms for computing hyperspherical generalizations of the Bessel functions
 that are needed for line-of-sight integration in closed universes,
 using stable recurrence relations in $l$ instead of ODEs in $\tau$
-\cite{lesgourguesFastAccurateCMB2014b,tramComputationHypersphericalBessel2017b}.
+\cite{lesgourguesFastAccurateCMB2014,tramComputationHypersphericalBessel2017b}.
 CLASS is written in C, and also provides a wrapper for use with Python.
 It has been extended into a wide range of modified models and additional computations (see \cref{sec:modifications}).
 %SONG for second order perturbation theory,
@@ -1676,21 +1676,14 @@ and support for automatic differentiation.
 
 \section{Modifications of \EB{} codes (new)}
 
-Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.
-These modifications lead to a wide variety of additions or changes to the \EB{} equations \eqref{eq:eb}.
-
-Here I give a list of examples of modified models.
-The list is far from exhaustive,
-but nevertheless serves to illustrate the breadth of extensions across different sectors of the \EB{} equations and codes.
-For example
-%\footnote{\url{https://www.google.com/search?q=\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22+site:arxiv.org}}
-%\footnote{\url{https://duckduckgo.com/?q=\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22+site:arxiv.org}}
-%\footnote{\url{https://ui.adsabs.harvard.edu/search/q=full\%3A(\%22modified\%20version\%20of\%20CAMB\%22\%20OR\%20\%22modified\%20version\%20of\%20CLASS\%22)}}
-\footnote{\url{https://www.google.com/search?q=(\%22modified+CAMB\%22+OR+\%22modified+CLASS\%22+OR+\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22)+site:arxiv.org}}
-
-\TODO{all require background, thermodynamics and perturbation modifications}
-
-\TODO{the focus here is modifications in EB codes; not observational constraints, do not favor/disfavor any models}
+Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.%
+\footnote{For example, \url{https://www.google.com/search?q=("modified+CAMB"+OR+"modified+CLASS"+OR+"modified+version+of+CAMB"+OR+"modified+version+of+CLASS")+site:arxiv.org} gives 4500 results at the time of writing.}
+Here I give a list of examples of modified models, which is far from exhaustive.
+My intention is to use a representative sample to show
+how \emph{all} parts of the \EB{} equations \eqref{eq:eb}
+(background, thermodynamics and perturbations for all components)
+are subject to modification, and what type of changes they lead to.
+It is not my objective to explain the physics and observational status of every modification in detail.
 
 \subsection{Dark energy models}
 \label{sec:modify_de}
@@ -2136,13 +2129,17 @@ can require revisions to the TCA.
 
 \subsection{Other modifications}
 
-Variation of fundamental constants.
-
-Other approaches to the equations,
-such as generalized Boltzmann hierarchy.
-CLASSIER.
-
-Different initial conditions (adiabatic, isocurvature, ...).
+This is far from a complete list of modified \EB{} codes.
+Spatial curvature for modeling flat, open and closed universes has been incorporated as standard functionality in CMBFAST, CAMB and CLASS \cite{zaldarriagaIntegralSolutionMicrowave1998,zaldarriagaCMBFASTSpatiallyClosed2000,lewisEfficientComputationCMB2000a,lesgourguesFastAccurateCMB2014,pitrouOptimalBoltzmannHierarchies2020a}.
+Variation of fundamental constants has also been investigated for the
+fine-structure constant $\alpha$ and electron mass $m_e$ \cite[e.g.][]{hartNewConstraintsTimedependent2018,chlubaVaryingFundamentalConstants2023},
+the effective gravitational constant from modified gravity theories (see \cref{sec:modify_gravity}) \cite[e.g.][]{ballardiniCosmologicalConstraintsGravitational2022},
+and humorously even for $\pi$ \cite{gammalCircularReasoningSolving2024}.
+Different approaches to the equations have also been explored, such as
+an integral equation approach to the Boltzmann hierarchies \cite{kamionkowskiCosmologicalPerturbationsBoltzmann2021a,noncoldwithouthierarchy,leeRapidAccurateNumerical2025a,leeCosmologicalEvolutionDecaying2026},
+a Generalized Boltzmann Hierarchy for massive neutrinos where momenta are integrated out \cite{nascimentoGeneralizedBoltzmannHierarchy2021},
+emulation of the perturbation solutions in CLASS \cite{albersCosmicNetPhysicsdrivenImplementation2019,guntherCosmicNetIIEmulating2022},
+and taking perturbation theory up to second order in the code SONG \cite{pettinariIntrinsicBispectrumCosmic2013,pettinariIntrinsicBispectrumCosmic2016,pettinariImpactPolarisationIntrinsic2014}.
 
 \section{Modifications in \EB{} codes}
 \label{sec:modifications}
