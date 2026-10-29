@@ -23,6 +23,7 @@
 
 \usepackage[table]{xcolor} % color tables
 \hypersetup{colorlinks=true, allcolors=., urlcolor=blue} % web links blue, internal links (figures, citations, ...) in surrounding text color / black
+\captionsetup[table]{position=top} % make spacing take into account that captions appear above tables
 \usepackage{booktabs}
 \usepackage{makecell}
 
@@ -1594,7 +1595,21 @@ by specifying their energy-momentum contributions \eqref{eq:totalT} as a class,
 which makes it convenient to implement modifications when they fit into this form.
 
 \begin{table}[tb]
-\begin{center}
+\caption[Comparison of technical properties of \EB{} codes.]{%
+A comparison of various technical properties of traditional versus newer \EB{} codes.
+The colors indicate relative differences
+and should not be interpreted as \textcolor{green}{\enquote{good}}, \textcolor{yellow}{\enquote{neutral}} or \textcolor{red}{\enquote{bad}}.
+AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
+The citation count at the time of writing is looked up online from each code's main citation paper, as given in the text.
+${}^1$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
+${}^2$BDF methods are \enquote{A-stable} (and \enquote{L-stable}) only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order degrades in stiff regions.
+${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2017a}.
+${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
+${}^5$Sparsity found numerically and changes with approximations.
+${}^6$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
+}
+\label{tab:comparison}
+\centering
 \small
 \setlength{\tabcolsep}{2pt}
 \def\arraystretch{1.5}
@@ -1618,21 +1633,6 @@ Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. 
 Maturity (citations)   & \cellcolor{green}6935         & \cellcolor{green}3429              & \cellcolor{yellow}43            & \cellcolor{red}31/5                & \cellcolor{red}Unpub.              & \cellcolor{red}6 \\
 \bottomrule
 \end{tabular}
-\end{center}
-\caption[Comparison of technological properties of \EB{} codes.]{%
-A comparison of various technological properties of traditional versus newer \EB{} codes.
-The colors are meant to highlight the relative differences
-and should not be interpreted as \textcolor{green}{\enquote{good}}, \textcolor{yellow}{\enquote{neutral}} or \textcolor{red}{\enquote{bad}}.
-AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
-The citation count at the time of writing is looked up online from each code's main citation paper, as given in the text.
-${}^1$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^2$BDF methods are \enquote{A-stable} (and \enquote{L-stable}) only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order degrades in stiff regions.
-${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2017a}.
-${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
-${}^5$Sparsity found numerically and changes with approximations.
-${}^6$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
-}
-\label{tab:comparison}
 \end{table}
 
 \subsubsection{SymBoltz}
@@ -2078,7 +2078,13 @@ between baryons, dark matter and dark energy,
 and shows how the symbolic-numeric interface and approximation-free structure makes this easy in SymBoltz.
 
 \begin{table}[t]
-\begin{center}
+\caption[Example works of interactions between pairs of species that have been implemented in \EB{} codes between pairs of species.]{%
+Examples of interactions that have been implemented in \EB{} codes between pairs of species:
+photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
+Only baryon--photon interactions are part of the standard \LCDM{} model.
+}
+\label{tab:interactions}
+\centering
 \small % TODO: \normalsize?
 \setlength{\tabcolsep}{2pt}
 \def\arraystretch{1.3}
@@ -2107,13 +2113,6 @@ $\boldsymbol{\nu}$ & &
 \cite{diamantiDarkRadiationInteracting2013,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,audrenStrongestModelindependentBound2014a,buen-abadSteppedPartiallyAcoustic2023,leeCosmologicalEvolutionDecaying2026} &
 \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021}, \Cref{paper:interactions} \\ \bottomrule
 \end{tabular}
-\end{center}
-\caption[Example works of interactions between pairs of species that have been implemented in \EB{} codes between pairs of species.]{%
-Examples of interactions that have been implemented in \EB{} codes between pairs of species:
-photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
-Only baryon--photon interactions are part of the standard \LCDM{} model.
-}
-\label{tab:interactions}
 \end{table}
 
 \iffalse
@@ -2563,8 +2562,10 @@ but without the precision and stability problems of finite differences.
 \subsection{Exploiting smoothness with spectral methods}
 \label{sec:spectral}
 
-\begin{table}[htbp]
-\begin{center}
+\begin{table}[t]
+\caption{Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
+\label{tab:spectral}
+\centering
 \def\arraystretch{1.5}
 \begin{tabular}{lcc}
 \toprule
@@ -2574,9 +2575,6 @@ but without the precision and stability problems of finite differences.
 \textbf{Spectral methods} & \cellcolor{red}Degraded convergence     & \cellcolor{green}Exponential convergence \\
 \bottomrule
 \end{tabular}
-\end{center}
-\caption{Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
-\label{tab:spectral}
 \end{table}
 
 The absence of approximation schemes means that the same ODE is evolved at all times.
@@ -2947,8 +2945,6 @@ In my opinion, communicating research results should always be done by humans.
 
 I think it is genuinely very important that we, as the cosmological research community,
 resolve the \enquote{political tension} in AI use and figure out the accepted way to use these tools while preserving the literature that we want as humans.
-
-\TODO{captions above tables}
 
 \TODO{check - vs -- in double names etc}
 
