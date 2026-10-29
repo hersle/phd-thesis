@@ -173,11 +173,11 @@ When this $g_{\mu\nu}$ is inserted into the Einstein equation \eqref{eq:einstein
 and one assumes that $T_{\mu\nu}$ is described by a perfect fluid with energy density $\rho$ and pressure $P$,
 one obtains the first and second Friedmann equations:
 \begin{subequations}
+\label{eq:fried}
 \begin{align}
     H^2 = \left( \frac{\dot{a}}{a} \right)^2 &= \frac{8\pi}{3} \rho + \frac{\Lambda}{3}, \label{eq:fried1} \\
     \dot{H} + H^2 = \frac{\ddot{a}}{a} &= - \frac{4\pi}{3} (\rho + 3P) + \frac{\Lambda}{3}. \label{eq:fried2}
-\end{align}%
-\label{eq:fried}%
+\end{align}
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
 which is sourced by the following \enquote{ingredients}.
@@ -868,13 +868,13 @@ The variables that source gravity
 are found from the energy-momentum \eqref{eq:Tgeneral}
 in terms of only the monopole $\Psi_0$, dipole $\Psi_1$ and quadrupole $\Psi_2$:
 \begin{subequations}
+\label{eq:energy_momentum_integrals_pert}
 \begin{align}
 \delta\rho &= 4\pi a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \epsilon \, \Psi_0, &
 (\rho + P)\theta &= 4\pi k a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, q \, \Psi_1, \\
 \delta P &= \frac{4\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_0, &
 (\rho + P)\sigma &= \frac{8\pi}{3} a^{-4} \int_0^\infty \diff{q}\,q^2 f_0 \, \frac{q^2}{\epsilon} \, \Psi_2 .
-\end{align}%
-\label{eq:energy_momentum_integrals_pert}%
+\end{align}
 \end{subequations}
 
 With the multipole expansion, the linearized Boltzmann equation \eqref{eq:boltzmann_linear}
@@ -915,12 +915,12 @@ Then integrate the hierarchy \eqref{eq:hierarchy_ql} with $\epsilon=q$ over $4\p
 and use that $\int \diff{q} \, q^3 f_0 \odv{\log f_0}/{\log q} = \int \diff{q} \, q^4 \odv{f_0}/{q} = -4 \int \diff{q} \, q^3 f_0$ by parts.
 Ultimately:
 \begin{subequations}
+\label{eq:hierarchy_l}
 \begin{align}
 \dot{F}_0 &= -k F_1 + 4 \dot{\phi} , \\
 \dot{F}_1 &= \frac{k}{3} \big(F_0 - 2 F_2 + 4\psi\big) , \\
 \dot{F}_l &= \frac{k}{2l+1} \big(l F_{l-1} - (l+1) F_{l+1}\big) , \quad (l \geq 2) .
-\end{align}%
-\label{eq:hierarchy_l}%
+\end{align}
 \end{subequations}
 The reduced hierarchy for $F_l(\tau, k)$ is still infinite over $l$,
 but $q$ has been fully integrated out.
@@ -1993,11 +1993,11 @@ MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstrain
 modify the perturbed Einstein equations \eqref{eq:eb_gravity}
 with the phenomenological parameterizations
 \begin{subequations}
+\label{eq:mg}
 \begin{align}
 k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
 k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} .
-\end{align}%
-\label{eq:mg}%
+\end{align}
 \end{subequations}
 with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$.
 Derivatives like $\dot\phi$ are still needed by the continuity equation \eqref{eq:pert_cont},
@@ -2958,8 +2958,6 @@ resolve the \enquote{political tension} in AI use and figure out the accepted wa
 \TODO{state that papers are in chronological order}
 
 \TODO{fix tensor notation such as $T^\mu_\mu$; use $T^\mu{}_\mu$ instead}
-
-\TODO{move all labels in subequations before align}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
