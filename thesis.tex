@@ -1923,9 +1923,48 @@ and is both more accurate and faster than RECFAST.
 %\TODO{this exactly generalizes ...} the effective recombination coefficient $\alpha_B$ to $2 \leq n < \infty$ in Peebles' equation \eqref{eq:peebles}
 %\TODO{rename $\alpha^{(2)} \to \alpha_B$ in Peebles eq.?}
 
-\TODO{reionization models}
+\textbf{Reionization} models modify the late-time ionization history of the universe,
+when radiation from the first stars and galaxies reionize the neutral atoms after recombination.
+It is difficult to describe these processes from first principles with linear theory,
+so many reionization models come in parameterized forms, such as
+instantaneous step function models \cite{seljakLineSightApproach1996,bruscoliHowReionizationEpoch2002},
+piecewise binned models \cite{lewisCosmicMicrowaveBackground2006},
+a smooth and redshift-symmetric $\tanh$-activated function \cite{lewisCosmologicalParametersWMAP2008a}
+\begin{equation}
+x_e(z) = \frac{f}{2}\left[1 + \tanh \left(\frac{y_{\rm re} - y}{\Delta y}\right)\right], \qquad y = (1+z)^{3/2} ,
+\end{equation}
+and redshift-asymmetric exponential models \cite{douspisNewParameterizationReionisation2015,collaborationPlanckIntermediateResults2016}
+%\begin{equation}
+%x_e = \begin{cases} 1-a^{-3} & \text{if $a<a_p$} \\ e^{-\lambda/a} & \text{if $a \geq a_p$} \end{cases}
+%\end{equation}
+\begin{equation}
+x_e(z) = f \left(\frac{z_{\rm early} - z}{z_{\rm early} - z_{\rm end}}\right)^{\alpha} .
+\end{equation}
+and model-independent principal component analyses \cite{huModelIndependentReionizationObservables2003,mortonsonReionizationConstraintsFiveyear2008,heinrichCompleteReionizationConstraints2017a}.
+A different type of models inject additional \enquote{exotic energy} from non-standard models into the differential baryon equations \eqref{eq:eb_baryons},
+which are modified in the schematic form
+\cite{poulinDarkMatterAnnihilations2015,stockerExoticEnergyInjection2018}
+\begin{equation}
+\dot{x}_e \rightarrow \dot{x}_e + I_X,
+\qquad
+\dot{T}_b \rightarrow \dot{T}_b + \,K_h .
+\end{equation}
+The injections $I_X$ and $K_h$ come from non-standard models,
+for example decaying and annihilating dark matter or evaporation of light primordial black holes.
 
-\TODO{modified baryon physics, e.g. consistent baryons}
+\textbf{Other baryon modifications}
+have implemented perturbed effects of recombination \cite{lewisLinearEffectsPerturbed2007}.
+It has also been pointed out by \cite{pookkillathBaryonPhysicsTight2019} that the baryon and general fluid equations
+in \cite[equations 29-30 vs. 66-67]{maCosmologicalPerturbationTheory1995a}
+(our equations \eqref{eq:eb_baryons} vs. \eqref{eq:fluid})
+are inconsistent because every term involving baryon pressure is ignored \emph{except for} the term proportional to $(\delta P/\delta\rho) k^2 \delta$.
+This breaks general covariance and energy-momentum conservation.
+Similarly, one could argue that the nonzero baryon equation of state $w_b \ll 1$
+makes it inconsistent to solve the background independently of thermodynamics.
+In principle, the background continuity equation $\dot{\rho_b} = -3\calH(1+w_b) \rho_b$ with $w_b \neq 0$ from thermodynamics
+should be evolved as one coupled system.
+This would be hard to implement in most codes that are structured with the background being independent of thermodynamics,
+by assuming $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and independently of thermodynamics.
 
 \subsection{Modified gravity theories}
 \label{sec:modify_gravity}
@@ -2074,6 +2113,8 @@ Variation of fundamental constants.
 Other approaches to the equations,
 such as generalized Boltzmann hierarchy.
 CLASSIER.
+
+Different initial conditions (adiabatic, isocurvature, ...).
 
 \section{Modifications in \EB{} codes}
 \label{sec:modifications}
@@ -2815,6 +2856,7 @@ In this section, I will explain this design in greater detail.
 \label{sec:symbolicnumeric}
 
 \TODO{how can we accomodate modifications such as all the ones in the modifications section with a uniform interface. show what features the symbolic interface has after recent updates to symboltz. shooting, backwards, split bg/pt, auto-spline, auto-observed, ...}
+\TODO{idea is to expose every part of the \EB{} equations on equal footing in exactly the same way so they are equally accessible for easy modification}
 
 As \cref{sec:modifications} shows, the standard \LCDM{} \EB{} equations \eqref{eq:eb} are highly subject to modification.
 To modify the equations in other \EB{} codes,
