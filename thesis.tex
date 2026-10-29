@@ -1865,7 +1865,7 @@ and has been re-calibrated to the output of CosmoRec (see below)
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=0.6\textwidth]{media/emla}
+\includegraphics[width=0.7\textwidth]{media/emla}
 \caption{\label{fig:emla}
 The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two categories.
 \enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
@@ -1970,12 +1970,23 @@ by assuming $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and indepe
 \subsection{Modified gravity theories}
 \label{sec:modify_gravity}
 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=1.0\textwidth]{media/mg}
+\caption[The landscape of modified gravity theories.]{\label{fig:mg}
+The landscape of modified gravity theories is very large.
+This figure shows only a region in the space of theories biased towards those that are relevant for cosmology.
+It is created by Tessa Baker, and is reused with permission from \url{https://www.tessabaker.space/linksthings.html}.
+}
+\end{figure}
+
 Just like Newton's laws of gravity and motion works great in many cases,
 it could be the case that Einstein's theory of \GR{} is a limit or approximation to the true theory of gravity.
 In principle, modified gravity theories also explain phenomena
 such as galaxy rotation curves, enhanced clustering and the late-time acceleration
 without dark matter and dark energy, which we do not understand the nature of anyway.\footnote{\url{https://xkcd.com/1758/}}
-Several (classes of) modified gravity theories have bene implemented in \EB{} codes.
+The space of modified gravity theories is very large (see \cref{fig:mg}),
+and some classes of theories have been implemented in \EB{} codes.
 
 MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
 MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstraintsSubhorizon2022}
@@ -2018,10 +2029,8 @@ so integration with a symbolic library could make it easier to specify the theor
 They also introduce additional stiffness in the \EB{} system,
 which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
 
-\Cref{paper:bransdicke} and \cref{sec:bransdicke} deals with \BD{} gravity,
-which is a Horndeski theory.
-
-\TODO{figure with \url{https://www.tessabaker.space/images/map_slide_v2.pdf}?}
+\Cref{paper:bransdicke} and \cref{sec:bransdicke} in this thesis
+deals with \BD{} gravity, which is a Horndeski theory.
 
 \subsection{Interacting models}
 \label{sec:modify_interacting}
