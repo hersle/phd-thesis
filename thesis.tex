@@ -1056,7 +1056,7 @@ with small $P$, $\delta P$ and $\sigma$.
 It is usually done with $w=0$ in the background and $\sigma=0$ and $c_s^2 = \delta P/\delta \rho = 0$ in the perturbed continuity equation \eqref{eq:fluid_continuity},
 but $k^2 c_s^2 \neq 0$ in the Euler equation \eqref{eq:fluid_euler}.
 In addition, baryons interact with photons through Thomson scattering with rate $\dot\kappa$,
-which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ from recombination and reionization (see \cref{sec:modify_recombination}),
+which requires evolution of the free electron density $x_e$, baryon temperature $T_b$ and optical depth $\kappa$ from recombination and reionization (see \cref{sec:modify_baryons}),
 and momentum exchange in the perturbations:
 \begin{equation}
 \label{eq:eb_baryons}
@@ -1587,7 +1587,7 @@ Like DISCO-EB, it targets GPU parallelization, avoids approximation schemes
 and reports better runtime scaling with increasing $\lmax$ over CPU-based codes.
 For the whole pipeline to support automatic differentiation,
 ABCMB cannot simply call out to external recombination codes (like CAMB and CLASS can),
-but reimplements HyRec-2 in native JAX (see \cref{sec:modify_recombination}).
+but reimplements HyRec-2 in native JAX (see \cref{sec:modify_baryons}).
 Similarly to CMBEASY, it features an object-oriented interface for adding new species
 by specifying their energy-momentum contributions \eqref{eq:totalT} as a class,
 which makes it convenient to implement modifications when they fit into this form.
@@ -1677,7 +1677,7 @@ improved interpolation schemes
 and support for automatic differentiation.
 
 \section{Modifications of \EB{} codes}
-\label{sec:modify_gravity}
+\label{sec:modifications}
 
 Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.%
 \footnote{For example, \url{https://www.google.com/search?q=("modified+CAMB"+OR+"modified+CLASS"+OR+"modified+version+of+CAMB"+OR+"modified+version+of+CLASS")+site:arxiv.org} gives 4500 results at the time of writing.}
