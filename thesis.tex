@@ -1682,6 +1682,11 @@ These modifications lead to a wide variety of additions or changes to the \EB{} 
 Here I give a list of examples of modified models.
 The list is far from exhaustive,
 but nevertheless serves to illustrate the breadth of extensions across different sectors of the \EB{} equations and codes.
+For example
+%\footnote{\url{https://www.google.com/search?q=\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22+site:arxiv.org}}
+%\footnote{\url{https://duckduckgo.com/?q=\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22+site:arxiv.org}}
+%\footnote{\url{https://ui.adsabs.harvard.edu/search/q=full\%3A(\%22modified\%20version\%20of\%20CAMB\%22\%20OR\%20\%22modified\%20version\%20of\%20CLASS\%22)}}
+\footnote{\url{https://www.google.com/search?q=(\%22modified+CAMB\%22+OR+\%22modified+CLASS\%22+OR+\%22modified+version+of+CAMB\%22+OR+\%22modified+version+of+CLASS\%22)+site:arxiv.org}}
 
 \TODO{all require background, thermodynamics and perturbation modifications}
 
@@ -2020,6 +2025,47 @@ which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
 \subsection{Interacting models}
 \label{sec:modify_interacting}
 
+All species in the \LCDM{} model interact indirectly with each other through gravity,
+but only photons and baryons interact directly through Thomson scattering.
+A very natural way to extend \LCDM{} is therefore to consider interactions between other species.
+This leads to many combinations of possible interactions,
+and is further motivated by our poor understanding of the species in the dark sector.
+
+In the language of the Boltzmann equation \eqref{eq:boltzmann},
+interactions correspond to a collision term $C \neq 0$ on the right side.
+In the language of energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$
+of the total $T_{\mu\nu} = \sum_a T_{\mu\nu}^a$ from every species $a$,
+it corresponds to allowing a flow $Q^\nu_a \neq$ into every species'
+\begin{equation}
+\nabla_\mu T^{\mu\nu}_a = Q^\nu_a
+\qquad \text{such that} \qquad
+\sum_a Q^\nu_a = 0,
+\end{equation}
+for example with $Q^\nu_a = \sum_b Q^\nu_{ab}$ and $Q^\nu_{ab} = -Q^\nu_{ba}$ for pairwise interactions $a \leftrightarrow b$.
+
+In \cref{tab:interactions}, I consider every pair of species in \LCDM{} with the addition of dark radiation (mentioned in \cref{sec:modify_dm}),
+and list examples of works that have implemented interactions between them by modifying \EB{} codes.
+This includes both pairwise interactions and some self-interactions.
+
+There are too many combinations to explain the physics of every interaction here,
+so I instead highlight the modifications that they give rise to.
+In the background, extra collision terms $Q \neq 0$ in the fluid continuity equation \eqref{eq:fluid_continuity_bg}
+generally breaks the analytical solutions $\rho_s \propto a^{-3(1+w_s)}$ for constant $w_s$,
+so even matter, radiation and dark energy species must instead evolve $\dot\rho_s$ as an ODE.
+If the species is parameterized by $\Omega_{s0}$ today,
+this requires either the shooting method to find the corresponding $\rho_s(\tau_\ini)$ \cite[e.g.][]{audrenStrongestModelindependentBound2014a},
+or integration backwards in time (from $\tau_0$ to $\tau_\ini$) if the equations are stable in reverse (e.g. \cref{paper:interactions}).
+Perturbed fluid equations \eqref{eq:fluid} are also modified
+and additional stiffness can be introduced into the equations (see \cref{sec:approx}),
+which must be dealt with by new or revised approximation schemes \cite[e.g.][]{blasCosmicLinearAnisotropy2011c,archidiaconoLinearScaleBounds2017,archidiaconoConstrainingDarkMatter2019,beckerCosmologicalConstraintsMultiinteracting2021a,heBoundsVelocityDependentDark2025}.
+Some interactions require thermodynamics additions to account for Thomson-like scattering \cite[e.g.][]{wilkinsonUsingCMBAngular2014}.
+Interactions involving photons may modify the expressions for the CMB source functions \cite[e.g.][]{wilkinsonUsingCMBAngular2014,muraiIsotropicCosmicBirefringence2023}.
+Dark radiation and neutrino interactions require additional or modified $l$-hierarchies \eqref{eq:hierarchy_l} and/or $(q,l)$-hierarchies \eqref{eq:hierarchy_ql} \cite[e.g.][]{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017}.
+
+\Cref{paper:interactions} in this thesis also deals with the implementation of models with interactions
+between baryons, dark matter and dark energy,
+and shows how the symbolic-numeric interface and approximation-free structure makes this easy in SymBoltz.
+
 \begin{table}[t]
 \begin{center}
 \small % TODO: \normalsize?
@@ -2031,59 +2077,40 @@ which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
  & \textbf{b} & $\boldsymbol{\nu}$ & \textbf{DM} & \textbf{DR} & \textbf{DE} \\
 \midrule
 $\boldsymbol{\gamma}$ &
-Thomson scattering, recombination \newline \cite{maCosmologicalPerturbationTheory1995a,seagerNewCalculationRecombination1999b} \newline Rayleigh scattering \cite{lewisRayleighScatteringBlue2013,alipourEffectsRayleighScattering2015} &
+\cite{maCosmologicalPerturbationTheory1995a,seagerNewCalculationRecombination1999b,seagerHowExactlyDid2000a,wongHowWellWe2007,chlubaCompleteTreatmentCosmological2010,shawPreciseCosmologicalParameter2011,ali-haimoudHyRecFastHighly2011a,lewisRayleighScatteringBlue2013,alipourEffectsRayleighScattering2015,leeHYREC2HighlyAccurate2020} &
 -- &
-Scattering \newline \cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018,beckerCosmologicalConstraintsMultiinteracting2021a} &
+\cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018,beckerCosmologicalConstraintsMultiinteracting2021a} &
 -- &
-Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022,muraiIsotropicCosmicBirefringence2023} \\ \midrule%\cmidrule{2-6}
+\cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022,muraiIsotropicCosmicBirefringence2023} \\ \midrule%\cmidrule{2-6}
 \textbf{b} & &
 -- &
-Scattering \newline \cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,boddyCriticalAssessmentCMB2018,figuerueloDarkMatterbaryonsElastic2026} &
+\cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,boddyCriticalAssessmentCMB2018,buen-abadSteppedPartiallyAcoustic2023,heBoundsVelocityDependentDark2025,figuerueloDarkMatterbaryonsElastic2026}, \Cref{paper:interactions} &
 -- &
-Scattering \newline \cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBaryonsdark2020a} \\ \midrule%\cmidrule{3-6}
+\cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBaryonsdark2020a}, \Cref{paper:interactions} \\ \midrule%\cmidrule{3-6}
 $\boldsymbol{\nu}$ & &
-\cite{cyr-racineLimitsNeutrinoNeutrinoScattering2014,oldengottInteractingNeutrinosCosmology2017a,kreischNeutrinoPuzzleAnomalies2020a}, see \cref{sec:neutrinos} &
-Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021,braxExtendedAnalysisNeutrinoDark2023} &
-Majoron, decay \newline \cite{escuderoCosmologicalConstraintsInvisible2019,escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
-Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006,motaNeutrinoClusteringGrowing2008} \\ \midrule%\cmidrule{4-6}
+\cite{cyr-racineLimitsNeutrinoNeutrinoScattering2014,oldengottInteractingNeutrinosCosmology2017,kreischNeutrinoPuzzleAnomalies2020} &
+\cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021,braxExtendedAnalysisNeutrinoDark2023} &
+\cite{escuderoCosmologicalConstraintsInvisible2019,escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
+\cite{brookfieldCosmologyMassVaryingNeutrinos2006,motaNeutrinoClusteringGrowing2008} \\ \midrule%\cmidrule{4-6}
 \textbf{DM} & & & &
-Scattering, decay \newline \cite{diamantiDarkRadiationInteracting2013,buen-abadNonAbelianDarkMatter2015,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,cyr-racineETHOSEffectiveTheory2016,audrenStrongestModelindependentBound2014a,leeCosmologicalEvolutionDecaying2026} &
-Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021} \\ \bottomrule
+\cite{diamantiDarkRadiationInteracting2013,lesgourguesEvidenceDarkMatter2016,archidiaconoConstrainingDarkMatter2019,audrenStrongestModelindependentBound2014a,buen-abadSteppedPartiallyAcoustic2023,leeCosmologicalEvolutionDecaying2026} &
+\cite{valiviitaLargescaleInstabilityInteracting,luccaTensionsDarkShedding2020,jimenezProbingElasticInteractions2021}, \Cref{paper:interactions} \\ \bottomrule
 \end{tabular}
 \end{center}
-\caption[Examples of interactions that have been implemented in \EB{} codes between pairs of species.]{%
+\caption[Example works of interactions between pairs of species that have been implemented in \EB{} codes between pairs of species.]{%
 Examples of interactions that have been implemented in \EB{} codes between pairs of species:
 photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
 Only baryon--photon interactions are part of the standard \LCDM{} model.
-\TODO{DR-DR: \cite{smithConstraintsNeutrinoDark2012a,brinckmannConfrontingInteractingDark2023}}
 }
 \label{tab:interactions}
 \end{table}
 
-All species in the \LCDM{} model interact indirectly with each other through gravity,
-but only photons and baryons interact directly through Thomson scattering.
-Interactions between other species is thus a natural way to extend \LCDM{}.
-
-In the language of the Boltzmann equation \eqref{eq:boltzmann},
-interactions correspond to a collision term $C \neq 0$ on the right side.
-In the language of energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$
-of the total $T_{\mu\nu} = \sum_a T_{\mu\nu}^a$ from every species $a$,
-it corresponds to allowing a flow $Q^\nu_a \neq$ into every species'
-\begin{equation}
-\nabla_\mu T^{\mu\nu}_a = Q^\nu_a ,
-\end{equation}
-such that $\sum_a Q^\nu_a = 0$ (e.g. with $Q^\nu_a = \sum_b Q^\nu_{ab}$ with $Q^\nu_{ab} = -Q^\nu_{ba}$).
-
-\Cref{tab:interactions} considers every pair of species in the \LCDM{} model
-and dark radiation mentioned in \cref{sec:modify_dm},
-and lists example works that have modified \EB{} codes to implement interactions between them.
-
+\iffalse
 Interactions between photons and axion-like scalar fields (a dark matter or energy candidate; see \cref{sec:modify_dm})
 rotates the plane of linear polarization of photons as they travel through space
 causes an effect called cosmic birefringence, and nonzero CMB power spectra $C_l^\mathrm{TB}$ and $C_l^\mathrm{EB}$,
 which are zero in the standard model \cite{nakatsukaCosmicBirefringenceDue2022}.
 Must add a new term to line-of-sight integration for polarization.
-
 interactions between the fluids of baryons, dark matter and dark energy
 are incorporated by additional collision terms $Q \neq 0$ on the right sides
 of the continuity and Euler equations in \cref{sec:fluid}.
@@ -2105,6 +2132,7 @@ even in the limit of massive neutrinos.
 Background continuity equation modified, breaks analytical solution.
 New and modified perturbation equations,
 can require revisions to the TCA.
+\fi
 
 \subsection{Other modifications}
 
@@ -2206,7 +2234,7 @@ Dark energy could also interact with other species (see \cref{sec:modify_interac
 Modifications of gravity, such as Horndeski theories,
 also introduce scalar fields that play the role of dark energy and additionally modify the Einstein equations (see \cref{sec:modify_gravity}).
 
-\subsection{Dark matter models}
+\subsection{Dark matter and dark radiation models}
 
 \TODO{decaying dark matter, self-interacting dark matter, axions, warm/fuzzy dark matter, ...}
 
@@ -2730,14 +2758,14 @@ Thomson scattering, recombination \newline \cite{maCosmologicalPerturbationTheor
 -- &
 Scattering \newline \cite{wilkinsonUsingCMBAngular2014,stadlerConstraintsgCDMInteractions2018,beckerCosmologicalConstraintsMultiinteracting2021a} &
 -- &
-Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022,muraiIsotropicCosmicBirefringence2023} \\ \midrule%\cmidrule{2-6}
+Birefringence \newline \cite{lueCosmologicalSignatureNew1999,nakatsukaCosmicBirefringenceDue2022,muraiIsotropicCosmicBirefringence2023,naokawaGravitationalLensingEffect2023} \\ \midrule%\cmidrule{2-6}
 \textbf{b} & &
 -- &
 Scattering \newline \cite{chenCosmicMicrowaveBackground2002,boddyFirstCosmologicalConstraint2018,boddyCriticalAssessmentCMB2018,figuerueloDarkMatterbaryonsElastic2026} &
 -- &
 Scattering \newline \cite{vagnozziWeHaveAny2020,jimenezCosmologicalSignaturesBaryonsdark2020a} \\ \midrule%\cmidrule{3-6}
 $\boldsymbol{\nu}$ & &
-\cite{cyr-racineLimitsNeutrinoNeutrinoScattering2014,oldengottInteractingNeutrinosCosmology2017a,kreischNeutrinoPuzzleAnomalies2020a}, see \cref{sec:neutrinos} &
+\cite{cyr-racineLimitsNeutrinoNeutrinoScattering2014,oldengottInteractingNeutrinosCosmology2017,kreischNeutrinoPuzzleAnomalies2020}, see \cref{sec:neutrinos} &
 Scattering \newline \cite{wilkinsonConstrainingDarkMatterNeutrino2014,mosbechFullBoltzmannHierarchy2021,braxExtendedAnalysisNeutrinoDark2023} &
 Majoron, decay \newline \cite{escuderoCosmologicalConstraintsInvisible2019,escuderoCMBSearchNeutrino2020,chenWeakerAgainMass2022} &
 Mass-varying $\nu$ \newline \cite{brookfieldCosmologyMassVaryingNeutrinos2006,motaNeutrinoClusteringGrowing2008} \\ \midrule%\cmidrule{4-6}
@@ -2750,7 +2778,6 @@ Energy and momentum exchange \newline \cite{valiviitaLargescaleInstabilityIntera
 Examples of interactions that have been implemented in \EB{} codes between pairs of species:
 photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
 Only baryon--photon interactions are part of the standard \LCDM{} model.
-\TODO{DR-DR: \cite{smithConstraintsNeutrinoDark2012a,brinckmannConfrontingInteractingDark2023}}
 }
 \label{tab:interactions}
 \end{table}
