@@ -2413,7 +2413,35 @@ Approximation schemes are also less necessary in the time of emulators.
 I advocate for moving approximation schemes to the level of emulators,
 to make it easier for users to implement modified cosmological models.
 
+Move to writing interfaces between theory codes and emulators, e.g. OLE (?) \url{https://arxiv.org/abs/2503.13183} \url{https://arxiv.org/abs/2307.01138}
+
 \subsection{Gradients through automatic differentiation}
+
+\TODO{
+Fisher forecasting (must tune step sizes):
+\url{https://arxiv.org/abs/1910.09273}
+\url{https://arxiv.org/abs/2303.09451}
+\url{https://arxiv.org/abs/astro-ph/0606227}
+\url{https://arxiv.org/abs/2311.03291}
+}
+
+\TODO{
+Gradient-based MCMC:
+\url{https://arxiv.org/abs/1111.4246}
+\url{https://arxiv.org/abs/2606.04895}
+\url{https://arxiv.org/abs/2503.13183}
+\url{https://arxiv.org/abs/2305.06347}
+\url{https://arxiv.org/abs/2405.12965}
+\url{https://arxiv.org/abs/2310.08306}
+}
+
+\TODO{
+Optimization and profile likelihoods:
+\url{https://arxiv.org/abs/1311.1657} (\enquote{profile likelihoods}: using derivative-based minuit optimizer to explore L)
+\url{https://arxiv.org/abs/2312.09814} (noise from EB solver makes optimization problematic due to ODE solver, approx schemes, etc. when EB code is tuned for MCMCs, but EB codes become extremely slow for higher precision)
+\url{https://arxiv.org/abs/2312.02972} (on why gradient-free methods dominate; can use gradient-based with increasing precision settings if EB code is reliable)
+\url{https://arxiv.org/abs/2308.06379} (also explains that frequentist methods are less common because derivatives are hard to obtain accurately)
+}
 
 Evaluating derivatives through \EB{} codes is necessary or desirable for Fisher forecasting, gradient-based MCMC methods and for training emulators.
 \TODO{ref to intro?}
