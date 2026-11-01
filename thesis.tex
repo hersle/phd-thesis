@@ -2425,6 +2425,10 @@ which says that it is impossible to design an implicit linear multi-step method 
 \cite[section V.1]{hairerSolvingOrdinaryDifferential1996},
 as originally proved by \TODO{cite org}.
 These methods therefore cannot have high order and optimal stability properties at the same time.
+Multi-stage (but single-step) Runge--Kutta methods,
+such as \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt,
+are not restricted by this barrier,
+but must solve a different nonlinear system for each stage.
 
 \textbf{Rosenbrock methods} are a different type of implicit solvers built to avoid Newton iterations.
 Instead, they linearize the implicit method \eqref{eq:euler_implicit} around the current time step:
