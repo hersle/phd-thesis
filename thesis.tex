@@ -1332,6 +1332,7 @@ and HMCODE \cite{meadAccurateHaloModel2015,meadAccurateHalomodelMatter2016,meadH
 I reiterate, however, that the core task of an \EB{} remains the integration of the background, perturbations and line-of-sight integrals presented above.
 
 \subsection{History of \EB{} codes}
+\label{sec:history}
 
 \begin{figure}
 \centering
@@ -2159,23 +2160,53 @@ a Generalized Boltzmann Hierarchy for massive neutrinos where momenta are integr
 emulation of the perturbation solutions in CLASS \cite{albersCosmicNetPhysicsdrivenImplementation2019,guntherCosmicNetIIEmulating2022},
 and taking perturbation theory up to second order in the code SONG \cite{pettinariIntrinsicBispectrumCosmic2013,pettinariIntrinsicBispectrumCosmic2016,pettinariImpactPolarisationIntrinsic2014}.
 
-\section{The development and features of SymBoltz}
+\section{SymBoltz: motivation, development and features}
 \label{sec:symboltz}
 
-Throughout my PhD I became increasingly interested in \EB{} codes.
-First, I learned to use CLASS myself while working on \cref{paper:bransdicke} in this thesis.
-Second, it is a mandatory project\footnote{\url{https://cmb.wintherscoming.no/}} in the \enquote{Cosmology 2} course at UiO to write a simplified \EB{} code
-that solves the background, recombination with the Peebles equation, perturbations, and computes matter and CMB power spectra.
-Third, through my time as a PhD student I have seen countless papers that implement extended cosmological models in \EB{} codes (see \cref{sec:modifications}),
-and become familiar with how it can be difficult to navigate and understand the source code of these codes,
-and how the complicated parts of \EB{} codes are sometimes treated as \enquote{black boxes}.
+Through my PhD I became increasingly interested in \EB{} codes.
+First, I learned to use CLASS (and hi\_class) myself while working on \cref{paper:bransdicke} in this thesis.
+Second, it is a mandatory project%
+\footnote{The project is given on \url{https://cmb.wintherscoming.no/} and largely follows \cite{callinHowCalculateCMB2006b}.}
+in the \textit{Cosmology 2} course offered by the University of Oslo to write a simplified \EB{} code
+that solves the background, thermodynamics with Peebles recombination, perturbations, and computes matter and CMB power spectra.
+Third, over time I have seen countless cosmologists and papers that modify \EB{} codes to implement extended cosmological models (see \cref{sec:modifications}),
+and seen how it can be difficult to navigate, understand and modify their source codes and deal with approximation schemes of the equations,
+leading to (parts of) the codes being treated as \enquote{black boxes} by users.
+Fourth, I find \EB{} codes to be a very satisfying combination of many different numerical methods used in conjunction (implicit ODE solvers, linear algebra, numerical quadrature, interpolation methods, root solvers, differentiation, ...);
+and I think it is very elegant how they are the fundamental theoretical tool that captures the background and linear perturbations of \enquote{all} cosmological models in a general way.
 
-It was the sum of these pieces gave me insight into how \EB{} codes work,
-and inspired me to write a new code from scratch.
-It is designed to be even easier to modify than existing codes through a symbolic-numeric interface;
-avoid approximation schemes found in CAMB and CLASS in order to simplify the internals and make enable users to write down a \emph{single} set of equations for their model;
-and support modern numerical techniques such as automatic differentiation and improved interpolation methods.
-In this section, I will explain this design in greater detail.
+The sum of these experiences and the evolution of other codes in \cref{sec:history}
+gave me insight into how \EB{} codes work internally and are modified.
+This is what inspired me to create a new code from scratch called \textbf{SymBoltz}%
+\footnote{$\textbf{SymBoltz} = \text{\textbf{sym}bolic-numeric Einstein--\textbf{Boltz}mann solver}$.},
+which is designed with the following high-level goals in mind:
+\begin{itemize}
+\item
+The entire \enquote{cosmological model} should be exposed through a symbolic modeling language
+that uniformly captures and transparently shows all variables, parameters and equations
+that make up the background and perturbations of the entire \EB{} system \eqref{eq:eb}.
+This abstraction layer should be taken maximal advantage of to make it convenient for users
+to use the code and modify any parts of the cosmological model.
+At the same time it should automatically translate the equations into numerical code
+that is optimal for solving the resulting ODEs with implicit solvers.
+\item
+Users should specify only one set of equations without approximation schemes.
+It should not be necessary to derive and validate approximations of the equations in different regimes.
+This also encourages specification of well-defined cosmological models of our smooth universe,
+which does not switch its governing equations abruptly at some arbitrary time.
+This is numerically nontrivial because the approximation-free equations are stiff and must be solved by implicit ODE solvers.
+They need the Jacobian matrix of the ODEs,
+which would be very cumbersome for users to specify manually
+but can be found automatically from the symbolic equations.
+\item
+The code should support modern numerical methods.
+High-order implicit ODE solvers should make the integration of approximation-free equations as fast as possible.
+Automatic differentiation should be supported to compute gradients of the output in a stable and fast way.
+Spectral methods converge up to exponentially for smooth functions
+and can be used to take maximum advantage of the approximation-free output,
+for example in internal interpolation and quadrature methods.
+\end{itemize}
+In the following, I elaborate on these aspects in greater detail.
 
 \subsection{Symbolic-numeric interface for easy model specification}
 \label{sec:symbolicnumeric}
@@ -2260,7 +2291,7 @@ Can use autodiff.
 \subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
 
-\TODO{document problem-dependent implicit solvers, e.g. \url{https://www.stochasticlifestyle.com/differences-between-methods-for-solving-stiff-odes/} and SciMLBenchmarks?}
+\TODO{document problem-dependent implicit solvers, e.g. \url{https://www.stochasticlifestyle.com/differences-between-methods-for-solving-stiff-odes/} and SciMLBenchmarks? no, cite \cite[Section IV.10: \enquote{Numerical Experiments}]{hairerSolvingOrdinaryDifferential1996}}
 \TODO{stiff not only due to baryons, but also in later universe \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}. implicit solver can take larger steps.}
 
 The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} are \emph{stiff} \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
