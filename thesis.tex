@@ -2417,37 +2417,47 @@ Move to writing interfaces between theory codes and emulators, e.g. OLE (?) \url
 
 \subsection{Gradients through automatic differentiation}
 
-\TODO{
-Fisher forecasting (must tune step sizes):
-\url{https://arxiv.org/abs/1910.09273}
-\url{https://arxiv.org/abs/2303.09451}
-\url{https://arxiv.org/abs/astro-ph/0606227}
-\url{https://arxiv.org/abs/2311.03291}
-}
+Derivatives are integral\footnote{Pun intended.} to many numerical methods and algorithms.
+In cosmology, several applications make it necessary or desirable to evaluate gradients of \EB{} codes with respect to cosmological parameters.
+For example:
+\begin{itemize}
+\item
+\textbf{Fisher forecasting} is used to predict how tightly data with some given uncertainties can constrain parameters,
+and needs derivatives of the likelihood function that can be reduced to gradients of observables from \EB{} codes with respect to parameters
+\cite[e.g.][]{eisensteinCosmicComplementarityJoint1999,perottoProbingCosmologicalParameters2006,collaborationEuclidPreparationVII2020a,casasEuclidValidationMontePython2023,hahnDISCODJDifferentiableEinsteinBoltzmann2024a}.
 
-\TODO{
-Gradient-based MCMC:
-\url{https://arxiv.org/abs/1111.4246}
-\url{https://arxiv.org/abs/2606.04895}
-\url{https://arxiv.org/abs/2503.13183}
-\url{https://arxiv.org/abs/2305.06347}
-\url{https://arxiv.org/abs/2405.12965}
-\url{https://arxiv.org/abs/2310.08306}
-}
+\item
+\textbf{Gradient-based MCMC methods} such as Hamiltonian Monte Carlo (HMC) and the No-U-Turn Sampler (NUTS) \cite{hoffmanNoUTurnSamplerAdaptively2011}
+can explore complicated parameter spaces more efficiently than the traditional Metropolis--Hastings algorithm
+(although their advantage can be reduced by increased evaluation time for the gradients)
+\cite[e.g.][]{pirasCosmoPowerJAXHighdimensionalBayesian2023,ruiz-zapateroLimberJackjlAutodifferentiableMethods2024,pirasFutureCosmologicalLikelihoodbased2024a,guntherOLEOnlineLearning2025,nygaardPosteriorSamplingAge2026}.
+Metropolis--Hastings samplers can also be initialized with Fisher matrices,
+which requires gradients through the \EB{} code and careful selection of the finite difference step size \cite[e.g.][section 3]{brinckmannMontePython3Boosted2018}.
 
-\TODO{
-Optimization and profile likelihoods:
-\url{https://arxiv.org/abs/1311.1657} (\enquote{profile likelihoods}: using derivative-based minuit optimizer to explore L)
-\url{https://arxiv.org/abs/2312.09814} (noise from EB solver makes optimization problematic due to ODE solver, approx schemes, etc. when EB code is tuned for MCMCs, but EB codes become extremely slow for higher precision)
-\url{https://arxiv.org/abs/2312.02972} (on why gradient-free methods dominate; can use gradient-based with increasing precision settings if EB code is reliable)
-\url{https://arxiv.org/abs/2308.06379} (also explains that frequentist methods are less common because derivatives are hard to obtain accurately)
-}
+\item
+\textbf{Gradient-based optimization methods} for exploring likelihood functions rely on accurate derivatives,
+but derivatives from \EB{} codes can be unstable due to noise from approximation schemes, low-order ODE solvers and finite difference derivatives
+\cite[e.g.][]{collaborationPlanckIntermediateResults2014a,nygaardCONNECTNeuralNetwork2023,holmPROSPECTProfileLikelihood2024,khalifeReviewHubbleTension2024}.
+This is another argument for SymBoltz' approximation-free nature with a high-order implicit ODE solver and for the spectral methods in \cref{sec:spectral} (see also \cref{tab:comparison}).
 
-Evaluating derivatives through \EB{} codes is necessary or desirable for Fisher forecasting, gradient-based MCMC methods and for training emulators.
-\TODO{ref to intro?}
-This is traditionally performed with finite differences,
-but automatic differentiation is a more robust way of doing it,
-as I explain below.
+\item \textbf{The shooting method} is used inside \EB{} codes when the equations are parameterized as a boundary-value problem.
+One must then wrap the integration of background ODEs inside a root solver
+in order to find the initial conditions that give the desired final conditions
+\cite[e.g.][]{audrenStrongestModelindependentBound2014a,sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.
+This can be done with gradient-free bisection with only one parameter,
+but for a general number of parameters it needs other methods such as Newton's method,
+which uses the Jacobian to iterate towards the root.
+
+\item \textbf{Sensitivity analyses} study how observables respond to changes in different parameters
+by computing their gradients through \EB{} codes \cite[e.g.][]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a} (see also \cref{fig:ad_evolution}).
+\end{itemize}
+
+Gradients are traditionally computed with finite differences.
+This requires careful selection of the step size,
+and can be inaccurate and slower than necessary.
+As I explain in the following,
+automatic differentiation is a robust way of computing derivatives that
+does not depend on any step size and can be faster than finite differences.
 
 Any computer program, including an \EB{} code,
 can be interpreted as a mathematical function $F: \mathbb{R}^m \rightarrow \mathbb{R}^n$
