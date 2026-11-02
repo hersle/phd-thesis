@@ -2209,12 +2209,10 @@ for example in internal interpolation and quadrature methods.
 In the following, I elaborate on these aspects in greater detail
 and from a higher level than in \cref{paper:symboltz}.
 I also account for the updates to SymBoltz that were made with \cref{paper:chebyshev,paper:interactions}.
+I will compare some aspects to CLASS, which is the established code that I am most familiar with.
 
 \subsection{Symbolic-numeric interface for easy model specification}
 \label{sec:symbolicnumeric}
-
-\TODO{how can we accomodate modifications such as all the ones in the modifications section with a uniform interface. show what features the symbolic interface has after recent updates to symboltz. shooting, backwards, split bg/pt, auto-spline, auto-observed, ...}
-\TODO{idea is to expose every part of the \EB{} equations on equal footing in exactly the same way so they are equally accessible for easy modification}
 
 As \cref{sec:modifications} shows, the standard \LCDM{} \EB{} equations \eqref{eq:eb} are highly subject to modification.
 To modify the equations in other \EB{} codes,
@@ -2222,73 +2220,105 @@ one must often make significant edits to the source code in many different place
 For example, in CLASS one must generally edit some or all of the following files:
 \begin{itemize}
 \item \texttt{input.c} and \texttt{input.h} for parameter handling,
-\item \texttt{background.c} and \texttt{background.h}: background equations,
+\item \texttt{background.c} and \texttt{background.h} for background equations,
 \item \texttt{thermodynamics.c} and \texttt{thermodynamics.h} for thermodynamics equations,
 \item \texttt{perturbations.c} and \texttt{perturbations.h} for perturbation equations.
 \end{itemize}
-Moreover, each file must typically be edited in several places:
-initial conditions, evolution equations, approximation schemes, parameter handling and input/output handling are handled in different places in each file.
-Navigating and understanding all these files is a nontrivial task for users that are unfamiliar with the code.
+Moreover, each file must typically be edited in several places.
+Initial conditions, evolution equations, approximation schemes, parameter handling and input/output handling are handled in different places in each file.
+Navigating and understanding all these files is nontrivial for users who are unfamiliar with the code.
 At the time of writing these files contain more than 20 000 lines of code in total,
-where the high-level equations are intertwined with low-level machinery.
-In my opinion, this separation of the modules in CLASS reflect the right way to \emph{solve} the \EB{} problem,
-but make for an unnecessarily complicated way to \emph{specify} it.
+where high-level equations are scattered and intertwined with low-level machinery.
+In my opinion, this separation of modules in CLASS
+reflects the right way to \emph{solve} the \EB{} problem,
+but is not the easiest way to \emph{specify} it.
 
 With SymBoltz, my vision is to separate out the full specification of the \EB{} equations \eqref{eq:eb}
 from internal machinery in the code.
 In particular, I advocate for thinking about the full \EB{} system of equations \eqref{eq:eb}
 -- which includes what is commonly called the \enquote{background}, \enquote{thermodynamics}, \enquote{recombination code} and \enquote{perturbations} --
-as fundamentally \emph{one} (large) system of ODEs that should also be specified as such (including all differential and algebraic equations, parameter definitions and initial conditions).
-For example, the perturbation and background equations should be specified in the \emph{same} system.
-It should be the responsibility of the cosmologist (\enquote{user}) to specify this large system of equations for their model;
-and it should be the responsibility of the code to transform the system into an optimal numerical problem and to solve it,
-such as breaking up the equations into \enquote{background}, \enquote{thermodynamics} and \enquote{perturbation} stages.
-Provided that this symbolic framework is sufficiently general,
-it provides a common interface to modify any part of the \EB{} equations in a way that accommodates any well-defined extension of the equations.
+as fundamentally \emph{one} (large) system of ODEs where $k$ is a parameter.
+All its variables, parameters, differential and algebraic equations and initial conditions can be specified in a single place.
+It is the responsibility of the cosmologist (\enquote{user}) to specify their model through this large system of equations;
+and it is the responsibility of the code to break up the system, transform it into a numerical problem and solve it.
+The symbolic-numeric interface in SymBoltz
+therefore exposes every part of the \EB{} equations \eqref{eq:eb}
+through one uniform symbolic modeling language,
+and automatically compiles them to numerical code for ODE solvers.
+The intention is to make all variables, parameters and equations of the model fully transparent and easy to modify.
 
-The easiest way to see how the equations are specified in SymBoltz is to look at one of the examples\footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/LCDM/}} in the online documentation of SymBoltz.
-It specifies the full \EB{} system \eqref{eq:eb} in around 300 lines of code,
-with the background thermodynamics, RECFAST recombination and perturbations all in the same place.
+To illustrate how the symbolic-numeric interface looks in practice,
+I refer the reader to the full \LCDM{} example on SymBoltz' documentation page.%
+\footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/LCDM/}}
+It encodes the entire standard model in only around 300 lines of code
+that directly resemble the \EB{} equations \eqref{eq:eb}.
+It includes all variables, parameters and equations for the background and perturbations,
+with baryons, photons, cold dark matter, dark energy, massless and massive neutrinos and RECFAST recombination.
+This makes the model specification clear, compact and convenient.
 
-This is the core idea with the mixed symbolic-numeric interface in SymBoltz.
-It relies on ModelingToolkit.jl\footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}},
-which is a Julia library designed for mixed symbolic-numeric computations.
-Significant work in SymBoltz has been contributed back to this library.
-\Cref{paper:symboltz} describes how it works and what it achieves.
+The symbolic-numeric interface is built on top of a library in Julia called ModelingToolkit.jl,%
+\footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}}
+which is a general-purpose symbolic modeling framework integrated with ODE solvers in the OrdinaryDiffEq.jl library (see \cref{sec:approx}).
+The development of SymBoltz has contributed back to these libraries in Julia.%
+\footnote{\url{https://github.com/search?q=org:SciML+author:hersle&type=issues}}
 
-\TODO{... but it has received some additions and improvements in later updates:}
-\TODO{give list?}
-\TODO{or just say it is described in paper 1+2?}
-\TODO{show example for trivial RM$\Lambda$ model?}
-
-\iffalse
+\Cref{paper:symboltz,paper:interactions} explain in greater detail
+why the symbolic-numeric interface is useful
+and how it works under the hood.
+To summarize, it currently supports:
 \begin{itemize}
-\item All background, thermodynamics and perturbation equations, variables, parameters, initial conditions and so on should be specified as one single system.
-It should not be necessary to jump between source files for the background, thermodynamics, recombination code and perturbations; and between different functions inside each such file.
-Automatically split in stages, and set up splines to interpolate between them.
-Modification should be as simple as possible.
-
-\item Efficient numerical code is generated, both for the ODE function $f$ and its Jacobian.
-Analytical and sparse Jacobian is important for approximation-freeness.
-
-\item Unknown and observed equations are automatically handled and distinguished.
-
-\item Derivative expansions of unknown variables are handled automatically.
-
-\item Interpolation is handled automatically of any variable, whether observed or analytical.
-
-\item Initialization.
-For example hi\_class constraint example.
-
-\item Can escape symbolic interface to call external functions,
-for example to interpolate input from other programs.
-
-\item Shooting is specified symbolically.
-Can use autodiff.
-
-\item Equations can be specified to integrate either forwards in time (default) or backwards in time.
+\item \textbf{Symbolic specification:}
+All variables, parameters, differential and algebraic equations, initial conditions and parameter relationships
+are declared through the symbolic modeling language of ModelingToolkit.
+This makes it possible to refer to arbitrary variables and parameters and build expressions thereof,
+and makes SymBoltz able to do internal logic with its programmatic \enquote{knowledge} of the underlying equations.
+\item \textbf{Stage separation:}
+All background and perturbation equations are written into the same system,
+where the perturbations are free to refer to any background variables.
+This system is automatically split into background and perturbation stages,
+and Hermite interpolation is set up to provide all necessary background variables to the perturbations.
+The background can also be split into several substages
+depending on the dependencies between variables (see \cref{paper:interactions}).
+\item \textbf{Numerical code generation:}
+Users can mix differential and algebraic equations in any order.
+ModelingToolkit reduces them to minimal first-order ODEs $\dot{u} = f(\tau,u)$
+for the differential variables $u$
+by sorting the equations and eliminating algebraic variables.
+Numerical code is then generated for the ODE function $f$ and its Jacobian $J$,
+using optimizations such as Common Subexpression Elimination (CSE) to make it efficient.
+In particular, the symbolic equations are used to generate the Jacobian analytically,
+and in sparse form for the perturbations,
+which is \emph{crucial for avoiding approximation schemes} (see \cref{sec:approx}).
+\item \textbf{Initial conditions:}
+At the initial time,
+the code solves a system of equations to determine the initial conditions for the differential variables.
+One can specify both explicit expressions for one variable in terms of another
+and implicit constraint equations.
+For example, the Einstein equations \eqref{eq:eb_gravity}
+can be initialized by passing a value for $\psi$,
+and the constraint equation is then used to solve for the initial value of $\phi$.
+\item \textbf{Shooting method:}
+Users can specify arbitrary constraint equations that should hold at the final integration time of the background
+together with arbitrary shooting parameters (e.g. for initial conditions) that should be tuned to make them hold.
+The background is then wrapped in a nonlinear root solver (e.g. Newton's method)
+and solved several times to find the shooting parameters that give the desired constraints.
+\item \textbf{Mixed forwards-backwards integration:}
+Variables are by default integrated forwards in time,
+but users can request any variables in the background to be integrated backwards in time instead.
+This is allowed only if the dependencies between variables are such that
+the forwards and backwards variables can be integrated in separate substages.
+This was introduced with SymBoltz version 2 and is described in \cref{paper:interactions}.
+\item \textbf{Interpolation:}
+From the background and perturbation solutions,
+users can interpolate any variable $x(\tau)$ or $x(\tau,k)$ in both time and wavenumber.
+The time interpolation automatically decides the best way to compute the variable,
+depending on whether it belongs to the background or perturbations
+and whether it is determined by a differential or algebraic equation.
 \end{itemize}
-\fi
+The ambition of the symbolic-numeric interface is to be a general framework
+that accommodates most modifications to the \EB{} equations.
+It should make it as easy as possible to specify the cosmological model
+through a high-level interface without having to touch internal low-level code.
 
 \subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
