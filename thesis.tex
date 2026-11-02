@@ -2327,10 +2327,10 @@ The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs 
 This happens not only during tight coupling in the early universe,
 but also for oscillatory perturbations in the late universe even in the absence of baryons
 \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
-Stiffness is a property of differential equations that can arise
-if several timescales coexist in the equations,
-which is very common in cosmology where baryons and photon interact rapidly while the universe expands slowly, for example.
-Understanding this property is crucial to numerically solving the \EB{} equations,
+Stiffness is a property of differential equations that is hard to define mathematically,
+but can arise when several timescales coexist in the equations.
+This is very common in cosmology where baryons and photon interact rapidly while the universe expands slowly, for example.
+Understanding stiffness is crucial to numerically solving the \EB{} equations,
 and there are two different ways of handling it.
 
 \subsubsection{Explicit integrators with approximation schemes}
@@ -2339,43 +2339,43 @@ and there are two different ways of handling it.
 \centering
 \includegraphics[width=0.8\textwidth]{media/approximations}
 \caption{%
-Validity regions in conformal time $\tau$ and perturbation wavenumber $k$ of the
+Validity regions in conformal time $\tau$ and wavenumber $k$ of the
 the tight coupling approximation (TCA),
 radiation streaming approximation (RSA) and
 ultra-relativistic fluid approximation (UFA)
-in CLASS for some choice of cosmological parameters.
-Reproduced from \cite{blasCosmicLinearAnisotropy2011c}.}
+in CLASS for some fiducial cosmological parameters
+\cite{blasCosmicLinearAnisotropy2011c}.}
 \label{fig:approximations}
 \end{figure}
 
-Standard explicit ODE methods, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.
+Standard explicit ODE methods, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.%
+\footnote{\emph{By definition}, \enquote{stiff equations are problems for which explicit methods don't work} \cite{hairerSolvingOrdinaryDifferential1996}.}
 The stiffness causes them to take tiny time steps and diverge with enormous errors.
-CAMB and (to some extent) CLASS\footnote{CLASS has an implicit integrator; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
+CAMB and (to some extent) CLASS\footnote{CLASS also has an implicit integrator; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
 Several approximation schemes have been invented, including the
 tight coupling approximation (TCA),
 radiation streaming approximation (RSA),
 ultra-relativistic fluid approximation (UFA) and
-non-cold dark matter fluid approximation (NCDMFA) \cite{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
+non-cold dark matter fluid approximation (NCDMFA) \cite[e.g.][]{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
 All of them involve switching between different variants of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
 The first three are illustrated by \cref{fig:approximations}.
 
 For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=3kF_1/4$
-in the \EB{} equations \eqref{eq:eb} into a modified pair:
+in the \EB{} equations \eqref{eq:eb} into a modified pair free of the product $\dot\kappa \, (\theta_\gamma-\theta_b)$
+(here in the synchronous gauge)
+\cite[equation 2.7]{blasCosmicLinearAnisotropy2011c}:
 \begin{subequations}
 \begin{align}
-\dot\theta_b &= -\frac{1}{1+R}\left(\calH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right) + k^2\psi, \\
-\dot\theta_\gamma &= \dot\theta_b + \dot\Theta_{\gamma b}^{\mathrm{tca}}.
+\dot\theta_b &= -(1+R)^{-1}\left(\calH\theta_b - c_s^2 k^2 \delta_b - k^2 R\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right) + R\,\dot\Theta_{\gamma b}^{\mathrm{tca}}\right), \\
+\dot\theta_\gamma &= -R^{-1}\left(\dot\theta_b + \calH\theta_b - c_s^2 k^2 \delta_b\right) + k^2\left(\tfrac{1}{4}\delta_\gamma - \sigma_\gamma^{\mathrm{tca}}\right).
 \end{align}
 \end{subequations}
-Here $\sigma_\gamma^\mathrm{tca}$ and $\dot\Theta_{\gamma b}^\mathrm{tca}$
-are perturbative power series in the smallness parameter $\tau = 1/\dot\kappa$
-that is inversely proportional to the baryon-photon interaction rate
-\cite{blasCosmicLinearAnisotropy2011c}.
-The expressions for $\sigma_\gamma^\mathrm{tca}$ and $\dot\Theta_{\gamma b}^\mathrm{tca}$
-gets increasingly complicated as the perturbative expansions are done to first and second order.
+In addition, expressions for $\sigma_\gamma^\mathrm{tca}$ and $\dot\Theta_{\gamma b}^\mathrm{tca}$
+are expanded perturbatively in the interaction timescale $\tau_c = 1/\dot\kappa$.
+This gets increasingly complicated as it is done to first and second order in various ways.
 Moreover, one must identify the $(\tau, k)$-regime where the approximation is valid,
-and tune a hyperparameter that decides when to switch on the approximation scheme on.
-Finally, one should ideally validate any approximation scheme against the non-approximate equations,
+and tune a hyperparameter that decides when to switch it on and off.
+Ideally, one should also validate approximation schemes against non-approximated equations,
 which is impossible with explicit integrators.
 
 But suppose that one goes through all the trouble of correctly deriving, implementing, tuning and validating
@@ -2388,12 +2388,17 @@ and require the whole process to be repeated for the modified equations.
 Strictly speaking, this is true even for the modifications that do not touch the approximated equations directly,
 because the tuning and validation in principle depends on the whole coupled perturbation ODE.
 
-\TODO{spawned literature on more and more approximation schemes: 2nd order TCA, ...}
+The literature on approximation schemes is very large.
+The TCA alone has been investigated many times
+\cite[e.g.][]{doranSpeedingCosmologicalBoltzmann2005b,cyr-racinePhotonsBaryonsAtoms2011a,pitrouTightcouplingApproximationBaryon2011,blasCosmicLinearAnisotropy2011c,pookkillathBaryonPhysicsTight2019};
+other parts of the equations have received their own schemes (see above);
+and new schemes have been introduced with modified models (see \cref{sec:modifications}).
 
 The reason for using approximation schemes is that they improve speed and stability
-by reducing the stiffness and sometimes also the size of the ODEs.
-This makes explicit ODE solvers possible, and lets them take longer time steps.
-However, as explained above, this comes at the cost of significantly complicating the modeling for users.
+by reducing the stiffness and sometimes the size of the ODEs.
+This makes explicit ODE solvers viable,
+and lets them take longer time steps.
+However, as explained above, it comes at the cost of complicating the modeling for users.
 There is another way of handling stiffness that does not have this disadvantage.
 
 \subsubsection{Implicit integrators without approximation schemes}
