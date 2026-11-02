@@ -2548,16 +2548,26 @@ and makes implicit ODE solvers performant due to optimal treatment of the Jacobi
 The stiffness of the \EB{} equations must be treated one way or another,
 and I advocate for solving it once and for all in the numerics
 instead of complicating the physics with approximation schemes on a model-by-model basis.
-\TODO{don't repeat my emphasis from earlier}
 
-\subsubsection{Approximation schemes in the times of emulators}
+\subsubsection{Approximation schemes in the time of emulation}
 
-\TODO{write Intro first about emulators?}
-Approximation schemes are also less necessary in the time of emulators.
-I advocate for moving approximation schemes to the level of emulators,
-to make it easier for users to implement modified cosmological models.
+Historically, approximation schemes were introduced first
+\cite[e.g.][]{maCosmologicalPerturbationTheory1995a,blasCosmicLinearAnisotropy2011c}
+and sped up \EB{} codes for use in MCMC sampling, for example.
+More recently, emulation has become increasingly popular \cite[e.g.][]{manciniCOSMOPOWEREmulatingCosmological2022b,pirasCosmoPowerJAXHighdimensionalBayesian2023}
+in order to interpolate the full predictions of theory codes in parameter space.
+This has been driven by the rise of machine learning, neural networks and GPU computing.
+Earlier papers on emulation did not take off to the same extent
+\cite[e.g.][]{fendtPicoParametersImpatient2007,fendtComputingHighAccuracy2007,auldFastCosmologicalParameter2007,auldScCosmoNetFast2008}.
 
-Move to writing interfaces between theory codes and emulators, e.g. OLE (?) \url{https://arxiv.org/abs/2503.13183} \url{https://arxiv.org/abs/2307.01138}
+In the current time of emulation, I advocate for rethinking how we approach approximation schemes.
+In my opinion we should reduce our reliance on approximation schemes \enquote{inside} theory codes,
+and rather focus on creating user-friendly emulation interfaces on the \enquote{outside} of theory codes.
+Someone who is unfamiliar with emulators should not have to learn how to create and train an emulator from scratch,
+but should be able to wrap their theory function into a general emulation framework with as little effort as possible.
+This would reduce sources of error and simplify implementation of modified models in theory codes,
+and emulators can provide a greater speedup than traditional approximation schemes anyway.
+This is in the spirit of OLÉ \cite{guntherUncertaintyawareDataefficientCosmological2024,guntherOLEOnlineLearning2025}, for example.
 
 \subsection{Gradients through automatic differentiation}
 
