@@ -2824,24 +2824,58 @@ but also more broadly to highlight that spectral methods are a promising researc
 I also speculate that there are undiscovered ways to use spectral methods in \EB{} codes,
 and that this may make the approximation-free approach even stronger in the future.
 
-\section{Future work}
+\section{Papers, conclusions and outlook}
 
-\TODO{viability of MCMCs in SymBoltz? 1) can run run directly with no approximations, or 2) can run with no approx in model-building stage, and automatically create emulator using a streamlined interface. could also work with gradient-based MCMCs.}
+At the end of this thesis,
+\cref{paper:symboltz} accompanies the initial release of SymBoltz,
+\cref{paper:chebyshev} adds spectral Chebyshev interpolation to SymBoltz, and
+\cref{paper:interactions} uses SymBoltz to implement interacting models with minimal code modifications and without approximation schemes.
+They show that it is viable to build \EB{} codes
+with a high-level interface that is easy to modify,
+and completely free of approximation schemes
+using modern implicit ODE solvers and spectral interpolation methods.
 
-\TODO{lensing}
-
-\TODO{curvature}
-
-\TODO{more models}
-
-\TODO{current feature matrix?}
-
-\TODO{after Chebyshev in $k,l$: wanted to do sparse Chebyshev grid interpolation in cosmological parameters}
-
-\TODO{2 approaches:
-1. physical approximations with traditional numerical algorithms,
-2. keep full physical equations, but look for numerical algorithms with the best properties for the physical equations.
-}
+There are many ways in which I would like to continue building upon SymBoltz.
+If I had more time, I would:
+\begin{itemize}
+\item
+Interface SymBoltz with an MCMC code for parameter inference,
+such as Cobaya \TODO{cite} or CosmoSIS \TODO{cite}
+that target support for multiple \EB{} codes.
+Alternatively, SymBoltz could be interfaced with Turing.jl\footnote{\url{https://turinglang.org/}} \TODO{cite},
+which is a full probabilistic programming language for Bayesian inference.
+It is also written in Julia and would combine naturally with SymBoltz,
+and could make use of data from a growing collection of likelihoods implemented in Julia\footnote{\url{https://github.com/JuliaCosmologicalLikelihoods}}.
+\item
+Investigate whether the differentiability of SymBoltz
+could make MCMCs in complicated parameter spaces more efficient
+by using gradient-based MCMC methods.
+For example, recent investigations show that the gradient-based NUTS sampler converges with fewer samples than the traditional Metropolis--Hastings sampler,
+but the extra time needed to compute the derivatives reduces its advantage,
+so the current situation is inconclusive \cite[e.g.][]{nygaardPosteriorSamplingAge2026}.
+\item
+Create an emulation interface to SymBoltz (as discussed at the end of \cref{sec:approx}),
+in order to easily interpolate predictions as a function of cosmological parameters for any cosmological model.
+In particular, I am interested in exploring whether the one-dimensional Chebyshev interpolation in \cref{paper:chebyshev}
+can also be generalized to interpolation in multi-dimensional parameter spaces.
+The curse of dimensionality could be relaxed by using sparse grid techniques and adaptive techniques,
+so fewer points are used along directions in parameter space where the observables vary in ways that are simpler to capture (e.g. $A_s$).
+\item
+Implement lensed CMB power spectra, spatial curvature and vector and tensor modes,
+which are currently missing in SymBoltz.
+\item
+Build a library of modified models in SymBoltz (see \cref{sec:modifications}),
+and use them to refine the symbolic-numeric interface as necessary to accommodate for extensions.
+\item
+Investigate whether spectral methods can be used other places in the code
+to take further advantage of the smooth approximation-free output,
+for example in line-of-sight integration (as discussed in \cref{sec:spectral}).
+\item To clean up and polish the code base of SymBoltz,
+which has gone a little back and forth during development
+as I have tested different approaches.
+\end{itemize}
+It is my hope that others will pick up on some of these ideas and take SymBoltz further,
+or that some of the ideas that shaped SymBoltz proves useful and be incorporated into other \EB{} codes.
 
 \chapter{The nonlinear part}
 \label{chap:nonlin}
