@@ -1144,13 +1144,14 @@ P_h(\tau) &= \frac{4\pi}{3} a^{-4} \sum_i W_i \frac{q_i^2}{\epsilon_i} , \\
 \end{aligned}
 \end{equation}
 The $l$-hierarchy cutoff at $\lmax$ is done in the same way as for the photons.
-In principle, we should evolve one such hierarchy for each of the $N_m = 3$ neutrino mass eigenstates.
+In principle, we should evolve one of these hierarchies for each of the $N_m = 3$ neutrino mass eigenstates.
 Thus, massive neutrinos contribute $N_m \times (\lmax+1) \times N_q$ perturbation ODEs,
 which significantly increases the size of the ODE system compared to $l$-only hierarchies!
 This can be simplified by evolving a single approximate degenerate hierarchy with $m = \sum m_\nu / 3$ instead,
 or by approximating some of them as massless neutrinos.
-
-\TODO{128 $q$-points per $k$-mode in COSMICS; spectral quadrature with 3-5 points now}
+To make $N_q$ as small as possible,
+it is critical to use a spectral method such as Gaussian quadrature ($N_q \approx 5$) \cite[e.g.][]{lesgourguesCosmicLinearAnisotropy2011f,howlettCMBPowerSpectrum2012a,sletmoenSymBoltzjlSymbolicnumericApproximationfree2026},
+instead of low-order piecewise Newton--Cotes quadrature in early implementations ($N_q \approx 128$) \cite[e.g.][]{maCosmologicalPerturbationTheory1995a}.
 
 \subsubsection{Massless neutrinos (\texorpdfstring{$\nu$}{nu})}
 
@@ -2418,7 +2419,7 @@ but in return they are stable and efficient for stiff equations \cite[e.g.][]{ha
 This approach completely avoids approximation schemes and lets users specify \emph{one} \EB{} system to evolve at all times.
 However, the physical complexity of approximation schemes is replaced
 by a new set of challenges in the numerical solver infrastructure.
-Here I explain some of these intricacies,
+Here I explain some of these numerical intricacies,
 which in my opinion deserve as much attention as approximation schemes
 for their effect on the numerical solution of the \EB{} equations.
 
@@ -2509,7 +2510,7 @@ It is also unnecessarily inefficient:
 the Jacobian of a linear ODE
 $f_i(u) = \sum_j A_{ij}(\tau) u_j$ is just $A_{ij}(\tau)$,
 but the finite differences do not \enquote{know} this
-and evaluate $f(u)$ and hence $A_{ij}(\tau)$ many times to find it.
+and evaluate $f(u)$ and hence $A_{ij}(\tau)$ several times to find it.
 
 \emph{This is exactly where the symbolic-numeric interfaces of SymBoltz (and PyCosmo) come into the picture.}
 With no extra input from the user,
@@ -2548,6 +2549,7 @@ It is further interfaced with the LinearSolve.jl\footnote{\url{https://github.co
 which makes it possible to swap out the linear system solver used inside the implicit solvers.
 We may then try several different combinations of ODE and linear system solvers
 by changing only a single line of code and benchmark their performance \emph{and} precision on the \EB{} equations.
+This is not easy to do in codes that include only one or a few hardcoded implicit solvers.
 It is through this testing that I have found the implicit \texttt{Rodas5P} method to work best
 \emph{in conjunction with} the analytical and sparse perturbations Jacobian.%
 \footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/benchmarks/}}
@@ -2779,58 +2781,66 @@ In addition, \cref{fig:ad_evolution} shows how it can be used to evolve the sens
 \end{table}
 
 The absence of approximation schemes means that the same ODE is evolved at all times.
-Consequently, the perturbation solution $u(\tau, k)$ is a \emph{smooth} function of both $\tau$ and $k$
-(down to the numerical noise set by the ODE solver).
+Consequently, the solution for any perturbation variable $u(\tau, k)$ is a \emph{smooth} function of both $\tau$ and $k$
+(down to the numerical noise, e.g. set by the ODE solver tolerance).
 This is not true to the same extent with approximations,
 as the transitions between equations at different $(\tau,k)$ (see \cref{fig:approximations})
 can introduce small discontinuities or kinks in the solution.
-This leads me to ask the following question:
+This motivates the following question:
 \begin{displayquote}
 Is it possible to exploit the smoothness of the perturbation solutions $u(\tau, k)$ due to approximation-freeness?
 \end{displayquote}
 
 \emph{Spectral} methods are a class of computational methods (e.g. for ODEs, interpolation and quadrature).
-What they have in common is that they assume the underlying function (e.g. the ODE solution, interpolant or integrand) to be smooth.
+What they have in common is that they assume the underlying function (e.g. the ODE solution, interpolant or integrand) to be smooth,
+in the mathematical sense that it is differentiable as many times as possible.
 Spectral methods make use of this to expand the function into a linear combination of \emph{global} basis functions that run over the whole computational domain.
 This is in contrast to \emph{local} (non-spectral) methods that work with one subdomain at a time.
 The major selling point of spectral methods is that they can converge exponentially fast (e.g. with error $\rho^{-N}$ for $N$ points and some $\rho>1$),
 whereas local methods converge algebraically fast (e.g. as $N^{-p}$, where $p$ is usually the method's order of convergence).
 However, if the function is not smooth, even if it only has a kink at one point,
-then the exponential convergence is degraded and local methods are safer.
-As \cref{tab:spectral} illustrates, approximation-free \EB{} codes open the door to such methods.
+then the exponential convergence degrades and local methods are safer.
+Approximation-free \EB{} codes open the door to such methods,
+as illustrated in \cref{tab:spectral}.
 
-In fact, spectral methods are already used in some places in \EB{} codes.
-For example, the multipole expansion \eqref{eq:decompose_legendre} is spectral on $\mu \in [-1, 1]$,
-and the use of Gaussian quadrature for the $q$-integrals \eqref{eq:energy_momentum_integrals_bg} and \eqref{eq:energy_momentum_integrals_pert} is spectral on $q \in [0, \infty)$%
-\footnote{COSMICS used 8th order Newton-Cotes quadrature (a local method) and needed 128 $q$-points \cite{maCosmologicalPerturbationTheory1995a},
-while CLASS uses Gaussian quadrature (a spectral method) with only 5 $q$-points \cite{lesgourguesCosmicLinearAnisotropy2011f}!}.
-
-In \cref{paper:chebyshev},
-I show that approximation-free \EB{} codes can do the interpolation in $k$ and $l$ (see \cref{sec:eb_codes})
-using global Chebyshev polynomials (a spectral method)%
-\footnote{Interpolation with Fourier series is perhaps more familiar and is spectral for smooth and periodic functions.
+\Cref{paper:chebyshev} implements Chebyshev interpolation (a spectral method)%
+\footnote{Perhaps more familiar is Fourier series interpolation,
+which is spectral for smooth and periodic functions.
 Chebyshev interpolation is its closest analogue for smooth but non-periodic functions.}
-instead of cubic splines (a local method, used by most other \EB{} codes).
+in SymBoltz for internal interpolation in $k$ and $l$ of the \EB{} code (as explained in \cref{sec:eb_codes}).
+The standard method used in other \EB{} codes is cubic splines (a local method).
 Chebyshev interpolation is used both to interpolate the perturbation solution $u(\tau,k)$ in $k$ and angular power spectra $C_l$ in $l$,
-so fewer perturbation $k$-modes \eqref{eq:pt_ode} and line-of-sight integrals \eqref{eq:los} need to be solved for unchanged precision.
+so fewer perturbation $k$-modes \eqref{eq:pt_ode} and line-of-sight integrals \eqref{eq:los} need to be solved for higher precision.
 This reinforces the position of approximation-free \EB{} codes:
 instead of using model-dependent approximation schemes that complicate the physics,
-we can relax approximation schemes and even \enquote{win back} some of the performance that is sacrificed in the process
-by taking advantage of the smoothness of the resulting solution.
+we can relax approximation schemes and leverage the resulting smoothness
+to \enquote{win back} some performance.
 
 In my opinion, the improvement is not revolutionary given the $\approx 0.1\%$ precision target for current cosmological surveys,
 where interpolation with cubic splines is not much worse.
-However, as future surveys require even greater precision from our modeling tools, I believe that spectral methods will become more important.
-In theory, going from $0.1\%$ to $0.01\%$ precision requires increasing $N$ to $10^{1/p} \times N$ with algebraic convergence,
-but only to $N + \log(10)/\log(\rho)$ with exponential convergence.
+However, as future surveys require greater precision from our modeling tools,
+I believe that spectral methods can become more important.
+In theory, going from $0.1\%$ to $0.01\%$ precision requires increasing $N$ to $10^{1/p} \times N$ with algebraic convergence (a multiplicative increase),
+but only to $N + \log(10)/\log(\rho)$ with exponential convergence (an additive increase).
+\EB{} codes can slow down significantly when precision parameters are tightened,
+but the more favorable computational complexity of spectral methods
+makes it possible to achieve higher precision at lower cost.
 
-This is not the only way spectral methods may take advantage of smoothness.
-For example, several works have improved the computation of angular power spectra to relax the Limber approximation by using spectral methods
-\TODO{cite \url{https://arxiv.org/abs/1911.11947} and \url{https://arxiv.org/abs/2410.03632} and \url{https://arxiv.org/abs/2502.12142} and \url{https://arxiv.org/abs/2212.04291}}.
-I hope that \cref{paper:chebyshev} serves not only to describe its particular interpolation method,
-but also more broadly to highlight that spectral methods are a promising research direction.
-I also speculate that there are undiscovered ways to use spectral methods in \EB{} codes,
-and that this may make the approximation-free approach even stronger in the future.
+\bigskip
+
+In fact, spectral methods are already used in some places in \EB{} codes,
+but the term is not often used in the literature.
+For example, the multipole expansion \eqref{eq:decompose_legendre} is a spectral method on $\mu \in [-1, 1]$ with global Legendre polynomial basis functions,
+and Gaussian $q$-quadrature in the massive neutrinos equations \eqref{eq:eb_massive_neutrinos} is a spectral method on $q \in [0, \infty)$.
+
+I speculate that there are some yet undiscovered ways of using spectral methods in other parts of \EB{} codes.
+For example, several works have improved the computation of angular power spectra
+by doing integration over the rapidly oscillating spherical Bessel functions
+with techniques such as the FFTlog algorithm, Chebyshev polynomials and Levin integration
+\cite[e.g.][]{schonebergTraditionalLineofSightApproach2018,fangLimberEfficientComputation2020a,leonardN5KChallengeNonLimber2023,chiarenzaBLASTLimberAngular2024,reischkePylevinEfficientNumerical2025a}.
+My hope is that \cref{paper:chebyshev} serves not only to describe a particular interpolation method,
+but also encourages research on spectral methods from a greater perspective
+that could make the approximation-free approach even stronger in the future.
 
 \section{Papers, conclusions and outlook}
 
