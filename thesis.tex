@@ -1272,7 +1272,8 @@ It leads to a general method where multipoles $\Delta_l^A$ (such as $F_l$)
 are computed as integrals of a source function $S^A(\tau,k)$ of the perturbations
 weighted by spherical Bessel functions $j_l(x)$:
 \begin{equation}
-\Delta_l^A(k) = \int_{\tau_i}^{\tau_0} \diff{\tau}\,S^A(\tau,k)\,j_l(k(\tau_0-\tau)) .
+\Delta_l^A(k) = \int_{\tau_i}^{\tau_0} \diff{\tau}\,S^A(\tau,k)\,j_l(k\chi) ,
+\qquad \chi(\tau) = \tau_0-\tau .
 \label{eq:los}
 \end{equation}
 The major advantage is that $S^A(\tau,k)$ depends on the perturbations only up to $l \leq 2$
@@ -1280,7 +1281,11 @@ and only weakly on their $\lmax$-truncation.
 Thus, the perturbation ODEs can be solved with a small $\lmax$ that gives a good enough $S^A(\tau,k)$,
 and then the integrals for $\Delta_l^A(k)$ can be evaluated for many $(k,l)$ by numerical quadrature,
 which is much cheaper than solving ODEs.
-\TODO{requires (ultra)spherical Bessel functions; cite Tram etc.?}
+In non-flat universes the spherical Bessel functions $j_l(k \chi)$ generalize to hyperspherical Bessel functions $\Phi_l^\nu(\chi)$,
+where $k$ enters through $\mu$ as a separate argument from $\chi$.
+They are more difficult to compute with recursion relations in $l$ or ODEs in $x$, for example,
+and for performance they should be rescaled back to the flat spherical Bessel functions for high $\nu$
+\cite{lesgourguesFastAccurateCMB2014,tramComputationHypersphericalBessel2017b,lewisCAMBV2Cosmological2026a}.
 \label{eb:los}
 
 \iffalse
