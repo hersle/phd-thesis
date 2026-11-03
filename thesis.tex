@@ -391,7 +391,7 @@ PySCo \cite{bretonPySCoFastParticleMesh2025}.
 
 \Cref{chap:nonlin} in this thesis describes a smaller fraction of my work in this direction.
 There we use \enquote{fast-but-approximate} $N$-body simulations with the COLA method
-in order to predict the nonlinear matter power spectrum in modified Brans-Dicke gravity relative to \GR{}.
+in order to predict the nonlinear matter power spectrum in modified \BD{} gravity relative to \GR{}.
 We show a way to reduce the nonlinear prediction to that from linear \EB{} codes.
 This technique can be used in conjunction with emulators (see below) of \GR{} simulations,
 in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
@@ -403,7 +403,7 @@ has developed a \enquote{sport} of emulators, using whatever (dirty) tricks nece
 
 \EB{} and, to a much greater extent, $N$-body simulations are expensive to run.
 To estimate cosmological parameters using Bayesian inference,
-Markov chain Monte Carlo (MCMC) methods need to sample $10^4$-$10^6$ points in parameter space and in principle run these codes for every sample.
+Markov chain Monte Carlo (MCMC) methods need to sample $10^4$--$10^6$ points in parameter space and in principle run these codes for every sample.
 It is therefore very common to \emph{emulate} the output of expensive computations.
 
 Generally speaking, an emulator refers to \emph{any} method that reproduces or \enquote{imitates} the output of a physically principled and expensive function $\mathcal{O}(\mathbf{p})$ of parameters $\mathbf{p}$ using a cheap surrogate model:
@@ -1118,9 +1118,9 @@ with another identity $j_{l+1}(x) = (2l+1) j_l(x) / x - j_{l-1}(x)$.
 \subsubsection{Massive neutrinos (\texorpdfstring{$h$}{h})}
 
 Massive neutrinos are parameterized by their nonzero mass $m$ and modeled as a full $(q,l)$-hierarchy \eqref{eq:hierarchy_ql}
-with the Fermi-Dirac distribution function $f_0(q) \propto 1 / (\exp(q/T_{h0})+1)$.%
+with the Fermi--Dirac distribution function $f_0(q) \propto 1 / (\exp(q/T_{h0})+1)$.%
 \footnote{
-The Fermi-Dirac distribution is really $f_0(\tau, q) = 1 / (\exp(E(\tau,q)/T(\tau))+1)$,
+The Fermi--Dirac distribution is really $f_0(\tau, q) = 1 / (\exp(E(\tau,q)/T(\tau))+1)$,
 but neutrinos decoupled from the primordial plasma while they were relativistic with $E/T_h \approx q/T_{h0}$.
 From this moment, $f_0(q)$ is frozen in time by the background Boltzmann equation \eqref{eq:boltzmann_bg}.
 }
@@ -1238,7 +1238,7 @@ In some cases, the parameters determine a mixed set of initial and final conditi
 and the background solve is wrapped inside the \textbf{shooting method} to find the initial conditions that produce the desired final conditions.
 For most models (but not necessarily in general) the background ODEs decouple into blocks that can be solved sequentially,
 such as the expansion history for $\calH(\tau)$ followed by thermodynamics for $x_e(\tau)$.
-The background ODEs are usually quite small with 1-10 ODE variables,
+The background ODEs are usually quite small with 1--10 ODE variables,
 but can be highly \textbf{stiff} due to the recombination and thermodynamics (see \cref{sec:approx}).
 \label{eb:bg}
 
@@ -1253,8 +1253,8 @@ u(\tau_\ini, k) = u_\ini.
 The perturbations must usually be integrated for 100s of $k$-modes to resolve the $k$-dependence.
 Importantly, linear perturbations in Fourier space are independent (see \cref{sec:fourier}),
 so the same ODE system can be evolved independently for each $k$ and thus be parallelized (instead of solving for all $k$-modes together in a $100\times$ larger ODE).
-The perturbation system for each $k$ usually consists of 10-100s of equations if only photons and massless neutrinos are included (with $\lmax \lesssim 10\text{-}100$),
-and 100s-1000s of equations if massive neutrinos are also included (with similar $\lmax$ and $N_q \approx 5$ for massive neutrinos).
+The perturbation system for each $k$ usually consists of 10s--100s of equations if only photons and massless neutrinos are included (with $\lmax \lesssim 10\text{--}100$),
+and 100s--1000s of equations if massive neutrinos are also included (with similar $\lmax$ and $N_q \approx 5$ for massive neutrinos).
 The perturbation equations are both \textbf{large} and highly \textbf{stiff},
 particularly at early times,
 which makes them hard to solve numerically (see \cref{sec:approx}).
@@ -1924,7 +1924,7 @@ and the correction function also includes derivatives around the Planck 2018 par
 With the EMLA and this trick, HyRec-2 avoids solving for the frequency-dependence of the photon field,
 and is both more accurate and faster than RECFAST.
 
-%Using the original RECFAST over HyRec and CosmoRec can give $1\%$-$3\%$-$4\%$ error in $x_e$ and up to $4\%$ error in $C_l$ at high $l \approx 3000$,
+%Using the original RECFAST over HyRec and CosmoRec can give $1\%$--$3\%$--$4\%$ error in $x_e$ and up to $4\%$ error in $C_l$ at high $l \approx 3000$,
 %which in turn noticeably biases extracted parameters from Planck \cite{shawPreciseCosmologicalParameter2011}.
 %The latest RECFAST with updated fudge factors and fit functions resolve this problem,
 %but the fit to a \LCDM{} remains less safe for extended models than with HyRec and CosmoRec.
@@ -2706,7 +2706,7 @@ The seeds only state that the derivative of the input or output with respect to 
 They are mathematically equivalent in theory,
 but differ how they are implemented and in performance characteristics in practice.
 A rule of thumb is that forward-mode is simpler to implement and performs better when there are many more outputs than inputs ($m \ll n$),
-for example for distances and power spectra at 100s-1000s of $\{z,k,l\}$ as a function of 1-10 cosmological parameters.
+for example for distances and power spectra at 100s--1000s of $\{z,k,l\}$ as a function of 1--10 cosmological parameters.
 Reverse-mode is more challenging to implement and can perform better when there are many more inputs than outputs ($m \gg n$),
 and is in theory more appropriate for a scalar likelihood function, for example.
 SymBoltz currently only supports forward-mode, so I focus on that here.
@@ -2942,7 +2942,7 @@ by recalibrating HMCODE \cite{joudakiTestingGravityCosmic2022a}.
 This is an effective halo modeling tool that adds nonlinear corrections to the linear $P(k)$
 from \EB{} codes with in a quick way, but is calibrated against $N$-body simulations.
 In \cite{joudakiTestingGravityCosmic2022a} this was re-fit to \BD{} $N$-body simulations
-and accurate to only $5\%$-$10\%$,
+and accurate to only $5\%$--$10\%$,
 while \cref{paper:bransdicke} improves the accuracy to $1\%$-$2\%$
 and retains the connection to \EB{} codes.
 
@@ -3131,7 +3131,7 @@ In short, what we find in \cref{paper:bransdicke} is that
 if we use the same values of $\sigma_8$, $\varphi_\ini h^2$, $\rho_{m0}$ and $\rho_{r0}$ in \GR{} and \BD{},
 and we compare spectra at equal $z$ and $k/h$;
 then the boost of the \emph{nonlinear} spectra (from $N$-body simulations)
-match the boost of the \emph{linear} spectra (from \EB{} codes) to $1\%$-$2\%$.
+match the boost of the \emph{linear} spectra (from \EB{} codes) to $1\%$--$2\%$.
 We show this by running a few $N$-body simulations and comparing the boosts to those from \EB{} codes.
 Thus, instead of going through the trouble of running a suite of many $N$-body simulations
 and training an emulator from them,
@@ -3145,8 +3145,6 @@ It could also be used for other modified gravity theories.
 By starting with one carefully designed emulator of $P_\mathrm{GR}(z, k)$ for \GR{},
 one could in this way build up a network of \enquote{boost approximations} (or emulators)
 that predicts nonlinear matter power spectra for several modified gravity models.
-
-\TODO{check - vs -- in double names etc}
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
