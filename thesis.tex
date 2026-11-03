@@ -2844,14 +2844,17 @@ that could make the approximation-free approach even stronger in the future.
 
 \section{Papers, conclusions and outlook}
 
-At the end of this thesis,
-\cref{paper:symboltz} accompanies the initial release of SymBoltz,
-\cref{paper:chebyshev} adds spectral Chebyshev interpolation to SymBoltz, and
-\cref{paper:interactions} uses SymBoltz to implement interacting models with minimal code modifications and without approximation schemes.
-They show that it is viable to build \EB{} codes
+\Cref{paper:symboltz} describes the initial release of SymBoltz
+with the symbolic-numeric interface, approximation-free structure and support for automatic differentiation.
+\Cref{paper:chebyshev} implements spectral Chebyshev interpolation in SymBoltz
+and shows how it converges faster than cubic splines.
+\Cref{paper:interactions} uses SymBoltz to implement interacting models,
+and shows how the symbolic-numeric interface makes this particularly easy
+and that the approximation-free structure holds up with extensions.
+Together, these papers show that it is viable to build \EB{} codes
 with a high-level interface that is easy to modify,
-and completely free of approximation schemes
-using modern implicit ODE solvers and spectral interpolation methods.
+with equations that are completely free of approximation schemes,
+and using modern implicit ODE solvers and spectral interpolation methods.
 
 There are many ways in which I would like to continue building upon SymBoltz.
 If I had more time, I would:
@@ -2882,18 +2885,18 @@ so fewer points are used along directions in parameter space where the observabl
 Implement lensed CMB power spectra, spatial curvature and vector and tensor modes,
 which are currently missing in SymBoltz.
 \item
-Build a library of modified models in SymBoltz (see \cref{sec:modifications}),
-and use them to refine the symbolic-numeric interface as necessary to accommodate for extensions.
+Build an expensive \enquote{library} of modified models in SymBoltz (see \cref{sec:modifications}),
+and use them to refine the symbolic-numeric interface if necessary to accommodate all extensions in an easy way.
 \item
 Investigate whether spectral methods can be used other places in the code
 to take further advantage of the smooth approximation-free output,
 for example in line-of-sight integration (as discussed in \cref{sec:spectral}).
-\item To clean up and polish the code base of SymBoltz,
-which has gone a little back and forth during development
-as I have tested different approaches.
+\item Clean up and polish the current code base,
+which has shifted a little back and forth during development
+while testing different approaches.
 \end{itemize}
 It is my hope that others will pick up on some of these ideas and take SymBoltz further,
-or that some of the ideas that shaped SymBoltz proves useful and be incorporated into other \EB{} codes.
+or that the ideas that shaped SymBoltz proves useful and be incorporated into other \EB{} codes.
 
 \chapter{The nonlinear part}
 \label{chap:nonlin}
