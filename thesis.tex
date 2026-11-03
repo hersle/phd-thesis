@@ -41,6 +41,7 @@
 
 \usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
+\AtEveryBibitem{\clearfield{eprintclass}} % print arXiv IDs without [category]
 
 \usepackage{microtype} % better line breaking (avoids overfull lines)
 \raggedbottom % do not stretch pages vertically (avoids underfull pages)
