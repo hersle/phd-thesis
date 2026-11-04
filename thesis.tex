@@ -257,7 +257,7 @@ that were later amplified by gravity into inhomogeneities.
 \includegraphics[height=5.25cm]{media/H0tension}%
 \hfill
 \includegraphics[height=5.35cm]{media/w0watension}%
-\caption{\label{fig:tensions}
+\caption[Hubble tension and preference for dynamical dark energy from DESI.]{\label{fig:tensions}
 \textbf{Left:}
 Increasingly precise observational probes of the early versus late universe
 has uncovered a discrepancy in the inferred value of the $H_0$ parameter of the \LCDM{} model
@@ -334,9 +334,9 @@ that we use for modifying the cosmological model.
 \hfill
 \includegraphics[height=7.2cm]{media/Cl}%
 }}
-\caption{\label{fig:cmb}
+\caption[Cosmic microwave background temperature fluctuations observed by Planck, and a matter power spectrum computed by SymBoltz.]{\label{fig:cmb}
 \textbf{Left:}
-The observed temperature fluctuations of the cosmic microwave background
+The observed temperature fluctuations of the cosmic microwave background by Planck
 \cite{collaborationPlanck2018Results2020}.
 \textit{Credit:} Damien P. George / ESA / Planck collaboration / \url{http://www.thecmb.org/}.
 \textbf{Right:}
@@ -402,9 +402,9 @@ and to support modern numerical methods such as automatic differentiation and sp
 \hfill
 \includegraphics[height=7.2cm]{media/Pk}%
 }}
-\caption{\label{fig:lss}
+\caption[Observed galaxy distribution by DESI, and a matter power spectrum computed by SymBoltz.]{\label{fig:lss}
 \textbf{Left:}
-The observed distribution of galaxies observed by the Dark Energy Spectroscopic Instrument
+The observed distribution of galaxies by the Dark Energy Spectroscopic Instrument
 \cite{desicollaborationDataRelease12026}.
 \textit{Credit:} Claire Lamman / DESI collaboration / \url{https://www.desi.lbl.gov/photos/}.
 \textbf{Right:}
@@ -1526,12 +1526,11 @@ I reiterate, however, that the core task of an \EB{} remains the integration of 
         \draw[lineage] (0, -0.2cm) -- (0, 0.2cm); & \node[entry] {descends from}; \\
     };
 \end{tikzpicture}
-\caption{%
+\caption[Development history of \EB{} codes.]{\label{fig:codes}
 Development history of major \EB{} codes (excluding modified versions for extended models) at the time of writing.
 The timeline of each code spans the earliest and latest trace of it that I could find online,
 and includes the publication time of its first research paper as given in the main text.
 }
-\label{fig:codes}
 \end{figure}
 
 Several \EB{} codes have been developed over the last three decades.
@@ -1955,7 +1954,7 @@ and has been re-calibrated to the output of CosmoRec (see below)
 \begin{figure}[t!]
 \centering
 \includegraphics[width=0.7\textwidth]{media/emla}
-\caption{\label{fig:emla}
+\caption[Effective multi-level Hydrogen atom of the recombination problem.]{\label{fig:emla}
 The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two categories.
 \enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
 \enquote{Interior states} are other excited states that are only indirectly connected to the ground state, and are expensive to solve but cosmology-independent,
@@ -2062,7 +2061,7 @@ by assuming $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and indepe
 \begin{figure}[t!]
 \centering
 \includegraphics[width=1.0\textwidth]{media/mg}
-\caption[The landscape of modified gravity theories.]{\label{fig:mg}
+\caption[Landscape of modified gravity theories.]{\label{fig:mg}
 The landscape of modified gravity theories is very large.
 This figure shows only a region in the space of theories biased towards those that are relevant for cosmology.
 It is created by Tessa Baker, and is reused with permission from \url{https://www.tessabaker.space/linksthings.html}.
@@ -2166,12 +2165,11 @@ between baryons, dark matter and dark energy,
 and shows how the symbolic-numeric interface and approximation-free structure makes this easy in SymBoltz.
 
 \begin{table}[t]
-\caption[Example works of interactions between pairs of species that have been implemented in \EB{} codes between pairs of species.]{%
+\caption[Examples of interactions implemented in \EB{} codes.]{\label{tab:interactions}
 Examples of interactions that have been implemented in \EB{} codes between pairs of species:
 photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark matter (DM), dark radiation (DR) and dark energy (DE).
 Only baryon--photon interactions are part of the standard \LCDM{} model.
 }
-\label{tab:interactions}
 \centering
 \small % TODO: \normalsize?
 \setlength{\tabcolsep}{2pt}
@@ -2425,14 +2423,13 @@ and there are two different ways of handling it.
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=0.8\textwidth]{media/approximations}
-\caption{%
+\caption[Approximation schemes in \EB{} codes.]{\label{fig:approximations}
 Validity regions in conformal time $\tau$ and wavenumber $k$ of the
 the tight coupling approximation (TCA),
 radiation streaming approximation (RSA) and
 ultra-relativistic fluid approximation (UFA)
 in CLASS for some fiducial cosmological parameters
 \cite{blasCosmicLinearAnisotropy2011c}.}
-\label{fig:approximations}
 \end{figure}
 
 Standard explicit ODE methods, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.%
@@ -2722,11 +2719,10 @@ For example, an \EB{} code takes in cosmological parameters $p = \{h, \Omega_{b0
 \begin{figure}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{media/ad_error}
-\caption{%
+\caption[Finite difference error of matter power spectrum gradients in SymBoltz.]{\label{fig:fd}
 Error of one-sided and two-sided finite difference derivatives of the matter power spectrum $\pdv{P(k; \mathbf{p})}/{p_i}$ from SymBoltz as a function of the step size $\epsilon$ for each cosmological parameter $p_i$ in the legend.
 The error is computed relative to the corresponding gradient with automatic differentiation.}
 %$p = h, \Omega_{c0}, \Omega_{b0}, N_\mathrm{ur}, M_\nu, Y_\mathrm{He}, T_{\gamma 0}, w_0, w_a, ns, \log(10^{10} A_s)$}
-\label{fig:fd}
 \end{figure}
 
 Finite differences is the easiest way of computing derivatives of an arbitrary program.
@@ -2751,11 +2747,10 @@ which produce numerical noise due to ODE solvers, interpolation, quadrature and 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\textwidth]{media/ad_runtime}
-\caption{%
+\caption[Automatic differentiation performance of the matter power spectrum in SymBoltz.]{\label{fig:ad_performance}
 The performance of automatic differentiation compared to one-sided and two-sided finite differences
 for computing the gradient of the matter power spectrum $P(k)$ with respect to the first $N$ parameters in \cref{fig:fd} in SymBoltz version 2.0.
 }
-\label{fig:ad_performance}
 \end{figure}
 
 Automatic differentiation avoids these issues by \enquote{opening the black box}.
@@ -2824,12 +2819,12 @@ which are writted in Fortran and C that are traditional ahead-of-time (AOT) comp
 \begin{figure}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{media/Pkz_sensitivity}
-\caption{Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
+\caption[Gradients of the matter power spectrum from automatic differentiation in SymBoltz.]{\label{fig:ad_evolution}
+Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
 This is a recreation of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
 but in SymBoltz instead of DISCO-EB, to show that both codes can compute similar sensitivities.
 The plots show how the codes effectively evolve not values, but gradients of the matter power spectrum over time,
 and can be used in this form as a way to learn how it is influenced by different cosmological parameters.}
-\label{fig:ad_evolution}
 \end{figure}
 
 SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \cite{revelsForwardModeAutomaticDifferentiation2016}.
@@ -2844,8 +2839,8 @@ In addition, \cref{fig:ad_evolution} shows how it can be used to evolve the sens
 \label{sec:spectral}
 
 \begin{table}[t]
-\caption{Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
-\label{tab:spectral}
+\caption[Local versus spectral methods in approximation-based versus approximation-free \EB{} codes.]{\label{tab:spectral}
+Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
 \centering
 \def\arraystretch{1.5}
 \begin{tabular}{lcc}
@@ -3009,10 +3004,10 @@ so we can go back and simply use the \EB{} codes from \cref{chap:lin}.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\textwidth]{media/bd_nonlin}
-\caption{Previous work modeled the nonlinear matter power spectrum from \BD{} gravity
+\caption[Nonlinear matter power spectra in \BD{} gravity from earlier work.]{\label{fig:bd_nonlin}
+Previous work modeled the nonlinear matter power spectrum from \BD{} gravity
 by re-calibrating nonlinear corrections from HMCODE to $N$-body simulations from RAMSES and using the COLA method.
 This figure is from \cite{joudakiTestingGravityCosmic2022a}.}
-\label{fig:bd_nonlin}
 \end{figure}
 
 Previous work has modeled the nonlinear matter power spectrum of \BD{} gravity
