@@ -128,7 +128,7 @@ Modern cosmology is largely a computational science.
 %When Edwin Hubble measured the distances to ... and fit it to $v=H_0 d$,
 %he could do the calculation with pen/paper .
 
-Today, the increasing data volume and precision of modern observations makes fully analytical modeling infeasible.
+Today, the increasing data volume and precision of modern observations make fully analytical modeling infeasible.
 Analytical work is used to formulate the laws of physics and the fundamental equations of cosmology,
 such as the Einstein and Boltzmann equations.
 However, they take the form of partial differential equations (PDEs) or ordinary differential equations (ODEs)
@@ -197,15 +197,15 @@ one obtains the first and second Friedmann equations:
 \end{align}
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
-which is sourced by the following \enquote{ingredients}.
+which are sourced by the following \enquote{ingredients}.
 
 \item \textbf{Dark energy}
-as a cosmological constant $\Lambda$ was first added by Einstein in his equation \eqref{eq:einstein_intro}
+as a cosmological constant $\Lambda$ was first added by Einstein in his equations \eqref{eq:einstein_intro}
 in order for them to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
-When Hubble observed that nearby galaxies are recessing and showed that the universe expands with time,
+When Hubble observed that nearby galaxies are receding and showed that the universe expands with time,
 Einstein famously erased it and called it his \enquote{biggest blunder}.
 However, it is now back in the equations to explain the acceleration \eqref{eq:fried2}
-of the expansion that has been found from supernova observations in the 1990s.
+of the expansion that was found from supernova observations in the 1990s.
 We move $\Lambda$ to the right side of the Einstein equations $G_{\mu\nu} = 8\pi T_{\mu\nu}$,
 and absorb it into $T_{\mu\nu}$ with $P = -\rho$.
 
@@ -224,8 +224,8 @@ and makes up around $5\%$ of the energy density today.
 \enquote{Baryons} in cosmology includes baryons, such as protons and neutrons, that make up the elements;
 but also leptons, such as electrons, which are not baryons, but nevertheless referred to as such by cosmologists.
 Baryons cluster like CDM, but unlike CDM the interacting baryon-photon plasma in the early universe
-creates outwards pressure that counteract collapse.
-The resulting baryon acoustic oscillations (BAO) leaves a detectable signature on the matter distribution and cosmic microwave background.
+creates outwards pressure that counteracts collapse.
+The resulting baryon acoustic oscillations (BAO) leave a detectable signature on the matter distribution and cosmic microwave background.
 
 \item \textbf{Photons}
 are massless and thus relativistic particles.
@@ -233,10 +233,10 @@ They interact with baryons through scattering off charged particles.
 In the early universe the temperature was so high that atoms were ionized and photons constantly scattered off electrons,
 but as the universe expanded and became cooler the electrons and ions combined and the universe became transparent to photons.
 Photons that were last scattered at this time have since traveled unimpeded through the universe and are observable as the cosmic microwave background today,
-which functions us a direct probe of early universe physics.
+which functions as a direct probe of early universe physics.
 This was first detected by Penzias and Wilson in 1964,
 and has now been refined with the Planck experiment.
-They made up a significant fraction of the energy budget in the early universe, but are negligible today.
+Photons made up a significant fraction of the energy budget in the early universe, but are negligible today.
 
 \item \textbf{Neutrinos}
 are massive but light particles in the standard model of particle physics.
@@ -260,7 +260,7 @@ that were later amplified by gravity into inhomogeneities.
 \caption[Hubble tension and preference for dynamical dark energy from DESI.]{\label{fig:tensions}
 \textbf{Left:}
 Increasingly precise observational probes of the early versus late universe
-has uncovered a discrepancy in the inferred value of the $H_0$ parameter of the \LCDM{} model
+have uncovered a discrepancy in the inferred value of the $H_0$ parameter of the \LCDM{} model
 called the \enquote{Hubble tension}
 \cite{perivolaropoulosChallengesCDMUpdate2022b}.
 \textbf{Right:}
@@ -309,7 +309,7 @@ which is a very fundamental assumption in both the \LCDM{} model and common exte
 
 \item
 Recent measurements from the DESI survey of the BAO feature imprinted in the LSS
-prefers time-varying models of dark energy when its equation of state is
+prefer time-varying models of dark energy when its equation of state is
 parameterized as a first-order Taylor expansion in the scale factor around its value today
 \cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}.
 This is shown in \cref{fig:tensions}.
@@ -318,13 +318,13 @@ This is shown in \cref{fig:tensions}.
 The DESI results also constrain the total neutrino mass by an \emph{upper} bound
 that is in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments.
 However, when the time-varying dark energy model is used instead of the \LCDM{} model,
-the constraints become compatible.
-\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
+the constraints become compatible
+\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}.
 \end{itemize}
 These and other discrepancies motivate research on modifying all parts of the cosmological model.
 We will consider some examples of modified models in \cref{sec:modifications}.
-Every such modification must be implemented into the software
-that we use for modifying the cosmological model.
+Every such modification must be implemented into the computer software
+that we use to simulate the cosmological model.
 
 \begin{figure}[t!]
 \centering
@@ -334,7 +334,7 @@ that we use for modifying the cosmological model.
 \hfill
 \includegraphics[height=7.2cm]{media/Cl}%
 }}
-\caption[Cosmic microwave background temperature fluctuations observed by Planck, and a matter power spectrum computed by SymBoltz.]{\label{fig:cmb}
+\caption[CMB temperature fluctuations observed by Planck, and a CMB power spectrum computed by SymBoltz.]{\label{fig:cmb}
 \textbf{Left:}
 The observed temperature fluctuations of the cosmic microwave background by Planck
 \cite{collaborationPlanck2018Results2020}.
@@ -392,7 +392,7 @@ which is the implementation of a new \EB{} code called SymBoltz
 \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.
 It is designed to make it easier to implement modified cosmological models,
 remove the need for approximation schemes that complicate the equations in other codes,
-and to support modern numerical methods such as automatic differentiation and spectral interpolation methods.
+and support modern numerical methods such as automatic differentiation and spectral interpolation methods.
 
 \begin{figure}[t!]
 \centering
@@ -418,7 +418,7 @@ for a \LCDM{} model computed by SymBoltz
 
 At sufficiently small distance scales and late times,
 the linear perturbation theory that underlies \EB{} codes is no longer sufficient.
-Here nonlinear effects from gravitational clustering becomes important.
+Here nonlinear effects from gravitational clustering become important.
 $N$-body codes are codes that simulate the nonlinear evolution of gravitational clustering
 by evolving $N$ matter particles in a box that interact with each other due to gravity.
 This is extremely expensive as $N$ grows and can take anywhere from minutes to months,
@@ -438,13 +438,13 @@ RAMSES \cite{teyssierCosmologicalHydrodynamicsAdaptive2002a} and
 AREPO \cite{weinbergerArepoPublicCode2020}.
 
 \enquote{Fast-but-approximate} codes sacrifice accuracy in order to achieve faster computational speeds.
-These codes usually neglect baryonic effects and consider only cold dark matter, which results in a simpler and elegant computational problem,
+These codes usually neglect baryonic effects and consider only cold dark matter, which results in a simpler and more elegant computational problem,
 and a fixed particle-mesh (PM) structure of the computational grid.
 Some codes employ approximations such as the COLA method \cite{tassevSolvingLargeScale2013b},
-which sacrifices accuracy at the very smallest scales in order to take much fewer time steps.
+which sacrifices accuracy at the very smallest scales in order to take far fewer time steps.
 Such methods are more appropriate for exploring dependence throughout parameter space,
-and their accuracy sacrifice is less of a downside in applications that study difference or ratios of an observable in two different universes.
-Some example of codes in this category are
+and their accuracy sacrifice is less of a downside in applications that study differences or ratios of an observable in two different universes.
+Some examples of codes in this category are
 L-PICOLA \cite{howlettLPICOLAParallelCode2015},
 its modified gravity generalization MG-PICOLA \cite{wintherCOLAScaledependentGrowth2017}
 that is now succeeded by
@@ -467,16 +467,16 @@ Yet it is often the case that the final output depends on the input in a relativ
 It then seems quite unnecessary to repeat similar computations many times by brute force,
 when the input-output dependence can be captured in a cheaper way.
 
-This is true for \EB{} codes and to an even greater extent $N$-body simulations
+This is true for \EB{} codes and to an even greater extent $N$-body simulations.
 For example, the power spectra at each $k$ and $l$ in \cref{fig:lss} and \cref{fig:cmb}
-responds smoothly to changes in each cosmological parameter.
+respond smoothly to changes in each cosmological parameter.
 The need for speed is further amplified by the use of Bayesian inference to estimate cosmological parameters from data.
-It uses Markov chain Monte Carlo (MCMC) methods must sample $10^4$--$10^6$ or more points in parameter space,
+It uses Markov chain Monte Carlo (MCMC) methods that must sample $10^4$--$10^6$ or more points in parameter space,
 and in principle the expensive codes must be run for every such sample.
 
 For these reasons a \enquote{sport} called emulation has developed in the cosmological literature.
 The goal is simply to deliver theoretical predictions
-with as high accuracy but little computational cost as possible
+with as high accuracy and low computational cost as possible
 using arbitrary \enquote{dirty tricks}.
 An \emph{emulator} refers to any method that reproduces (\enquote{emulates})
 the output of a (physically principled and expensive) function $\mathcal{O}(\mathbf{p})$
@@ -495,7 +495,7 @@ The most crucial insight is in my opinion the very simple property that observab
 are \emph{smooth} functions of the model parameters.
 As one perturbs the parameters $\mathbf{p}$ slightly,
 any well-defined observable function that we can detect in our universe should respond smoothly to it,
-so that the value of $\mathcal{O}$ and all of its derivatives (which are really just derived observables from $\mathcal{O}$) are continuous functions of $\mathbf{P}$.
+so that the value of $\mathcal{O}$ and all of its derivatives (which are really just derived observables from $\mathcal{O}$) are continuous functions of $\mathbf{p}$.
 This is a fundamental philosophical assumption at least in classical (non-quantum) theories of physics,
 and is what makes it possible to describe physics in the mathematical language of calculus and differential equations.
 
@@ -510,7 +510,7 @@ The expensive function is typically evaluated for a small number of sample point
 and then interpolation and regression methods are used to evaluate it cheaply at other points.
 A downside is that this training process must be repeated for every new cosmological model.
 Another challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space,
-but recent explosion of research in artificial intelligence and machine learning have made it feasible to emulate functions of
+but the recent explosion of research in artificial intelligence and machine learning has made it feasible to emulate functions of
 $O(10)$ cosmological parameters using neural networks, for example.
 In this field, the extent to which a function is smooth
 is a critical assumption that enables better interpolation methods.
@@ -529,7 +529,7 @@ Effort.jl \cite{boniciEffortjlFastDifferentiable2025},
 emulators for modified gravity simulations \cite{wintherEmulatorsNonlinearMatter2019a,maulandSesamePowerSpectrum2024a},
 and many more.
 
-When used as drop-in replacements for \EB{} codes wit high-precision settings in parameter inference calls,
+When used as drop-in replacements for \EB{} codes with high-precision settings in parameter inference calls,
 emulators can speed up theoretical predictions by up to $10^6 \times$
 and reduce the total MCMC runtime from days or weeks to seconds or minutes
 \cite[e.g.][]{boniciCapsejlEfficientAutodifferentiable2024}.
