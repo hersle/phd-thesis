@@ -197,7 +197,6 @@ one obtains the first and second Friedmann equations:
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
 which is sourced by the following \enquote{ingredients}.
-\TODO{figure of LSS survey?}
 
 \item \textbf{Dark energy}
 as a cosmological constant $\Lambda$ was first added by Einstein in his equation \eqref{eq:einstein_intro}
@@ -307,8 +306,25 @@ We will consider some examples of modified models in \cref{sec:modifications}.
 Every such modification must be implemented into the software
 that we use for modifying the cosmological model.
 
-\TODO{figure of CMB temperature map with power spectrum from SymBoltz}
-\TODO{figure of LSS survey with power spectrum from SymBoltz}
+\begin{figure}[t!]
+\centering
+\setlength{\fboxsep}{0pt}%
+\colorbox{black}{\makebox[\linewidth]{%
+\includegraphics[height=7.2cm]{media/cmb}%
+\hfill
+\includegraphics[height=7.2cm]{media/Cl}%
+}}
+\caption{\label{fig:cmb}
+\textbf{Left:}
+The observed temperature fluctuations of the cosmic microwave background
+\cite{collaborationPlanck2018Results2020}.
+\textit{Credit:} Damien P. George / ESA / Planck collaboration / \url{http://www.thecmb.org/}.
+\textbf{Right:}
+A theoretical power spectrum of temperature fluctuations $D_l$
+for a \LCDM{} model computed by SymBoltz
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.
+}
+\end{figure}
 
 \section{The computational tools of cosmology}
 
@@ -325,9 +341,10 @@ and are solved perturbatively around the FLRW metric \eqref{eq:flrw} for a given
 These equations must be modified depending on the cosmological model.
 The solutions of these equations are used to predict distance measures,
 power spectra for the spatial distribution of matter
+(as shown in \cref{fig:lss})
 and power spectra for the angular distribution of anisotropies in the cosmic microwave background
+(as shown in \cref{fig:cmb})
 and how this is influenced by gravitational lensing.
-\TODO{show fig gen with SymBoltz?}.
 %This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
 %but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
 
@@ -356,6 +373,26 @@ which is the implementation of a new \EB{} code called SymBoltz
 It is designed to make it easier to implement modified cosmological models,
 remove the need for approximation schemes that complicate the equations in other codes,
 and to support modern numerical methods such as automatic differentiation and spectral interpolation methods.
+
+\begin{figure}[t!]
+\centering
+\setlength{\fboxsep}{0pt}%
+\colorbox{black}{\makebox[\linewidth]{%
+\includegraphics[height=7.2cm]{media/lss}%
+\hfill
+\includegraphics[height=7.2cm]{media/Pk}%
+}}
+\caption{\label{fig:lss}
+\textbf{Left:}
+The observed distribution of galaxies observed by the Dark Energy Spectroscopic Instrument
+\cite{desicollaborationDataRelease12026}.
+\textit{Credit:} Claire Lamman / DESI collaboration / \url{https://www.desi.lbl.gov/photos/}.
+\textbf{Right:}
+A theoretical power spectrum of matter fluctuations $P(k)$
+for a \LCDM{} model computed by SymBoltz
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.
+}
+\end{figure}
 
 \subsection{Nonlinear \texorpdfstring{$\boldsymbol{N}$}{N}-body simulation codes}
 
@@ -411,7 +448,8 @@ It then seems quite unnecessary to repeat similar computations many times by bru
 when the input-output dependence can be captured in a cheaper way.
 
 This is true for \EB{} codes and to an even greater extent $N$-body simulations
-\TODO{example power spectra}.
+For example, the power spectra at each $k$ and $l$ in \cref{fig:lss} and \cref{fig:cmb}
+responds smoothly to changes in each cosmological parameter.
 The need for speed is further amplified by the use of Bayesian inference to estimate cosmological parameters from data.
 It uses Markov chain Monte Carlo (MCMC) methods must sample $10^4$--$10^6$ or more points in parameter space,
 and in principle the expensive codes must be run for every such sample.
