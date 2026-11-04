@@ -2768,11 +2768,12 @@ The method is numerically exact with no additional hyperparameters to tune
 While the program \eqref{eq:program} must be evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
 this is not required for the chain rule \eqref{eq:ad}.
 The Jacobian product is associative, so it can be evaluated in any order.
-This property gives rise to two modes of automatic differentiation:
+This property gives rise to two modes of automatic differentiation:%
+\footnote{Without loss of generality, we can always suppose that the first and last lines are the identity operations $f_1 = p$ and $f_N = f_{N-1}$ with identity Jacobians.}
 \begin{subequations}
 \begin{align}
-& \text{Forward-mode:} && \text{seed } \pdv{f_1}{p} = 1 \text{ and propagate } \pdv{f_i}{p} = J_i \cdot \pdv{f_{i-1}}{p} , \label{eq:ad_forward} \\
-& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{p} = 1 \text{ and propagate } \pdv{f_N}{p} = \pdv{f_{i+1}}{p} \cdot J_i . \label{eq:ad_backward}
+& \text{Forward-mode:} && \text{seed } \pdv{f_1}{f_1} = 1 \text{ and propagate } \pdv{f_i}{f_1} = J_i \cdot \pdv{f_{i-1}}{f_1} , \label{eq:ad_forward} \\
+& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{f_N} = 1 \text{ and propagate } \pdv{f_N}{f_{i-1}} = \pdv{f_N}{f_i} \cdot J_i . \label{eq:ad_backward}
 \end{align}
 \end{subequations}
 The seeds only state that the derivative of the input or output with respect to itself is $1$.
@@ -2792,9 +2793,9 @@ so the Taylor expansion of any function $f(z)$ on dual numbers is \emph{exact} t
 \begin{equation}
 f(x + \epsilon y) = f(x) + \epsilon \, y f^\prime(x).
 \end{equation}
-This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i-1}$ and derivative $f_{i-1}^\prime = \pdv{f_{i-1}}/{p}$ of the $i$-th line of code in the program \eqref{eq:program},
-then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $(i+1)$-th line by the forward chain rule \eqref{eq:ad_forward}.
-By starting at $i=0$ and evaluating the program with dual numbers,
+This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i-1}$ and derivative $f_{i-1}^\prime = \pdv{f_{i-1}}/{p}$ of the $(i-1)$-th line of code in the program \eqref{eq:program},
+then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $i$-th line by the forward chain rule \eqref{eq:ad_forward}.
+By starting with $f_1 = p + \epsilon$ at $i=1$ and evaluating the program with dual numbers,
 one accumulates both $F$ and $\pdv{F}/{p}$ at the final line $i=N$.
 
 This requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
