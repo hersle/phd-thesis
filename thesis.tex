@@ -972,7 +972,7 @@ we get:
 \begin{align}
 \dot{\Psi}_0 &= -k \frac{q}{\epsilon} \Psi_1 - \dot{\phi}\,\odv{\log f_0}{\log q} , \\
 \dot{\Psi}_1 &= \frac{k}{3} \frac{q}{\epsilon} \big(\Psi_0 - 2\Psi_2\big) - \frac{k}{3} \frac{\epsilon}{q} \psi \odv{\log f_0}{\log q} , \\
-\dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}\big(l \Psi_{l-1} - (l+1) \Psi_{l+1}\big) \qquad\quad (l \geq 2) .
+\dot{\Psi}_l &= \frac{k}{2l+1} \frac{q}{\epsilon}\big(l \Psi_{l-1} - (l+1) \Psi_{l+1}\big) , \quad (l \geq 2) .
 \end{align}
 \end{subequations}
 Note that the multipole expansion couples $l$ to just $l \pm 1$,
@@ -1181,7 +1181,8 @@ P_\gamma(\tau) &= \tfrac13 \, \rho_\gamma(\tau), \\
 \sigma_\gamma(\tau, k) &= \tfrac{1}{2} F_2 .
 \end{aligned}
 \end{equation}
-The $F_l$ and $G_l$ hierarchies are cut off at a finite $l = \lmax$
+The $\dot{F}_l$ and $\dot{G}_l$ equations are for $2 \leq l < \lmax$,
+and the hierarchies are cut off at a finite $l = \lmax$
 by assuming the analytical solutions $F_l \propto j_l(k\tau)$ and $G_l \propto j_l(k\tau)$
 that are approximately valid for free-streaming photons at sufficiently high $l$ \cite[section 5.3]{maCosmologicalPerturbationTheory1995a}.
 Due to the identity $j_l'(x) = (l\,j_{l-1}(x) - (l+1)\,j_{l+1}(x)) \, / \, (2l+1)$,
