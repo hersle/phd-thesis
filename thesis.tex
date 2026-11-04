@@ -54,6 +54,7 @@
 \newcommand\diff{\mathrm{d}}
 \newcommand\ini{\mathrm{ini}}
 \newcommand\LCDM{\ensuremath{\mathrm{\Lambda CDM}}}
+\newcommand\wowaCDM{\ensuremath{w_0 w_a \mathrm{CDM}}}
 \newcommand\EB{Einstein--Boltzmann}
 \newcommand\TODO[1]{\textcolor{red}{\textbf{TODO:} #1}}
 \newcommand\arxiv[1]{\href{https://arxiv.org/abs/#1}{arXiv: #1}}
@@ -251,6 +252,25 @@ Through quantum fluctuations, this created the initial perturbation seeds
 that were later amplified by gravity into inhomogeneities.
 \end{itemize}
 
+\begin{figure}[t!]
+\centering
+\includegraphics[height=5.25cm]{media/H0tension}%
+\hfill
+\includegraphics[height=5.35cm]{media/w0watension}%
+\caption{\label{fig:tensions}
+\textbf{Left:}
+Increasingly precise observational probes of the early versus late universe
+has uncovered a discrepancy in the inferred value of the $H_0$ parameter of the \LCDM{} model
+called the \enquote{Hubble tension}
+\cite{perivolaropoulosChallengesCDMUpdate2022b}.
+\textbf{Right:}
+Recent observations of baryon acoustic oscillations prefer a form of dynamical dark energy,
+here in the popular \wowaCDM{} extension of the standard model
+that parameterizes deviations $w_0 \neq -1$ and $w_a \neq 0$ from a cosmological constant
+\cite{collaborationDESIDR2Results2025}.
+}
+\end{figure}
+
 The \LCDM{} model has developed gradually,
 and is the best model we have come up with so far
 that simultaneously explains
@@ -275,7 +295,7 @@ but calculations show that it is off by at least 60 orders of magnitude
 Observations of the CMB (which depends mostly on early-universe physics)
 and of supernova distances (which depend mostly on late-universe physics)
 give incompatible values of the Hubble parameter $H_0 = H(t_0)$ today.
-This is called the \enquote{Hubble tension} and illustrated in \TODO{figure}.
+This is called the \enquote{Hubble tension} and illustrated in \cref{fig:tensions}.
 A similar tension exists for the amplitude of matter clustering from CMB versus LSS data,
 but is much less severe
 \cite{perivolaropoulosChallengesCDMUpdate2022b}.
@@ -290,8 +310,9 @@ which is a very fundamental assumption in both the \LCDM{} model and common exte
 \item
 Recent measurements from the DESI survey of the BAO feature imprinted in the LSS
 prefers time-varying models of dark energy when its equation of state is
-parameterized as a first-order Taylor expansion in the scale factor around its value today.
-\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
+parameterized as a first-order Taylor expansion in the scale factor around its value today
+\cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}.
+This is shown in \cref{fig:tensions}.
 
 \item
 The DESI results also constrain the total neutrino mass by an \emph{upper} bound
@@ -299,7 +320,6 @@ that is in tension with the \emph{lower} bound found from terrestrial neutrino o
 However, when the time-varying dark energy model is used instead of the \LCDM{} model,
 the constraints become compatible.
 \cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}
-\TODO{figure}
 \end{itemize}
 These and other discrepancies motivate research on modifying all parts of the cosmological model.
 We will consider some examples of modified models in \cref{sec:modifications}.
