@@ -1683,43 +1683,48 @@ which makes it convenient to implement modifications when they fit into this for
 
 \begin{table}[tb]
 \caption[Comparison of technical properties of \EB{} codes.]{%
-A comparison of various technical properties of traditional versus newer \EB{} codes.
-The colors indicate relative differences
-and should not be interpreted as \textcolor{green}{\enquote{good}}, \textcolor{yellow}{\enquote{neutral}} or \textcolor{red}{\enquote{bad}}.
-AD or FD means that the Jacobian is computed with automatic differentiation or finite differences, respectively.
-The citation count at the time of writing is looked up online from each code's main citation paper, as given in the text.
-${}^1$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^2$BDF methods are \enquote{A-stable} (and \enquote{L-stable}) only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order degrades in stiff regions.
-${}^3$Custom \texttt{BDF2} method specializing on linearity $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2018}.
-${}^4$Rosenbrock methods linearize $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{steinebachConstructionRosenbrockWanner2023}.
-${}^5$Sparsity found numerically and changes with approximations.
-${}^6$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
+A comparison of various technical properties of \EB{} codes
+related to how equations are specified,
+how stiff ODEs are handled,
+whether automatic differentiation is supported
+and how interpolation in $k$ and $l$ is done.
+Citation counts are looked up online from each code's main paper as of November 2026.
 }
 \label{tab:comparison}
-\centering
 \small
-\setlength{\tabcolsep}{2pt}
+\setlength{\tabcolsep}{1.5pt}
 \def\arraystretch{1.5}
+{\centering % center table, but not notes below
 \begin{tabular}{lllllll}
 \toprule
-& CAMB & CLASS & PyCosmo & \makecell[l]{DISCO-EB\\ABCMB${}^6$} & Bolt & SymBoltz \\
+& \textbf{CAMB} & \textbf{CLASS} & \textbf{PyCosmo} & \makecell[l]{\textbf{DISCO-EB}\\\textbf{ABCMB}${}^1$} & \textbf{Bolt} & \textbf{SymBoltz} \\
 \midrule
-Equation interface     & \cellcolor{yellow}Numeric     & \cellcolor{yellow}Numeric          & \cellcolor{green}Symbolic       & \cellcolor{yellow}Numeric          & \cellcolor{yellow}Numeric          & \cellcolor{green}Symbolic \\
+Equation interface     & Numeric                       & Numeric                            & Symbolic                        & Numeric                            & Numeric                            & Symbolic                  \\
 \midrule
-Best implicit solver   & \cellcolor{red}None           & \cellcolor{green}\texttt{ndf15}    & \cellcolor{green}\texttt{BDF2}  & \cellcolor{green}\texttt{Kvaerno5} & \cellcolor{green}\texttt{KenCarp4} & \cellcolor{green}\texttt{Rodas5P} \\
-Approximation-free     & \cellcolor{red}No             & \cellcolor{yellow}Almost${}^1$     & \cellcolor{green}Yes            & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
-Solver order (stable)  & \cellcolor{green}6            & \cellcolor{yellow}1--5 (2)${}^2$   & \cellcolor{yellow}2 (2)         & \cellcolor{green}5 (5)             & \cellcolor{green}4 (4)             & \cellcolor{green}5 (5) \\
-Newton iterations      & --                            & \cellcolor{red}Yes                 & \cellcolor{green}No${}^3$       & \cellcolor{red}Yes                 & \cellcolor{red}Yes                 & \cellcolor{green}No${}^4$ \\
-Jacobian method        & --                            & \cellcolor{red}$O(N)$ FD           & \cellcolor{green}$O(1)$ anal.   & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{yellow}$O(N)$ AD        & \cellcolor{green}$O(1)$ anal. \\
-Jacobian sparsity      & --                            & \cellcolor{yellow}Changes${}^5$    & \cellcolor{green}Fixed          & \cellcolor{red}None                & \cellcolor{red}None                & \cellcolor{green}Fixed \\
+Implicit solver        & None                          & \texttt{ndf15}                     & \texttt{BDF2}                   & \texttt{Kvaerno5}                  & \texttt{KenCarp4}                  & \texttt{Rodas5P}                  \\
+Approximations         & Yes                           & Optional${}^2$                     & No                              & No                                 & No                                 & No                  \\
+Solver order           & 6                             & 1--5 (2)${}^3$                     & 2                               & 5                                  & 4                                  & 5                     \\
+Per-step solve         & --                            & Nonlinear                          & Linear${}^4$                    & Nonlinear                          & Nonlinear                          & Linear${}^5$                  \\
+Jacobian method        & --                            & Fin. diff.                         & Analytical                      & Auto. diff.                        & Auto. diff.                        & Analytical                  \\
+Jacobian sparsity      & --                            & Changes${}^6$                      & Fixed                           & Dense${}^7$                        & Dense                              & Fixed                  \\
+%Jacobian calls         & --                            & Reused                             & Every step                      & Reused                             & Reused                             & Every step \\
 \midrule
-Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
+Differentiable         & No                            & No                                 & No                              & Yes                                & Yes                                & Yes                  \\
 \midrule
-Interpolation $(k, l)$ & \cellcolor{yellow}Cub. spl.   & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub. spl.        & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
+Interpolation $(k, l)$ & Cub. spl.                     & Cub. spl.                          & Cub. spl.                       & Cub. spl.                          & Linear                             & Chebyshev                  \\
 \midrule
-Maturity (citations)   & \cellcolor{green}6935         & \cellcolor{green}3429              & \cellcolor{yellow}43            & \cellcolor{red}31/5                & \cellcolor{red}Unpub.              & \cellcolor{red}6 \\
+Citations              & 6960                          & 3459                               & 43                              & 33/6                               & --                                 & 7                \\
 \bottomrule
-\end{tabular}
+\end{tabular}\par} % \par inside the group so the centering applies to the table
+\smallskip
+\noindent\footnotesize
+${}^1$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
+${}^2$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
+${}^3$BDF/NDF methods are unconditionally \enquote{A-stable} only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order can degrade in stiff regions.
+${}^4$Custom \texttt{BDF2} method that assumes linear $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2018} and needs $\mathbf{J}$ every time step.
+${}^5$Rosenbrock methods linearize $\mathbf{f}$ and need $\mathbf{J}$ every time step \cite{steinebachConstructionRosenbrockWanner2023}.
+${}^6$Sparsity found numerically and changes with approximations.
+${}^7$Diffrax does not support sparse Jacobians at the time of writing (\url{https://github.com/patrick-kidger/diffrax/issues/545}).
 \end{table}
 
 \subsubsection{SymBoltz}
@@ -2848,8 +2853,8 @@ Best-case convergence of local versus spectral numerical methods in \EB{} codes 
 \toprule
 & \makecell{\textbf{Approximation-based} \\ (e.g. CAMB, CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz, PyCosmo)} \\
 \midrule
-\textbf{Local methods}    & \cellcolor{yellow}Algebraic convergence & \cellcolor{yellow}Algebraic convergence \\
-\textbf{Spectral methods} & \cellcolor{red}Degraded convergence     & \cellcolor{green}Exponential convergence \\
+\textbf{Local methods}    & Algebraic convergence                   & Algebraic convergence                   \\
+\textbf{Spectral methods} & Degraded convergence                    & Exponential convergence                  \\
 \bottomrule
 \end{tabular}
 \end{table}
