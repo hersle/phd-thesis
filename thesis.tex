@@ -404,25 +404,37 @@ in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 
 \subsection{Emulators and interpolation methods}
 
-\TODO{happens quite often that we have a long function for computing something from physically accurate simulations, yet the dependence on the output of the input is relatively simple.
-has developed a \enquote{sport} of emulators, using whatever (dirty) tricks necessary to approximate the function with as few samples as possible.}
+It happens quite often in physics and cosmology that we have a way of computing or simulating
+something from physically principled equations that is very computationally expensive.
+Yet it is often the case that the final output depends on the input in a relatively smooth and \enquote{boring} way.
+It then seems quite unnecessary to repeat similar computations many times by brute force,
+when the input-output dependence can be captured in a cheaper way.
 
-\EB{} and, to a much greater extent, $N$-body simulations are expensive to run.
-To estimate cosmological parameters using Bayesian inference,
-Markov chain Monte Carlo (MCMC) methods need to sample $10^4$--$10^6$ points in parameter space and in principle run these codes for every sample.
-It is therefore very common to \emph{emulate} the output of expensive computations.
+This is true for \EB{} codes and to an even greater extent $N$-body simulations
+\TODO{example power spectra}.
+The need for speed is further amplified by the use of Bayesian inference to estimate cosmological parameters from data.
+It uses Markov chain Monte Carlo (MCMC) methods must sample $10^4$--$10^6$ or more points in parameter space,
+and in principle the expensive codes must be run for every such sample.
 
-Generally speaking, an emulator refers to \emph{any} method that reproduces or \enquote{imitates} the output of a physically principled and expensive function $\mathcal{O}(\mathbf{p})$ of parameters $\mathbf{p}$ using a cheap surrogate model:
+For these reasons a \enquote{sport} called emulation has developed in the cosmological literature.
+The goal is simply to deliver theoretical predictions
+with as high accuracy but little computational cost as possible
+using arbitrary \enquote{dirty tricks}.
+An \emph{emulator} refers to any method that reproduces (\enquote{emulates})
+the output of a (physically principled and expensive) function $\mathcal{O}(\mathbf{p})$
+of parameters $\mathbf{p}$ using a cheap surrogate model:
 \begin{equation}
 \mathbf{p} \,\,\,\to\,\,\, \mathrm{???} \,\,\,\to\,\,\, \mathcal{O} .
 \end{equation}
-\emph{How} an emulator works internally (???) is of secondary importance.
+\emph{How} an emulator works internally (???) is only of secondary importance.
 The most important point is that the result $\mathcal{O}$ correctly matches the target function within some given tolerance,
 and that the evaluation (???) is as fast as possible using whatever means necessary.
 
 Perhaps pedantically and philosophically, how can we be sure that a \enquote{black box} produces correct results when we have no idea what it does?
 And how do we reconcile this with our standards for validation, transparency and explainable methods in research?
-The most crucial insight is in my opinion the very simple property that observables in our own universe and physical models are \emph{smooth} functions of the parameters.
+The most crucial insight is in my opinion the very simple property that observables in physical models
+(ignoring quantum mechanical effects)
+are \emph{smooth} functions of the model parameters.
 As one perturbs the parameters $\mathbf{p}$ slightly,
 any well-defined observable function that we can detect in our universe should respond smoothly to it,
 so that the value of $\mathcal{O}$ and all of its derivatives (which are really just derived observables from $\mathcal{O}$) are continuous functions of $\mathbf{P}$.
