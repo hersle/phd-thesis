@@ -562,10 +562,10 @@ To this end,
 the majority of my work has been invested
 in developing a new \EB{} solver named SymBoltz.
 
-\Cref{paper:symboltz} in this thesis describes the initial implementation of SymBoltz;
-including how it is made easier for users to modify the equations through a mixed symbolic-numeric interface,
-handle stiffness with implicit ODE solvers instead of deriving complicated approximations of the equations,
-and support new numerical methods such as automatic differentiation for obtaining accurate gradients of its output.
+\Cref{paper:symboltz} in this thesis describes the initial implementation of SymBoltz,
+including how it makes it easier for users to modify the equations through a mixed symbolic-numeric interface,
+handles stiffness with implicit ODE solvers instead of deriving complicated approximations of the equations,
+and supports new numerical methods such as automatic differentiation for obtaining accurate gradients of its output.
 
 \Cref{paper:chebyshev} shows how SymBoltz can make use of more efficient interpolation schemes due to the smoothness of its approximation-free output.
 Interpolation is very important to reduce the computational work inside these codes.
@@ -712,7 +712,7 @@ We can now write down the perturbed FLRW metric in the Newtonian gauge:
 \label{sec:fourier}
 
 When we do linear perturbation theory
-on a homogeneous and isotropic background
+on a homogeneous and isotropic background,
 every perturbation equation we encounter will come in the form
 \begin{equation}
 %c(\tau) \, \partial_\tau^{n_\tau} \, \partial_x^{n_x} \, \partial_y^{n_y} \, \partial_z^{n_z} \, \deltaf(\tau, \mathbf{x}) ,
@@ -751,7 +751,7 @@ the corresponding equation for $\deltaf(\tau, \mathbf{k})$ becomes
 \label{eq:pert_fourier}
 \end{equation}
 This is a set of ordinary differential equations (ODEs) in time $\tau$ for each wavenumber $\mathbf{k}$,
-where different $\mathbf{k}$ enters \emph{independently}.
+where different $\mathbf{k}$ enter \emph{independently}.
 This decoupling happens due to linearity (one $\deltaf$ per term)
 and homogeneity ($C_i(\tau)$ independent of $\mathbf{x}$).
 Then only one $\mathbf{k}$-integral is inserted per term,
@@ -1081,7 +1081,7 @@ A \enquote{fluid} refers to a species where the $q$-dependence is integrated out
 sound speed $\delta P/\delta \rho$ and shear $\sigma$.
 For example, for standard species with fluid descriptions,
 $w$ is a constant or simple function of time,
-$\delta P = w$ and $\sigma = 0$
+$\delta P/\delta\rho = w$ and $\sigma = 0$
 (see \cref{sec:eb_full}).
 This effectively truncates the hierarchy at $l \leq 1$ or $l \leq 2$ (if $\sigma$ is evolved).
 %The fluid approximation works well for cold dark matter and baryons, for example.
@@ -1090,17 +1090,17 @@ This effectively truncates the hierarchy at $l \leq 1$ or $l \leq 2$ (if $\sigma
 \subsection{Fully coupled \EB{} system}
 \label{sec:eb_full}
 
-The fundamentals of everything in the \EB{} system is given by \cref{sec:einstein,sec:boltzmann}.
+The fundamentals of everything in the \EB{} system are given by \cref{sec:einstein,sec:boltzmann}.
 However, there are several nuances in the treatment of each species that would be far too lengthy to include in this thesis,
 such as the detailed treatment of interactions.
-Ultimately, the \LCDM{} results in a large system of ODEs and algebraic relations that must be evolved in time,
+Ultimately, the \LCDM{} model results in a large system of ODEs and algebraic relations that must be evolved in time,
 as I highlight here.
 
 \subsubsection{Gravity (\texorpdfstring{$G$}{G})}
 Gravity is described by the Einstein equations of General Relativity (as in \cref{sec:einstein}).
 The two background Friedmann equations \eqref{eq:fried} are redundant equations for $a$;
 it is most common to use the square root of the 1st equation \eqref{eq:fried1} as a first order ODE.
-Similarly, the four perturbed equations \eqref{eq:pertein} are redunant for $\phi$ and $\psi$;
+Similarly, the four perturbed equations \eqref{eq:pertein} are redundant for $\phi$ and $\psi$;
 it is most common to integrate the first order ODE \eqref{eq:pertein1} for $\dot{\phi}$
 and determine $\psi$ algebraically from the constraint \eqref{eq:pertein4}.
 These equations are sourced by the total $\rho$, $P$, $\delta\rho$ and $(\rho+P)\sigma$.
@@ -1160,13 +1160,13 @@ which would significantly complicate this list if they were included.
 \subsubsection{Photons (\texorpdfstring{$\gamma$}{gamma})}
 
 Photons are massless and therefore described by a relativistic $l$-hierarchy \eqref{eq:hierarchy_l}.
-However, taking their polarization into account results in the evolution of two such hierarchies $F_l$ and $G_l$ \cite[section 5.5][]{maCosmologicalPerturbationTheory1995a},
-and their interactions with baryons adds collision terms proportional to $\dot\kappa$:
+However, taking their polarization into account results in the evolution of two such hierarchies $F_l$ and $G_l$ \cite[section 5.5]{maCosmologicalPerturbationTheory1995a},
+and their interaction with baryons adds collision terms proportional to $\dot\kappa$:
 \begin{equation}
 \label{eq:eb_photons}
 \begin{aligned}
 \rho_\gamma(\tau) &= \rho_\gamma(\tau_0) \, a^{-4}, \\
-P(\tau) &= \tfrac13 \, \rho_\gamma(\tau), \\
+P_\gamma(\tau) &= \tfrac13 \, \rho_\gamma(\tau), \\
 \dot{F}_0(\tau, k) &= -k \, F_1 + 4\dot{\phi} , \\
 \dot{F}_1(\tau, k) &= \frac{k}{3}\,\big(F_0 - 2 F_2\big) + \frac{4}{3}\,k\psi + \frac43 \, \frac{\dot\kappa}{k} \left( \theta_b - \theta_\gamma \right) , \\
 \dot{F}_l(\tau, k) &= \frac{k}{2l+1}\,\big(l F_{l-1} - (l+1) F_{l+1}\big) - \dot\kappa \, \big(F_l - \tfrac{1}{10}\delta_{l2}\Pi\big) , \\
@@ -1287,7 +1287,7 @@ Thus, the perturbations in the \EB{} system are best interpreted as transfer fun
 from the early to the late universe.
 
 Our focus here is on the high-level \EB{} equations,
-so we do not go in great detail on initial conditions here.
+so I do not go into great detail on initial conditions here.
 
 \section{\EB{} codes}
 \label{sec:eb_codes}
@@ -1295,7 +1295,7 @@ so we do not go in great detail on initial conditions here.
 The core task of an \EB{} code is to solve the entire \EB{} system of ODEs \eqref{eq:eb}.
 Afterwards, a range of post-processing steps may or may not be performed,
 in order to compute observables such as distances, matter power spectra and CMB power spectra.
-The order of computational operations are
+The order of computational operations is
 \cite[e.g.][]{callinHowCalculateCMB2006b,lesgourguesCosmicLinearAnisotropy2011d,wintherscoming}:
 \begin{enumerate}
 \item \textbf{Background ODEs} are integrated in $\tau$ for variables $u(\tau)$ that depend only on $\tau$
@@ -1402,7 +1402,7 @@ C_l^{AB} \propto \int \diff{k}\,P_0(k)\,k^2\,\Delta_l^A(k)\,\Delta_l^B(k) .
 The perturbation ODEs step in time independently of the background solution and must therefore query it at arbitrary $\tau$,
 so the background solution is splined and provided as interpolated input to the perturbations.
 The line-of-sight integrals $\Delta_l(k)$ oscillate rapidly in $k$
-and must be computed on a much denser $k$-grid than what is required resolve $S^A(\tau,k)$ from the perturbations,
+and must be computed on a much denser $k$-grid than what is required to resolve $S^A(\tau,k)$ from the perturbations,
 so the perturbations are solved on a coarser $k$-grid and used to interpolate $S^A(\tau, k)$ to a finer $k$-grid for line-of-sight integration.
 The final power spectra in either $k$ or $l$ are wanted at arbitrary values,
 so they are computed for as few $k$ and $l$ as possible and then interpolated.
@@ -1415,7 +1415,7 @@ Other post-processing steps of \EB{} codes can include \enquote{boosting} in ord
 which is implemented in some \EB{} codes using halo modeling tools calibrated to $N$-body simulations
 (e.g. Halofit \cite{smithStableClusteringHalo2003b,takahashiRevisingHalofitModel2012a}
 and HMCODE \cite{meadAccurateHaloModel2015,meadAccurateHalomodelMatter2016,meadHMcode2020ImprovedModelling2021a}).
-I reiterate, however, that the core task of an \EB{} remains the integration of the background, perturbations and line-of-sight integrals presented above.
+I reiterate, however, that the core task of an \EB{} code remains the integration of the background, perturbations and line-of-sight integrals presented above.
 
 \subsection{History of \EB{} codes}
 \label{sec:history}
@@ -1553,7 +1553,7 @@ The code was written in Fortran and was later succeeded by CMBFAST.
 \subsubsection{CMBFAST}
 CMBFAST\footnote{\url{https://web.archive.org/web/20050308195517/cfa-www.harvard.edu/~mzaldarr/CMBFAST/cmbfast.html}} \cite{seljakLineSightApproach1996}
 descends from COSMICS and is the code that introduced the line-of-sight integration method \eqref{eq:los}.
-This sped up the computation by two orders of magnitude at without significant accuracy loss,
+This sped up the computation by two orders of magnitude without significant accuracy loss,
 because it allows $\lmax \approx 10$ instead of $\lmax \approx 1500$ in the perturbation ODEs for each $k$,
 and because the perturbation ODEs can be solved on a coarser $k$-grid before interpolation of the source function $S(\tau, k)$.
 It was first made for flat universes,
@@ -1567,7 +1567,7 @@ The code later evolved into CAMB and CMBEASY.
 CAMB\footnote{\url{https://camb.info/} and \url{https://github.com/cmbant/CAMB}} \cite{lewisEfficientComputationCMB2000a,lewisCAMBV2Cosmological2026a}
 is built on CMBFAST and is one of the two most established codes in the cosmological community today, alongside CLASS.
 It reimplemented CMBFAST in a new \enquote{1+3 covariant formalism} that evolves gauge-independent covariant variables relative to some four-velocity \cite{challinorCosmicMicrowaveBackground1999}.
-Thus, CAMB's conventions departs somewhat from the gauge-dependent formalism in \cite{maCosmologicalPerturbationTheory1995a}.
+Thus, CAMB's conventions depart somewhat from the gauge-dependent formalism in \cite{maCosmologicalPerturbationTheory1995a}.
 Its first release targeted the implementation of closed geometries in the line-of-sight integral,
 and appeared on arXiv only one day before the corresponding extension of CMBFAST \cite{lewisEfficientComputationCMB2000a,zaldarriagaCMBFASTSpatiallyClosed2000}.
 CAMB was integrated with the parameter extraction code CosmoMC \cite{lewisCosmologicalParametersCMB2002},
@@ -1606,7 +1606,7 @@ and thus works as an independent cross-check of CAMB.
 The two agree to $0.01\%$ with high-precision settings \cite{lesgourguesCosmicLinearAnisotropy2011e}.
 CLASS was made to be more flexible and simpler to modify than CAMB and CMBFAST,
 and its modules $\texttt{input} \to \texttt{background} \to \texttt{thermodynamics} \to \texttt{perturbations} \to \ldots \to \texttt{output}$
-directly mirrors the computational structure of the \EB{} problem in \cref{sec:eb_codes}.
+directly mirror the computational structure of the \EB{} problem in \cref{sec:eb_codes}.
 It offers very fine-grained control for tuning approximation schemes and precision parameters
 in order to control the precision-performance tradeoff.
 It is also the first code that makes it possible to disable some approximation schemes
@@ -1715,7 +1715,7 @@ Jacobian sparsity      & --                            & \cellcolor{yellow}Chang
 \midrule
 Differentiable         & \cellcolor{red}No             & \cellcolor{red}No                  & \cellcolor{red}No               & \cellcolor{green}Yes               & \cellcolor{green}Yes               & \cellcolor{green}Yes \\
 \midrule
-Interpolation $(k, l)$ & \cellcolor{yellow}Cub spl.    & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub. spl.        & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
+Interpolation $(k, l)$ & \cellcolor{yellow}Cub. spl.   & \cellcolor{yellow}Cub. spl.        & \cellcolor{yellow}Cub. spl.     & \cellcolor{yellow}Cub. spl.        & \cellcolor{red}Linear              & \cellcolor{green}Chebyshev \\
 \midrule
 Maturity (citations)   & \cellcolor{green}6935         & \cellcolor{green}3429              & \cellcolor{yellow}43            & \cellcolor{red}31/5                & \cellcolor{red}Unpub.              & \cellcolor{red}6 \\
 \bottomrule
@@ -1750,8 +1750,8 @@ SymBoltz also features interpolation in $k$ and $l$ using Chebyshev polynomials,
 which can converge faster than cubic splines used in other codes
 due to the smooth output of the approximation-free equations.
 Like Bolt, SymBoltz is written in the Julia programming language,
-which strives to resolve the two-language problem that is prevalent in cosmology \cite{bezansonJuliaFreshApproach2017},
-(as seen by the common need of creating Python wrappers around C and Fortran codes).
+which strives to resolve the two-language problem that is prevalent in cosmology \cite{bezansonJuliaFreshApproach2017}
+(as seen by the common need for creating Python wrappers around C and Fortran codes).
 The design of SymBoltz is elaborated upon in \cref{sec:symboltz}.
 
 \subsubsection{Comparison of selected codes}
@@ -1849,13 +1849,13 @@ AxionCAMB \cite{hlozekSearchUltralightAxions2015} and
 AxiCLASS \cite{poulinCosmologicalImplicationsUltralight2018}.
 Here a massive scalar field $\varphi$ must be evolved in a \KG{} equation
 $\ddot{\varphi} + 2 \calH \dot\varphi + a^2 m^2 \varphi = 0$ in the background.
-In the perturbations, the \KG{} equations are oscillatory, stiff and expensive to solve exactly,
+The perturbed \KG{} equation is oscillatory and can be stiff and expensive to solve exactly,
 but its energy-momentum contributions can be mapped exactly onto
 a generalized dark matter (GDM) fluid description \cite{huStructureFormationGeneralized1998},
 which is easier to evolve in time.
 Depending on their mass $m$,
-Axions mimics dark energy at early times when $H \gg m$ with slow rolling,
-and transitions to dark matter at late times when $H \lesssim m$ and the field starts to oscillate around the minimum of the potential.
+axions mimic dark energy at early times when $H \gg m$ with slow rolling,
+and transition to dark matter at late times when $H \lesssim m$ and the field starts to oscillate around the minimum of the potential.
 
 Non-cold dark matter (NCDM) models
 relax the assumptions that dark matter is cold (CDM) with non-relativistic velocity and negligible velocity dispersion.
@@ -1876,7 +1876,7 @@ Decaying dark matter is another class of models,
 where dark matter gradually decays into some species.
 For example, some models assume that dark matter (a fluid with $w=0$) decays with rate $\Gamma$
 into an unknown \enquote{dark radiation} (DR) component (a relativistic fluid with $w=1/3$ which is neither photons nor neutrinos)
-\cite[e.g]{audrenStrongestModelindependentBound2014a,poulinFreshLookLinear2016,bringmannConvertingNonrelativisticDark2018}.
+\cite[e.g.][]{audrenStrongestModelindependentBound2014a,poulinFreshLookLinear2016,bringmannConvertingNonrelativisticDark2018}.
 This requires new and modified continuity equations
 \begin{equation}
 \dot\rho_\mathrm{DM} = -3\calH \rho_\mathrm{DM} - a \, \Gamma \rho_\mathrm{DM},
@@ -2013,7 +2013,7 @@ and is both more accurate and faster than RECFAST.
 %\TODO{rename $\alpha^{(2)} \to \alpha_B$ in Peebles eq.?}
 
 \textbf{Reionization} models modify the late-time ionization history of the universe,
-when radiation from the first stars and galaxies reionize the neutral atoms after recombination.
+when radiation from the first stars and galaxies reionizes the neutral atoms after recombination.
 It is difficult to describe these processes from first principles with linear theory,
 so many reionization models come in parameterized forms, such as
 instantaneous step function models \cite{seljakLineSightApproach1996,bruscoliHowReionizationEpoch2002},
@@ -2027,10 +2027,10 @@ and redshift-asymmetric exponential models \cite{douspisNewParameterizationReion
 %x_e = \begin{cases} 1-a^{-3} & \text{if $a<a_p$} \\ e^{-\lambda/a} & \text{if $a \geq a_p$} \end{cases}
 %\end{equation}
 \begin{equation}
-x_e(z) = f \left(\frac{z_{\rm early} - z}{z_{\rm early} - z_{\rm end}}\right)^{\alpha} .
+x_e(z) = f \left(\frac{z_{\rm early} - z}{z_{\rm early} - z_{\rm end}}\right)^{\alpha} ,
 \end{equation}
 and model-independent principal component analyses \cite{huModelIndependentReionizationObservables2003,mortonsonReionizationConstraintsFiveyear2008,heinrichCompleteReionizationConstraints2017a}.
-A different type of models inject additional \enquote{exotic energy} from non-standard models into the differential baryon equations \eqref{eq:eb_baryons},
+A different type of models injects additional \enquote{exotic energy} from non-standard models into the differential baryon equations \eqref{eq:eb_baryons},
 which are modified in the schematic form
 \cite{poulinDarkMatterAnnihilations2015,stockerExoticEnergyInjection2018}
 \begin{equation}
@@ -2068,7 +2068,7 @@ It is created by Tessa Baker, and is reused with permission from \url{https://ww
 }
 \end{figure}
 
-Just like Newton's laws of gravity and motion works great in many cases,
+Just like Newton's laws of gravity and motion work great in many cases,
 it could be the case that Einstein's theory of \GR{} is a limit or approximation to the true theory of gravity.
 In principle, modified gravity theories also explain phenomena
 such as galaxy rotation curves, enhanced clustering and the late-time acceleration
@@ -2084,10 +2084,10 @@ with the phenomenological parameterizations
 \label{eq:mg}
 \begin{align}
 k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
-k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} .
+k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} ,
 \end{align}
 \end{subequations}
-with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\eta(a, k)$.
+with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\gamma(a, k)$.
 Derivatives like $\dot\phi$ are still needed by the continuity equation \eqref{eq:pert_cont},
 and must be found by differentiating the above expressions.
 
@@ -2095,7 +2095,7 @@ $\mathcal{H}$-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheor
 hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a}
 implement general classes of modified gravity theories.
 For example, they both support the popular class of Horndeski theories.
-This is the most general class theories with second order equations of motion
+This is the most general class of theories with second order equations of motion
 for a metric tensor $g_{\mu\nu}$ and scalar field $\varphi$.
 A Horndeski theory is specified by symbolic expressions for four free functions
 $G_2(\varphi, X)$, $G_3(\varphi, X)$, $G_4(\varphi, X)$ and $G_5(\varphi, X)$
@@ -2106,7 +2106,7 @@ so the acceleration equation must be integrated instead with \enquote{constraint
 The perturbed Einstein equations are also modified and must be solved together with a perturbed \KG{} equation.
 The coefficients in the perturbation equations are given in terms of four general functions
 $\alpha_K(\tau)$, $\alpha_B(\tau)$, $\alpha_T(\tau)$ and $\alpha_M(\tau)$,
-which have general expressions in terms of $G_i$ and its derivatives with respect to $\varphi$ and $X$
+which have general expressions in terms of $G_i$ and their derivatives with respect to $\varphi$ and $X$
 \cite{belliniMaximalFreedomMinimum2014a}.
 
 Modified gravity theories introduce new and modified background and perturbation equations.
@@ -2118,7 +2118,7 @@ They also introduce additional stiffness in the \EB{} system,
 which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
 
 \Cref{paper:bransdicke} and \cref{sec:bransdicke} in this thesis
-deals with \BD{} gravity, which is a Horndeski theory.
+deal with \BD{} gravity, which is a Horndeski theory.
 
 \subsection{Interacting models}
 \label{sec:modify_interacting}
@@ -2133,13 +2133,13 @@ In the language of the Boltzmann equation \eqref{eq:boltzmann},
 interactions correspond to a collision term $C \neq 0$ on the right side.
 In the language of energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$
 of the total $T_{\mu\nu} = \sum_a T_{\mu\nu}^a$ from every species $a$,
-it corresponds to allowing a flow $Q^\nu_a \neq$ into every species'
+it corresponds to allowing a flow $Q^\nu_a \neq 0$ into every species' energy-momentum:
 \begin{equation}
 \nabla_\mu T^{\mu\nu}_a = Q^\nu_a
 \qquad \text{such that} \qquad
-\sum_a Q^\nu_a = 0,
+\sum_a Q^\nu_a = 0.
 \end{equation}
-for example with $Q^\nu_a = \sum_b Q^\nu_{ab}$ and $Q^\nu_{ab} = -Q^\nu_{ba}$ for pairwise interactions $a \leftrightarrow b$.
+For example, pairwise interactions $a \leftrightarrow b$ can be specified as $Q^\nu_a = \sum_b Q^\nu_{ab}$ with $Q^\nu_{ab} = -Q^\nu_{ba}$.
 
 In \cref{tab:interactions}, I consider every pair of species in \LCDM{} with the addition of dark radiation (mentioned in \cref{sec:modify_dm}),
 and list examples of works that have implemented interactions between them by modifying \EB{} codes.
@@ -2162,7 +2162,7 @@ Dark radiation and neutrino interactions require additional or modified $l$-hier
 
 \Cref{paper:interactions} in this thesis also deals with the implementation of models with interactions
 between baryons, dark matter and dark energy,
-and shows how the symbolic-numeric interface and approximation-free structure makes this easy in SymBoltz.
+and shows how the symbolic-numeric interface and approximation-free structure make this easy in SymBoltz.
 
 \begin{table}[t]
 \caption[Examples of interactions implemented in \EB{} codes.]{\label{tab:interactions}
@@ -2414,7 +2414,7 @@ but also for oscillatory perturbations in the late universe even in the absence 
 \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
 Stiffness is a property of differential equations that is hard to define mathematically,
 but can arise when several timescales coexist in the equations.
-This is very common in cosmology where baryons and photon interact rapidly while the universe expands slowly, for example.
+This is very common in cosmology where baryons and photons interact rapidly while the universe expands slowly, for example.
 Understanding stiffness is crucial to numerically solving the \EB{} equations,
 and there are two different ways of handling it.
 
@@ -2425,7 +2425,7 @@ and there are two different ways of handling it.
 \includegraphics[width=0.8\textwidth]{media/approximations}
 \caption[Approximation schemes in \EB{} codes.]{\label{fig:approximations}
 Validity regions in conformal time $\tau$ and wavenumber $k$ of the
-the tight coupling approximation (TCA),
+tight coupling approximation (TCA),
 radiation streaming approximation (RSA) and
 ultra-relativistic fluid approximation (UFA)
 in CLASS for some fiducial cosmological parameters
@@ -2463,14 +2463,14 @@ Ideally, one should also validate approximation schemes against non-approximated
 which is impossible with explicit integrators.
 
 But suppose that one goes through all the trouble of correctly deriving, implementing, tuning and validating
-all the necessary approximation schemes for the \LCDM{} model for once, and then leans back to relax.
+all the necessary approximation schemes for the \LCDM{} model once, and then leans back to relax.
 In the next moment, someone enters the room and wants to implement an extended model
 that requires modifications of the equations.
 As exemplified several times in \cref{sec:modifications},
 it is not unlikely that the modifications will touch one or more of the approximation schemes
 and require the whole process to be repeated for the modified equations.
 Strictly speaking, this is true even for the modifications that do not touch the approximated equations directly,
-because the tuning and validation in principle depends on the whole coupled perturbation ODE.
+because the tuning and validation in principle depend on the whole coupled perturbation ODE.
 
 The literature on approximation schemes is very large.
 The TCA alone has been investigated many times
@@ -2611,11 +2611,11 @@ and must rebuild the sparsity pattern when the ODE changes due to approximation 
 \bigskip
 
 Due to all these technicalities,
-the speed and stability of implicit ODE solvers is highly problem-dependent
+the speed and stability of implicit ODE solvers are highly problem-dependent
 \cite[e.g.][Section IV.10]{hairerSolvingOrdinaryDifferential1996}!
 It is therefore practical to take a benchmark-oriented approach,
 where one makes use of a numerical ODE solver library that implements as many implicit solvers as possible
-and then benchmarks the performance on each of them on the equations at hand.
+and then benchmarks the performance of each of them on the equations at hand.
 This is one of the reasons that SymBoltz is written in Julia,
 which provides the OrdinaryDiffEq.jl\footnote{\url{https://github.com/SciML/OrdinaryDiffEq.jl/}} library
 with an enormous selection of implicit (and explicit) ODE solvers
@@ -2626,7 +2626,7 @@ We may then try several different combinations of ODE and linear system solvers
 by changing only a single line of code and benchmark their performance \emph{and} precision on the \EB{} equations.
 This is not easy to do in codes that include only one or a few hardcoded implicit solvers.
 It is through this testing that I have found the implicit \texttt{Rodas5P} method to work best
-\emph{in conjunction with} the analytical and sparse perturbations Jacobian.%
+\emph{in conjunction with} the analytical and sparse Jacobian of the perturbations.%
 \footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/benchmarks/}}
 
 I reiterate that it is \emph{the combination of} approximation-freeness and the symbolic-numeric interface
@@ -2765,7 +2765,7 @@ This requires a flexible programming language or compiler, such as Julia or JAX 
 The method is numerically exact with no additional hyperparameters to tune
 (but still depends on other precision parameters in the code, of course).
 
-While the program \eqref{eq:program} must evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
+While the program \eqref{eq:program} must be evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
 this is not required for the chain rule \eqref{eq:ad}.
 The Jacobian product is associative, so it can be evaluated in any order.
 This property gives rise to two modes of automatic differentiation:
@@ -2777,7 +2777,7 @@ This property gives rise to two modes of automatic differentiation:
 \end{subequations}
 The seeds only state that the derivative of the input or output with respect to itself is $1$.
 They are mathematically equivalent in theory,
-but differ how they are implemented and in performance characteristics in practice.
+but differ in how they are implemented and in performance characteristics in practice.
 A rule of thumb is that forward-mode is simpler to implement and performs better when there are many more outputs than inputs ($m \ll n$),
 for example for distances and power spectra at 100s--1000s of $\{z,k,l\}$ as a function of 1--10 cosmological parameters.
 Reverse-mode is more challenging to implement and can perform better when there are many more inputs than outputs ($m \gg n$),
@@ -2788,14 +2788,14 @@ SymBoltz currently only supports forward-mode, so I focus on that here.
 Similarly to how a complex number $z = x + i y$ is a pair of real numbers $x$ and $y$ defined with an algebra such that $i^2 = -1$,
 a dual number $z = x + \epsilon y$ is a pair of real numbers defined with an algebra such that $\epsilon^2 = 0$.
 The significance of this is that $\epsilon^2 = \epsilon^3 = \ldots = 0$,
-so the Taylor expansion any function $f(z)$ on dual numbers is \emph{exact} to first order:
+so the Taylor expansion of any function $f(z)$ on dual numbers is \emph{exact} to first order:
 \begin{equation}
-f(x + \epsilon y) = f(x) + \epsilon \, y f^\prime(y).
+f(x + \epsilon y) = f(x) + \epsilon \, y f^\prime(x).
 \end{equation}
 This means that if $z = f_{i-1} + \epsilon f_{i-1}^\prime$ holds the value $f_{i-1}$ and derivative $f_{i-1}^\prime = \pdv{f_{i-1}}/{p}$ of the $i$-th line of code in the program \eqref{eq:program},
 then $f_i(z) = f_i(f_{i-1}) + \epsilon f_{i-1}^\prime f_i^\prime(f_{i-1})$ holds the value and derivative at the $(i+1)$-th line by the forward chain rule \eqref{eq:ad_forward}.
 By starting at $i=0$ and evaluating the program with dual numbers,
-one accumulates both $F$ and $\pdv{F}/{P}$ at the final line $i=N$.
+one accumulates both $F$ and $\pdv{F}/{p}$ at the final line $i=N$.
 
 This requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
 For example, the function $\sin(x)$ must be overloaded to return $\sin(x)$ when called with real $x$,
@@ -2805,13 +2805,13 @@ as a given function must be evaluated differently for real numbers versus dual n
 In addition, it is not always known at compile-time which functions must be compiled in which ways,
 as different sets of cosmological parameters influence the computation in different ways,
 and not all parameters are differentiated every time.
-For this reason, just-in-time (JIT) compiled languages and frameworks become popular to accommodate this functionality.
-This includes fully JIT-compiled programming languages (e.g. Julia, in which SymBoltz and Bolt is written),
-and JIT \enquote{sublanguages} or frameworks inside interpreted languages (e.g. JAX in Python, in which DISCO-EB and ABCMB is implemented).
+For this reason, just-in-time (JIT) compiled languages and frameworks have become popular to accommodate this functionality.
+This includes fully JIT-compiled programming languages (e.g. Julia, in which SymBoltz and Bolt are written),
+and JIT \enquote{sublanguages} or frameworks inside interpreted languages (e.g. JAX in Python, in which DISCO-EB and ABCMB are written).
 Here the code is compiled right before it is evaluated,
 i.e. at the time when it is known what parameters are differentiated and what must be compiled in different ways.
 For this reason, it would be more challenging to support automatic differentiation in CAMB and CLASS,
-which are writted in Fortran and C that are traditional ahead-of-time (AOT) compiled languages.
+which are written in Fortran and C that are traditional ahead-of-time (AOT) compiled languages.
 
 \subsubsection{Automatic differentiation in SymBoltz}
 \label{sec:differentiability}
@@ -2832,7 +2832,7 @@ This was working but quite slowly in the initial release in \cref{paper:symboltz
 and I have since worked to improve its performance.
 As shown in \cref{fig:ad_performance},
 forward-mode automatic differentiation is now as fast as one-sided (and $2\times$ faster than two-sided) finite differences,
-but without its precision and stability problems.
+but without their precision and stability problems.
 In addition, \cref{fig:ad_evolution} shows how it can be used to evolve the sensitivity $\pdv{P(a,k;\mathbf{p})}/{p}$ of the matter power spectrum $P(a, k)$.
 
 \subsection{Exploiting smoothness with spectral methods}
@@ -2958,10 +2958,10 @@ so fewer points are used along directions in parameter space where the observabl
 Implement lensed CMB power spectra, spatial curvature and vector and tensor modes,
 which are currently missing in SymBoltz.
 \item
-Build an expensive \enquote{library} of modified models in SymBoltz (see \cref{sec:modifications}),
+Build an extensive \enquote{library} of modified models in SymBoltz (see \cref{sec:modifications}),
 and use them to refine the symbolic-numeric interface if necessary to accommodate all extensions in an easy way.
 \item
-Investigate whether spectral methods can be used other places in the code
+Investigate whether spectral methods can be used in other places in the code
 to take further advantage of the smooth approximation-free output,
 for example in line-of-sight integration (as discussed in \cref{sec:spectral}).
 \item Clean up and polish the current code base,
@@ -2969,7 +2969,7 @@ which has shifted a little back and forth during development
 while testing different approaches.
 \end{itemize}
 It is my hope that others will pick up on some of these ideas and take SymBoltz further,
-or that the ideas that shaped SymBoltz proves useful and be incorporated into other \EB{} codes.
+or that some of the ideas that shaped SymBoltz prove useful and can be incorporated into other \EB{} codes.
 
 \chapter{The nonlinear part}
 \label{chap:nonlin}
