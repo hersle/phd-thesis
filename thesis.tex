@@ -39,9 +39,14 @@
 \usepackage{derivative}
 %\derivset{\odv}[style-inf=\mathrm] % write normal derivatives with upright d
 
-\usepackage[backend=biber, style=alphabetic, url=false]{biblatex}
+\usepackage[backend=biber, style=alphabetic, url=true]{biblatex}
 \DeclareFieldFormat{titlecase}{#1}
-\AtEveryBibitem{\clearfield{eprintclass}} % print arXiv IDs without [category]
+\AtEveryBibitem{%
+  \clearfield{eprintclass}% print arXiv IDs without [category]
+  \ifboolexpr{test {\iffieldundef{doi}} and test {\iffieldundef{eprint}}}
+    {}% no DOI or arXiv ID: keep the URL
+    {\clearfield{url}\clearfield{urlyear}}% otherwise hide the URL and its access date
+}
 
 \usepackage{microtype} % better line breaking (avoids overfull lines)
 \raggedbottom % do not stretch pages vertically (avoids underfull pages)
