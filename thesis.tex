@@ -3149,6 +3149,12 @@ Unfortunately, standard $N$-body simulations are very expensive.
 Accurate results can require millions to billions of particles advected over thousands of time steps.
 This makes it problematic to use them for exploring parameter space and even more so when exploring modified models.
 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{media/cola}%
+\caption{\label{fig:cola}\TODO{$N$-body / COLA} From \cite{tassevSolvingLargeScale2013b}.}
+\end{figure}
+
 Fortunately, there is a clever way of alleviating this issue called the \textbf{COmoving Lagrangian Acceleration} (COLA) \textbf{method} \cite{tassevSolvingLargeScale2013b}.
 It is based on the insight that at large scales (low $k$),
 $N$-body simulations spend most of their effort on computing simple streaming-like particle motion by brute force.
