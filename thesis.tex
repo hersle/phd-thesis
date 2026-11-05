@@ -83,9 +83,9 @@
 \maketitle[
     supervisor={Hans A. Winther},
     dept={Institute of Theoretical Astrophysics},
-    %fac={Faculty of Mathematics and Natural Sciences},
+    fac={Faculty of Mathematics and Natural Sciences},
     %info={Additional information},
-    %year={2026}
+    year={2026}
 ]
 
 \begin{abstract}
@@ -109,22 +109,53 @@ by reducing them to linear boosts obtained from \EB{} codes.
 \listoftables{}
 
 \begin{preface}
-\TODO{Preface, including acknowledgments and thanks.}
-\section*{Guide to the reader}
-I use natural units in which $\hbar = c = G = k_B = 1$.
-\Cref{chap:back} contains a brief and general introduction.
-\Cref{chap:lin} is the bulk of the thesis and puts \cref{paper:symboltz,paper:chebyshev,paper:interactions} into context.
-\Cref{chap:nonlin} puts \cref{paper:bransdicke} into context.
+
+I use natural units $G = c = \hbar = k_B = 1$.
+\Cref{chap:back} briefly introduces the standard model and computational tools of cosmology at a high level.
+\Cref{chap:lin} introduces the linear \EB{} equations and codes in detail and puts SymBoltz and \cref{paper:symboltz,paper:chebyshev,paper:interactions} into context,
+and represents the bulk of my work.
+\Cref{chap:nonlin} proceeds to the nonlinear regime and puts \cref{paper:bransdicke} into context.
 All four papers are appended at the end of the thesis in chronological order
 (different from their logical order in the thesis).
 \Cref{chap:lin,chap:nonlin} end with two separate conclusions.
-\section*{Tool usage}
-UiO now requires declaration of AI use, see
-\url{https://www.mn.uio.no/forskning/phd/oppbygging/ki.html}
-and
-\url{https://www.mn.uio.no/kurt/universitet/kunstig-intelligens/maler-for-deklarasjon-av-ki-i-oppgaver.html}
+
 \section*{Acknowledgements}
-\TODO{}
+
+I dedicate this thesis to my grandfather, who passed away during this PhD.
+Ever since I was a kid, he always encouraged me to pursue what I enjoy,
+which is science, mathematics and computers,
+with no pressure from his great passion and talent,
+which was music.
+He always asked how I was doing at school and university,
+sometimes repeatedly, but always with great curiosity.
+
+To Øyvind, Akhil, Bendix, Abdolali, Farbod, David, Ignasi, Nils, Sigurd, Duncan
+and my other officemates and colleagues:
+thanks for all your encouragement, weird sense of humor and many lunch discussions over the years.
+
+I am also very grateful to my supervisor Hans
+for helping and guiding me when I needed it,
+and freedom and encouragement when I wanted it.
+Thanks also to Aayush and Christopher
+for your responsiveness on the Github repositories of ModelingToolkit and OrdinaryDiffEq,
+which made the SymBoltz project possible.
+
+\section*{Declaration of tool usage}
+
+This thesis is my original work and is made with assistance from several tools.
+As required by my institution, %\url{https://www.mn.uio.no/forskning/phd/oppbygging/ki.html}
+I declare that AI tools have
+given feedback on my writing and arguments,
+proofread and corrected errors in language and equations,
+helped with formatting and the creation of \cref{fig:codes},
+assisted with programming, plotting and debugging,
+and supplemented my literature search mostly in \cref{sec:modifications}.
+I have also used Google Search, \LaTeX{}, Julia, its libraries and Linux,
+which are influenced by AI.
+Output of any tool is reviewed and incorporated into the thesis by me,
+and all changes are tracked with version control\footnote{\url{https://github.com/hersle/phd-thesis}}
+to avoid unintended modifications.
+
 \end{preface}
 
 \mainmatter{}
