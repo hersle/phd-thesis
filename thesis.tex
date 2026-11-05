@@ -89,7 +89,16 @@
 ]
 
 \begin{abstract}
-\TODO{3--6 sentences describing your thesis.}
+This thesis describes a new code named SymBoltz
+for solving the \EB{} equations in cosmology up to linear perturbations.
+It exposes the full cosmological model through a symbolic-numeric interface that makes all equations transparent and easy to modify,
+avoids approximation schemes found in traditional codes using modern implicit methods,
+and computes gradients robustly with automatic differentiation for use in several applications.
+Interpolation in \EB{} codes is revisited by leveraging the smoothness of the approximation-free output.
+Examples of interacting models are implemented to show that SymBoltz is easy to use and modify.
+
+A new technique is also presented for emulating nonlinear matter power spectrum boosts in modified gravity theories
+by reducing them to linear boosts obtained from \EB{} codes.
 \end{abstract}
 \begin{xabstract}[Sammendrag]
 \TODO{In Norwegian}
