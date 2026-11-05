@@ -192,7 +192,7 @@ is devoted to exploring modifications to the standard model.
 
 What does this mean for our computational tools?
 It means that not only \enquote{hard} aspects like speed and robustness are priorities,
-but so are \enquote{softer} principles such as user-friendliness and flexibility,
+but so are \enquote{soft} principles such as user-friendliness and flexibility,
 in order to facilitate easy implementation of modified cosmological models.
 Moreover, we should strive to avoid model-specific approximation schemes and assumptions,
 as they make it harder to implement modifications and are a source of error for modifications.
@@ -200,9 +200,10 @@ as they make it harder to implement modifications and are a source of error for 
 \section{The standard cosmological model}
 \label{sec:LCDM}
 
-The \LCDM{} model is the current iteration of the standard model in cosmology
-because it is the best explanation we have so far of several observations we have made in the Universe.
-It assumes that \cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
+The \LCDM{} model is the current \enquote{version} of the standard model in cosmology.
+It is defined by a number of assumptions.
+For example
+\cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
 \item \textbf{\GR{}}
 is the correct theory of gravity.
@@ -313,13 +314,14 @@ that parameterizes deviations $w_0 \neq -1$ and $w_a \neq 0$ from a cosmological
 }
 \end{figure}
 
-The \LCDM{} model has developed gradually,
-and is the best model we have come up with so far
-that simultaneously explains
-the acceleration of the universe,
-anisotropies in the cosmic microwave background
-and statistics of large-scale structure
-with remarkable success.
+The \LCDM{} model has developed gradually.
+It is the best model we have come up with so far
+that \emph{simultaneously} explains several observed features
+of our Universe with remarkable success, including
+the accelerating expansion of the late universe seen from supernovae,
+temperature and polarization anisotropies in the cosmic microwave background from the early universe,
+and statistics of large-scale structure in the late universe.
+
 However, as gradually uncovered by increasingly precise observations,
 it also faces a number of challenges.
 For example
@@ -364,10 +366,11 @@ that is in tension with the \emph{lower} bound found from terrestrial neutrino o
 However, when the time-varying dark energy model is used instead of the \LCDM{} model,
 the constraints become compatible.
 \end{itemize}
-These and other discrepancies motivate research on modifying all parts of the cosmological model.
-We will consider some examples of modified models in \cref{sec:modifications}.
-Every such modification must be implemented into the computer software
-that we use to simulate the cosmological model.
+These and other discrepancies motivate research on modifying all parts of the cosmological model
+and relaxing the assumptions of \LCDM{}.
+I review some examples of modified models in \cref{sec:modifications}.
+As one modified the cosmological model,
+one must also modify computer software that solves its governing equations.
 
 \begin{figure}[t!]
 \centering
@@ -391,8 +394,9 @@ for a \LCDM{} model computed by SymBoltz
 
 \section{The computational tools of cosmology}
 
-To make predictions from the \LCDM{} model and its extensions,
-we must solve their equations of motion numerically with computers.
+To make theoretical predictions from the \LCDM{} model or any modified model
+that we can compare to observations,
+we must solve their governing equations of motion numerically with computers.
 Here I summarize some of the most important categories of modeling tools in the computational toolbox of cosmology
 that are related to my contributions in this thesis.
 
