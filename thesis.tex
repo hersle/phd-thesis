@@ -515,25 +515,27 @@ It then seems quite unnecessary to repeat similar computations many times by bru
 when the input-output dependence can be captured in a cheaper way.
 
 This is true for \EB{} codes and to an even greater extent $N$-body simulations.
-For example, the power spectra at each $k$ and $l$ in \cref{fig:lss} and \cref{fig:cmb}
-respond smoothly to changes in each cosmological parameter.
+For example, the power spectra at each $k$ and $l$ in \cref{fig:cmb,fig:lss}
+respond smoothly to changes in each cosmological parameter.%
+\footnote{\url{https://chrisnorth.github.io/planckapps/Simulator/} illustrates this pedagogically.}
 The need for speed is further amplified by the use of Bayesian inference to estimate cosmological parameters from data.
 It uses Markov chain Monte Carlo (MCMC) methods that must sample $10^4$--$10^6$ or more points in parameter space,
 and in principle the expensive codes must be run for every such sample.
 
 For these reasons a \enquote{sport} called emulation has developed in the cosmological literature.
-The goal is simply to deliver theoretical predictions
+The goal and rules are simple: to deliver theoretical predictions
 with as high accuracy and low computational cost as possible
 using arbitrary \enquote{dirty tricks}.
-An \emph{emulator} refers to any method that reproduces (\enquote{emulates})
+Thus, an \emph{emulator} $\mathcal{O}_\text{emu}(\mathbf{p})$ is any method that reproduces (\enquote{emulates})
 the output of a (physically principled and expensive) function $\mathcal{O}(\mathbf{p})$
-of parameters $\mathbf{p}$ using a cheap surrogate model:
+of parameters $\mathbf{p}$ using a cheap \enquote{black box} surrogate model:
+\newcommand\blackbox{\ensuremath{\vcenter{\hbox{\rule{4.5em}{2em}}}}} % black box (e.g. emulator)
 \begin{equation}
-\mathbf{p} \,\,\,\to\,\,\, \mathrm{???} \,\,\,\to\,\,\, \mathcal{O} .
+\mathbf{p} \,\,\,\to\,\,\, \blackbox \,\,\,\to\,\,\, \mathcal{O} .
 \end{equation}
-\emph{How} an emulator works internally (???) is only of secondary importance.
+\emph{How} the emulator works inside the \enquote{black box} is only of secondary importance.
 The most important point is that the result $\mathcal{O}$ correctly matches the target function within some given tolerance,
-and that the evaluation (???) is as fast as possible using whatever means necessary.
+and that the evaluation of the \enquote{black box} is as fast as possible using whatever means necessary.
 
 Perhaps pedantically and philosophically, how can we be sure that a \enquote{black box} produces correct results when we have no idea what it does?
 And how do we reconcile this with our standards for validation, transparency and explainable methods in research?
@@ -546,23 +548,18 @@ so that the value of $\mathcal{O}$ and all of its derivatives (which are really 
 This is a fundamental philosophical assumption at least in classical (non-quantum) theories of physics,
 and is what makes it possible to describe physics in the mathematical language of calculus and differential equations.
 
-Emulation therefore simply reduces to the mathematical field of function approximation,
-which is an extremely wide discipline in mathematics \cite[e.g.][]{trefethenApproximationTheoryApproximation2019}.
-%It only happens to be the case that the
-%operations inside the smooth function
-%-- i.e. an \EB{} codes or $N$-body simulations --
-%is long and of physical nature,
-%which makes the use of emulators
+From a bird's-eye view,
+one can therefore interpret emulation as a marriage between computational cosmology
+and the mathematical field of function approximation.
+In the latter field, the smoothness of the function is an important property
+that can be used to access better and faster converging interplation methods (as explored in \cref{paper:chebyshev}).
 The expensive function is typically evaluated for a small number of sample points,
 and then interpolation and regression methods are used to evaluate it cheaply at other points.
-A downside is that this training process must be repeated for every new cosmological model.
-Another challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space,
+A challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space,
 but the recent explosion of research in artificial intelligence and machine learning has made it feasible to emulate functions of
-$O(10)$ cosmological parameters using neural networks, for example.
-In this field, the extent to which a function is smooth
-is a critical assumption that enables better interpolation methods.
+$O(10)$ cosmological parameters using neural networks with relatively small computational cost, for example.
 
-A very large number of emulators and emulator frameworks have been created
+Many emulators and emulator frameworks have been created
 for emulating the output from \EB{} codes and $N$-body simulations
 for both standard and extended cosmological models, including
 CMBwarp \cite{jimenezFastCosmologicalParameter2004},
@@ -576,12 +573,33 @@ Effort.jl \cite{boniciEffortjlFastDifferentiable2025},
 emulators for modified gravity simulations \cite{wintherEmulatorsNonlinearMatter2019a,maulandSesamePowerSpectrum2024a},
 and many more.
 
+The upside to emulation is mainly speed.
 When used as drop-in replacements for \EB{} codes with high-precision settings in parameter inference calls,
-emulators can speed up theoretical predictions by up to $10^6 \times$
+emulators can speed up theoretical predictions by up to $10^6\times$
 and reduce the total MCMC runtime from days or weeks to seconds or minutes
 \cite[e.g.][]{boniciCapsejlEfficientAutodifferentiable2024}.
 This shifts the bottleneck of the computation from the theoretical predictions
 to the comparison with the observational dataset (i.e. the likelihood function).
+
+A downside is that the training process
+is sometimes an expensive and separate precomputation step
+that must be repeated for every new cosmological model or subset of parameter space.
+Furthermore, existing emulators are built in many different ways,
+and it is not straightforward for someone else to train an emulator for their own model.
+However, this is starting to change with recent work such as OLÉ \cite{guntherOLEOnlineLearning2025},
+where the idea is to iteratively update the emulator $\mathcal{O}_\text{emu}(\mathbf{p})$ on the fly
+\emph{as} the original function $\mathcal{O}(\mathbf{p})$ is being evaluated.
+Schematically, the idea is to wrap the function inside a new function
+that uses the cheap emulator if it is reliable,
+and otherwise computes the expensive function \emph{and} updates the emulator:
+\begin{equation}
+\mathcal{O}_\text{OLÉ}(\mathbf{p}) = \begin{cases}
+    \mathcal{O}_\text{emu}(\mathbf{p}) & \text{if the emulator is trustworthy at $\mathbf{p}$,} \\
+    \mathcal{O}(\mathbf{p}) & \text{otherwise, and use it to update the emulator!}
+\end{cases}
+\end{equation}
+In my opinion, this user-friendliness aspect deserves more attention
+to make emulators widespread and accessible for standard and extended models alike.
 
 \Cref{chap:nonlin} effectively presents an emulation method for $N$-body simulations
 that maps the expensive $N$-body simulations down to cheap \EB{} codes.
