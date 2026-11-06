@@ -3130,6 +3130,7 @@ The idea is to spawn particles with positions $\mathbf{x}_i$ and momenta $\mathb
 that sample the distribution function in phase space,
 and evolve each of them under the geodesic equation
 that accelerates particles due to gradients of the potential $\psi(\tau,\mathbf{x})$.
+They are illustrated in \cref{fig:cola}.
 Formally, this leads to a system of integro-differential equations called the Vlasov--Poisson equation,
 where the Poisson equation \eqref{eq:poisson_gr} is coupled to a non-relativistic and collisionless Boltzmann equation,
 which is called the Vlasov equation \cite[section 12.3]{dodelsonModernCosmology2021a}.
@@ -3152,7 +3153,12 @@ This makes it problematic to use them for exploring parameter space and even mor
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{media/cola}%
-\caption{\label{fig:cola}\TODO{$N$-body / COLA} From \cite{tassevSolvingLargeScale2013b}.}
+\caption{\label{fig:cola}%
+$N$-body simulations simulate mutual gravitational forces between matter particles in an expanding universe.
+Standard $N$-body simulations (right) solve directly for the positions and must take many time steps.
+The COmoving Lagranigan Acceleration method (middle) instead solves for the difference of the positions from those predicted by analytically Lagrangian Perturbation Theory (left),
+which allows them to take much longer time steps while sacrificing some accuracy at very small scales.
+From \cite{tassevSolvingLargeScale2013b}.}
 \end{figure}
 
 Fortunately, there is a clever way of alleviating this issue called the \textbf{COmoving Lagrangian Acceleration} (COLA) \textbf{method} \cite{tassevSolvingLargeScale2013b}.
@@ -3167,7 +3173,7 @@ but instead only for its residual from LPT to, say, second order:
 \end{equation}
 This trick lets COLA simulations sacrifice some accuracy at the very smallest scales
 (where uncertainties of baryonic physics enter anyway),
-in order to greatly reduce the number of time steps necessary.
+in order to greatly reduce the number of time steps necessary (see \cref{fig:cola}).
 This makes COLA $N$-body simulations suitable for probing parameter space
 including nonlinear effects up to $k \lesssim 1\,h/\mathrm{Mpc}$.
 Furthermore, the sacrifice of small-scale accuracy is made less severe
