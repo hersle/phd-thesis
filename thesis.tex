@@ -150,8 +150,7 @@ As required by my institution, %\url{https://www.mn.uio.no/forskning/phd/oppbygg
 I declare that AI tools have
 given feedback on my writing,
 proofread and corrected errors in language and equations,
-helped with formatting and the creation of \cref{fig:codes},
-assisted with programming, plotting and debugging,
+assisted with formatting, programming, plotting and debugging,
 and supplemented my literature search mostly in \cref{sec:modifications}.
 I also used \LaTeX{}, Google, Julia, many software libraries and Linux.
 Output from any tool is reviewed and incorporated by me,
@@ -200,6 +199,19 @@ as they make it harder to implement modifications and are a source of error for 
 \section{The standard cosmological model}
 \label{sec:LCDM}
 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{media/species}
+\caption[Energy content of an expanding universe computed by SymBoltz.]{\label{fig:species}
+As the universe expands with the scale factor,
+the energy density of each species in the \LCDM{} model relative to the total changes in time.
+Radiation (photons and neutrinos) dominates the early universe,
+matter (dark matter and baryons) dominates later,
+and dark energy dominates today ($a = 1$).
+Created with SymBoltz
+\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.}
+\end{figure}
+
 The \LCDM{} model is the current \enquote{version} of the standard model in cosmology.
 It is defined by a number of assumptions.
 For example
@@ -240,7 +252,7 @@ one obtains the first and second Friedmann equations:
 \end{align}
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
-which are sourced by the following \enquote{ingredients}.
+which are sourced by the following \enquote{ingredients} (illustrated in \cref{fig:species}).
 
 \item \textbf{Dark energy}
 as a cosmological constant $\Lambda$ was first added by Einstein in his equations \eqref{eq:einstein_intro}
