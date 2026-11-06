@@ -440,6 +440,7 @@ which is the implementation of a new \EB{} code called SymBoltz
 It is designed to make it easier to implement modified cosmological models,
 remove the need for approximation schemes that complicate the equations in other codes,
 and support modern numerical methods such as automatic differentiation and spectral interpolation methods.
+We will go into much more depth on \EB{} codes there.
 
 \begin{figure}[t!]
 \centering
@@ -503,7 +504,7 @@ PySCo \cite{bretonPySCoFastParticleMesh2025}.
 There we use \enquote{fast-but-approximate} $N$-body simulations with the COLA method
 in order to predict the nonlinear matter power spectrum in modified \BD{} gravity relative to \GR{}.
 We show a way to reduce the nonlinear prediction to that from linear \EB{} codes.
-This technique can be used in conjunction with emulators (see below) of \GR{} simulations,
+This technique can be used in conjunction with \GR{} emulators (see below),
 in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 
 \subsection{Emulators and interpolation methods}
@@ -549,15 +550,17 @@ This is a fundamental philosophical assumption at least in classical (non-quantu
 and is what makes it possible to describe physics in the mathematical language of calculus and differential equations.
 
 From a bird's-eye view,
-one can therefore interpret emulation as a marriage between computational cosmology
+one can see emulation as a marriage between computational cosmology
 and the mathematical field of function approximation.
 In the latter field, the smoothness of the function is an important property
-that can be used to access better and faster converging interplation methods (as explored in \cref{paper:chebyshev}).
-The expensive function is typically evaluated for a small number of sample points,
+that can be used to access better and faster converging interplation methods
+(as explored in \cref{paper:chebyshev}).
+The expensive function is evaluated at a number of sample points,
 and then interpolation and regression methods are used to evaluate it cheaply at other points.
-A challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space,
+A challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space
+(\enquote{the curse of dimensionality}),
 but the recent explosion of research in artificial intelligence and machine learning has made it feasible to emulate functions of
-$O(10)$ cosmological parameters using neural networks with relatively small computational cost, for example.
+$O(10)$ parameters using neural networks with relatively small computational cost, for example.
 
 Many emulators and emulator frameworks have been created
 for emulating the output from \EB{} codes and $N$-body simulations
@@ -587,7 +590,7 @@ that must be repeated for every new cosmological model or subset of parameter sp
 Furthermore, existing emulators are built in many different ways,
 and it is not straightforward for someone else to train an emulator for their own model.
 However, this is starting to change with recent work such as OLÉ \cite{guntherOLEOnlineLearning2025},
-where the idea is to iteratively update the emulator $\mathcal{O}_\text{emu}(\mathbf{p})$ on the fly
+where the idea is to iteratively update the emulator $\mathcal{O}_\text{emu}(\mathbf{p})$ on-the-fly
 \emph{as} the original function $\mathcal{O}(\mathbf{p})$ is being evaluated.
 Schematically, the idea is to wrap the function inside a new function
 that uses the cheap emulator if it is reliable,
