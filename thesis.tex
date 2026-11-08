@@ -2494,6 +2494,17 @@ through a high-level interface without having to touch internal low-level code.
 \subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{media/stiff}
+\caption[Implicit versus explicit solvers on the stiff \EB{} ODEs]{\label{fig:stiff}
+Explicit ODE solvers fail catastrophically at solving the stiff \EB{} perturbation ODEs,
+here taking around 1000 tiny steps before aborting (all the red points are on top of each other).
+Implicit solvers handle the stiffness fine,
+here taking around 100 long steps over the entire time domain.
+Created with SymBoltz \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.}
+\end{figure}
+
 The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} of the \EB{} system are \emph{stiff}.
 This happens not only during tight coupling in the early universe,
 but also for oscillatory perturbations in the late universe even in the absence of baryons
@@ -2518,20 +2529,21 @@ in CLASS for some fiducial cosmological parameters
 \cite{blasCosmicLinearAnisotropy2011c}.}
 \end{figure}
 
-Standard explicit ODE methods, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.%
+As illustrated in \cref{fig:stiff},
+standard explicit ODE solvers, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.%
 \footnote{\emph{By definition}, \enquote{stiff equations are problems for which explicit methods don't work} \cite{hairerSolvingOrdinaryDifferential1996}.}
-The stiffness causes them to take tiny time steps and diverge with enormous errors.
+The stiffness causes them to take tiny time steps and crash or diverge with enormous errors.
 CAMB and (to some extent) CLASS\footnote{CLASS also has an implicit integrator; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
 Several approximation schemes have been invented, including the
 tight coupling approximation (TCA),
 radiation streaming approximation (RSA),
 ultra-relativistic fluid approximation (UFA) and
 non-cold dark matter fluid approximation (NCDMFA) \cite[e.g.][]{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
-All of them involve switching between different variants of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
+They involve switching between different variants of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
 The first three are illustrated by \cref{fig:approximations}.
 
-For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=3kF_1/4$
-in the \EB{} equations \eqref{eq:eb} into a modified pair free of the product $\dot\kappa \, (\theta_\gamma-\theta_b)$
+For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=\tfrac34 k F_1$
+in the \EB{} equations \eqref{eq:eb} into a modified pair without the product $\dot\kappa \, (\theta_\gamma-\theta_b)$
 (here in the synchronous gauge)
 \cite[equation 2.7]{blasCosmicLinearAnisotropy2011c}:
 \begin{subequations}
@@ -2560,9 +2572,9 @@ because the tuning and validation in principle depend on the whole coupled pertu
 
 The literature on approximation schemes is very large.
 The TCA alone has been investigated many times
-\cite[e.g.][]{doranSpeedingCosmologicalBoltzmann2005b,cyr-racinePhotonsBaryonsAtoms2011a,pitrouTightcouplingApproximationBaryon2011,blasCosmicLinearAnisotropy2011c,pookkillathBaryonPhysicsTight2019};
-other parts of the equations have received their own schemes (see above);
-and new schemes have been introduced with modified models (see \cref{sec:modifications}).
+\cite[e.g.][]{doranSpeedingCosmologicalBoltzmann2005b,cyr-racinePhotonsBaryonsAtoms2011a,pitrouTightcouplingApproximationBaryon2011,blasCosmicLinearAnisotropy2011c,pookkillathBaryonPhysicsTight2019}.
+Other sectors of the equations have received their own schemes, as explained above.
+Finally, new schemes have been introduced with modified models, as explained in \cref{sec:modifications}.
 
 The reason for using approximation schemes is that they improve speed and stability
 by reducing the stiffness and sometimes the size of the ODEs.
@@ -2576,12 +2588,12 @@ There is another way of handling stiffness that does not have this disadvantage.
 Instead of circumventing stiffness,
 one can embrace it and use implicit ODE solvers.
 Implicit solvers are harder to implement than explicit solvers,
-but in return they are stable and efficient for stiff equations \cite[e.g.][]{hairerSolvingOrdinaryDifferential1996}.
+but in return they are stable and take longer time steps with stiff equations \cite[e.g.][]{hairerSolvingOrdinaryDifferential1996}.
 This approach completely avoids approximation schemes and lets users specify \emph{one} \EB{} system to evolve at all times.
 However, the physical complexity of approximation schemes is replaced
 by a new set of challenges in the numerical solver infrastructure.
 Here I explain some of these numerical intricacies,
-which in my opinion deserve as much attention as approximation schemes
+which in my opinion deserve as much attention as the physical approximation schemes
 for their effect on the numerical solution of the \EB{} equations.
 
 A pedagogical way of explaining the difference between explicit and implicit methods
