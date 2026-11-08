@@ -520,6 +520,7 @@ This technique can be used in conjunction with \GR{} emulators (see below),
 in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 
 \subsection{Emulators and interpolation methods}
+\label{sec:emulators}
 
 It happens quite often in physics and cosmology that we have a way of computing or simulating
 something from physically principled equations that is very computationally expensive.
@@ -2494,6 +2495,18 @@ through a high-level interface without having to touch internal low-level code.
 \subsection{Implicit integrators for avoiding approximation schemes}
 \label{sec:approx}
 
+The background ODEs \eqref{eq:bg_ode} and particularly the perturbation ODEs \eqref{eq:pt_ode} of the \EB{} system are \emph{stiff}.
+Stiffness is a property of differential equations that is hard to define mathematically,
+but can arise when several timescales coexist in the equations.
+This is very common in cosmology where baryons and photons interact rapidly while the universe expands slowly, for example.
+This happens not only during tight coupling in the early universe,
+but also for oscillatory perturbations in the late universe even in the absence of baryons
+\cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
+Understanding stiffness is crucial for numerically solving the \EB{} equations in a stable and efficient way,
+and to handle it one must seek either physical or numerical treatment.
+
+\subsubsection{Explicit integrators with approximation schemes}
+
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{media/stiff}
@@ -2505,42 +2518,18 @@ here taking around 100 long steps over the entire time domain.
 Created with SymBoltz \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.}
 \end{figure}
 
-The background ODEs \eqref{eq:bg_ode} and, in particular, the perturbation ODEs \eqref{eq:pt_ode} of the \EB{} system are \emph{stiff}.
-This happens not only during tight coupling in the early universe,
-but also for oscillatory perturbations in the late universe even in the absence of baryons
-\cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
-Stiffness is a property of differential equations that is hard to define mathematically,
-but can arise when several timescales coexist in the equations.
-This is very common in cosmology where baryons and photons interact rapidly while the universe expands slowly, for example.
-Understanding stiffness is crucial to numerically solving the \EB{} equations,
-and there are two different ways of handling it.
-
-\subsubsection{Explicit integrators with approximation schemes}
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=0.8\textwidth]{media/approximations}
-\caption[Approximation schemes in \EB{} codes]{\label{fig:approximations}
-Validity regions in conformal time $\tau$ and wavenumber $k$ of the
-tight coupling approximation (TCA),
-radiation streaming approximation (RSA) and
-ultra-relativistic fluid approximation (UFA)
-in CLASS for some fiducial cosmological parameters
-\cite{blasCosmicLinearAnisotropy2011c}.}
-\end{figure}
-
-As illustrated in \cref{fig:stiff},
-standard explicit ODE solvers, such as the well-known Euler, RK4 and Dormand--Prince methods, fail catastrophically at solving stiff ODEs.%
+Standard explicit ODE solvers, such as the Euler, RK4 and Tsitouras 5(4) methods, fail catastrophically at solving stiff ODEs.%
 \footnote{\emph{By definition}, \enquote{stiff equations are problems for which explicit methods don't work} \cite{hairerSolvingOrdinaryDifferential1996}.}
-The stiffness causes them to take tiny time steps and crash or diverge with enormous errors.
-CAMB and (to some extent) CLASS\footnote{CLASS also has an implicit integrator; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
+They are forced to take tiny time steps to follow the stiffness, and are extremely inefficient, abort early or crash and diverge with enormous errors,
+as illustrated in \cref{fig:stiff}.
+CAMB and to a smaller extent CLASS\footnote{CLASS also has an implicit integrator and can optionally disable most of its approximation schemes; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
 Several approximation schemes have been invented, including the
 tight coupling approximation (TCA),
 radiation streaming approximation (RSA),
 ultra-relativistic fluid approximation (UFA) and
 non-cold dark matter fluid approximation (NCDMFA) \cite[e.g.][]{blasCosmicLinearAnisotropy2011c,lesgourguesCosmicLinearAnisotropy2011f}.
-They involve switching between different variants of the \EB{} system \eqref{eq:eb} at different $\tau$ and $k$.
-The first three are illustrated by \cref{fig:approximations}.
+The first three are illustrated in \cref{fig:approximations}.
+All of them involve switching between different variants of the \EB{} ODE system \eqref{eq:eb} at different $\tau$ and $k$.
 
 For example, the TCA rewrites the baryon and photon equations for $\dot\theta_b$ and $\dot\theta_\gamma=\tfrac34 k F_1$
 in the \EB{} equations \eqref{eq:eb} into a modified pair without the product $\dot\kappa \, (\theta_\gamma-\theta_b)$
@@ -2558,19 +2547,31 @@ This gets increasingly complicated as it is done to first and second order in va
 Moreover, one must identify the $(\tau, k)$-regime where the approximation is valid,
 and tune a hyperparameter that decides when to switch it on and off.
 Ideally, one should also validate approximation schemes against non-approximated equations,
-which is impossible with explicit integrators.
+which is impossible if one depends on them.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=0.8\textwidth]{media/approximations}
+\caption[Approximation schemes in \EB{} codes]{\label{fig:approximations}
+Validity regions in conformal time $\tau$ and wavenumber $k$ of the
+tight coupling approximation (TCA),
+radiation streaming approximation (RSA) and
+ultra-relativistic fluid approximation (UFA)
+in CLASS for some fiducial cosmological parameters
+\cite{blasCosmicLinearAnisotropy2011c}.}
+\end{figure}
 
 But suppose that one goes through all the trouble of correctly deriving, implementing, tuning and validating
-all the necessary approximation schemes for the \LCDM{} model once, and then leans back to relax.
-In the next moment, someone enters the room and wants to implement an extended model
+all necessary approximation schemes for the \LCDM{} model once, and then leans back to relax.
+In the next moment, someone taps your shoulder and wants to implement an extended model
 that requires modifications of the equations.
 As exemplified several times in \cref{sec:modifications},
-it is not unlikely that the modifications will touch one or more of the approximation schemes
-and require the whole process to be repeated for the modified equations.
-Strictly speaking, this is true even for the modifications that do not touch the approximated equations directly,
-because the tuning and validation in principle depend on the whole coupled perturbation ODE.
+it is not unlikely that modifications touch one or more approximation schemes
+and require the whole process to be repeated.
+Strictly speaking, this is true even if the modifications do not touch the approximated equations directly,
+as the tuning and validation in principle depend on the whole coupled system of perturbation ODEs.
 
-The literature on approximation schemes is very large.
+The literature on approximation schemes is vast.
 The TCA alone has been investigated many times
 \cite[e.g.][]{doranSpeedingCosmologicalBoltzmann2005b,cyr-racinePhotonsBaryonsAtoms2011a,pitrouTightcouplingApproximationBaryon2011,blasCosmicLinearAnisotropy2011c,pookkillathBaryonPhysicsTight2019}.
 Other sectors of the equations have received their own schemes, as explained above.
@@ -2596,8 +2597,9 @@ Here I explain some of these numerical intricacies,
 which in my opinion deserve as much attention as the physical approximation schemes
 for their effect on the numerical solution of the \EB{} equations.
 
-A pedagogical way of explaining the difference between explicit and implicit methods
-is to compare the explicit and implicit Euler methods:%
+A pedagogical way of explaining explicit versus implicit methods
+for an (autonomous, for simplicity) ODE $\dot{u} = f(u)$
+is to compare the two Euler methods:%
 \footnote{Euler methods are seldom used in practice,
 but they are the simplest methods and make it possible to explain implicit ODE methods
 without complicating the high-level picture.
@@ -2629,6 +2631,7 @@ as Newton's method can still converge with an approximate Jacobian.
 However, an outdated $W$ will slow convergence,
 so the idea is to re-compute and re-factorize it only when convergence becomes too slow
 (or if $W$ changes because $\Delta \tau$ changes).
+% In theory, perturbation ODEs are linear and should solve in one linear solve, but reusing W breaks this
 This is what CLASS' \texttt{ndf15} evolver does, for example \cite[appendix A]{blasCosmicLinearAnisotropy2011c}.
 
 Notably,
@@ -2637,7 +2640,7 @@ the \texttt{ndf15} integrator in CLASS and the \texttt{BDF2} integrator in PyCos
 are implicit linear \textbf{multi-step methods}.
 They determine $u_{n+1}$ from a system that involves not only $u_n$,
 but also $u_{n-1}, u_{n-2}, \ldots$ at several past time steps.
-For example, the BDF2 method is
+For example, the BDF2 method for $u_{n+1}$ is
 \cite[equation D36]{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}:
 \begin{equation}
 3 u_{n+1} = 4 u_n - u_{n-1} + 2 \Delta\tau \cdot f(u_{n+1}) .
@@ -2647,17 +2650,18 @@ This class of methods is limited by a theorem called the \textbf{second Dahlquis
 It says that it is impossible to design an implicit linear multi-step method that is \enquote{A-stable} with order higher than 2.
 These methods therefore cannot have high order and optimal stability properties at the same time.
 Multi-stage (but single-step) Runge--Kutta methods,
-such as \texttt{Kvaerno5} in DISCO-EB and \texttt{KenCarp4} in Bolt,
+such as \texttt{Kvaerno5} in DISCO-EB/ABCMB and \texttt{KenCarp4} in Bolt,
 are not restricted by this barrier,
-but must solve a different nonlinear system for each stage.
+but must solve a different nonlinear system for each stage in every time step.
 
-\textbf{Rosenbrock methods} are a different type of implicit solvers built to avoid Newton iterations.
-Instead, they linearize the implicit method \eqref{eq:euler_implicit} around the current time step:
+\textbf{Rosenbrock methods} are a different class of implicit ODE solvers built to avoid Newton iterations entirely
+\cite{rosenbrockGeneralImplicitProcesses1963,langRosenbrockWannerMethodsConstruction2021}.
+Instead, they are designed by linearizing the ODE function around the current time step:
 \begin{equation}
 f(u_{n+1}) \approx f(u_n) + J(u_n) \cdot (u_{n+1}-u_n) .
 \label{eq:rosenbrock_linearize}
 \end{equation}
-Inserting this in the implicit Euler method (again for illustration purposes)
+Inserting this in the implicit Euler method (again used for simplicity)
 gives a \emph{linear} system for $u_{n+1}$,
 which can be solved directly without Newton iterations:
 \begin{equation}
@@ -2665,42 +2669,44 @@ which can be solved directly without Newton iterations:
 \label{eq:rosenbrock_linsolve}
 \end{equation}
 
-The linearization \eqref{eq:rosenbrock_linearize} is well suited to the perturbation ODEs \eqref{eq:pt_ode} that are linear by definition.
+Linearization is well suited to the perturbation ODEs \eqref{eq:pt_ode} that are linear by definition.
 However, Rosenbrock methods also work for nonlinear ODEs such as the background \eqref{eq:bg_ode},
-as higher-order Rosenbrock methods have multiple stages designed carefully such that the linearization error cancels up to some desired order.
-They are not restricted by the Dahlquist barrier,
+as higher-order Rosenbrock methods have multiple stages designed carefully such that the error of the linearization \eqref{eq:rosenbrock_linearize} cancels up to some desired order.
+Rosenbrock methods are not restricted by the Dahlquist barrier,
 and can remain stable even with higher orders and thus take more efficient steps.
 For example, the \texttt{Rodas5P} method that SymBoltz uses by default is a 5th order Rosenbrock method that is stable, accurate and efficient \cite{steinebachConstructionRosenbrockWanner2023}.
 
-Implicit methods must evaluate \textbf{the Jacobian} $J$ in addition to $f$.
-This is particularly true for Rosenbrock methods
-that need it at every time step.
+Implicit methods must evaluate \textbf{the Jacobian} $J$ in addition to $f$, as we have seen above.
+This is particularly true for Rosenbrock methods that need a new Jacobian at every time step.
 In a purely numerical code, such as CLASS,
-the source code is used to specify $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
+the source code effectively specifies the ODE function $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
 and $J$ is found by evaluating $f$ many times with finite differences, for example.
 This is sensitive to a step size and not always reliable.
 It is also unnecessarily inefficient:
 the Jacobian of a linear ODE
-$f_i(u) = \sum_j A_{ij}(\tau) u_j$ is just $A_{ij}(\tau)$,
+$f_i(\tau,u) = \sum_j A_{ij}(\tau) \, u_j$ is just $A_{ij}(\tau)$,
 but the finite differences do not \enquote{know} this
 and evaluate $f(u)$ and hence $A_{ij}(\tau)$ several times to find it.
+In practice, numerical codes are therefore restricted to either slow evaluation of $J$
+or suboptimal methods that rely heavily on reusing it over time steps.
 
 \emph{This is exactly where the symbolic-numeric interfaces of SymBoltz (and PyCosmo) come into the picture.}
 With no extra input from the user,
 they can \emph{symbolically} differentiate the user-specified expressions for $f$
 to generate the Jacobian $J$ \emph{analytically}.
 This fundamental architectural difference
-makes it possible to compute the Jacobian in an optimal way,
-and therefore maximizes the potential of using implicit solvers and avoiding approximation schemes.
+makes it possible to compute the Jacobian in an optimal way that is strictly faster and more accurate,
+and therefore maximizes the potential of using implicit solvers to avoid approximation schemes.
 In my opinion, it is critical to understand that it is precisely
 \emph{the combination of a symbolic-numeric framework and implicit solvers}
 that is the greatest advantage of this approach.
 
-Moreover, the Jacobian of the perturbation ODEs is typically a very sparse matrix
+Moreover, the Jacobian of the perturbation ODEs is typically a very \textbf{sparse} matrix
 where every $\dot{u}_i$ depends on only a few states $u_j$.
 It is very inefficient to solve big linear systems in implicit solvers with dense matrix methods that handle all zeros explicitly,
-as the computational cost of LU-factorizing an $n \times n$ matrix scales as $n^3$.
-Instead one should use sparse matrix algorithms, which only handle the nonzeros explicitly.
+as the computational cost of LU-factorizing a dense $n \times n$ matrix scales as $O(n^3)$.
+Instead one should use special data structures and algorithms for sparse matrices,
+which are designed to handle only the nonzeros explicitly.
 Here the symbolic framework again comes in handy, as the Jacobian is precomputed analytically,
 so the sparsity pattern is determined ahead of time and the nonzero entries are computed directly by an automatically generated function.
 In contrast, a purely numerical code such as CLASS does not \enquote{know} where the zeros are and must determine them at runtime,
@@ -2711,7 +2717,7 @@ and must rebuild the sparsity pattern when the ODE changes due to approximation 
 Due to all these technicalities,
 the speed and stability of implicit ODE solvers are highly problem-dependent
 \cite[e.g.][Section IV.10]{hairerSolvingOrdinaryDifferential1996}!
-It is therefore practical to take a benchmark-oriented approach,
+It is therefore wise to take a \textbf{benchmark-oriented approach},
 where one makes use of a numerical ODE solver library that implements as many implicit solvers as possible
 and then benchmarks the performance of each of them on the equations at hand.
 This is one of the reasons that SymBoltz is written in Julia,
@@ -2722,8 +2728,8 @@ It is further interfaced with the LinearSolve.jl\footnote{\url{https://github.co
 which makes it possible to swap out the linear system solver used inside the implicit solvers.
 We may then try several different combinations of ODE and linear system solvers
 by changing only a single line of code and benchmark their performance \emph{and} precision on the \EB{} equations.
-This is not easy to do in codes that include only one or a few hardcoded implicit solvers.
-It is through this testing that I have found the implicit \texttt{Rodas5P} method to work best
+This is not easy in codes that include only one or a few hardcoded implicit solvers.
+It is through such benchmarks that I have found the implicit \texttt{Rodas5P} method to work best
 \emph{in conjunction with} the analytical and sparse Jacobian of the perturbations.%
 \footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/benchmarks/}}
 
@@ -2736,23 +2742,24 @@ instead of complicating the physics with approximation schemes on a model-by-mod
 
 \subsubsection{Approximation schemes in the time of emulation}
 
-Historically, approximation schemes were introduced first
+Historically, approximation schemes inside \EB{} codes
 \cite[e.g.][]{maCosmologicalPerturbationTheory1995a,blasCosmicLinearAnisotropy2011c}
-and sped up \EB{} codes for use in MCMC sampling, for example.
-More recently, emulation has become increasingly popular \cite[e.g.][]{manciniCOSMOPOWEREmulatingCosmological2022b,pirasCosmoPowerJAXHighdimensionalBayesian2023}
-in order to interpolate the full predictions of theory codes in parameter space.
-This has been driven by the rise of machine learning, neural networks and GPU computing.
-Earlier papers on emulation did not take off to the same extent
+were introduced before emulation of the final output (e.g. in MCMC sampling) became popular
+\cite[e.g.][]{manciniCOSMOPOWEREmulatingCosmological2022b,pirasCosmoPowerJAXHighdimensionalBayesian2023}.
+The rise of emulation is largely driven by the development of machine learning, neural networks and GPU computing,
+while earlier papers on emulation did not take off to the same extent
 \cite[e.g.][]{fendtPicoParametersImpatient2007,fendtComputingHighAccuracy2007,auldFastCosmologicalParameter2007,auldScCosmoNetFast2008}.
 
-In the current time of emulation, I advocate for rethinking how we approach approximation schemes.
-In my opinion we should reduce our reliance on approximation schemes \enquote{inside} theory codes,
-and rather focus on creating user-friendly emulation interfaces on the \enquote{outside} of theory codes.
+In the current time of emulation \cite{nygaardPosteriorSamplingAge2026}, I advocate for rethinking how we approach approximation schemes.
+In my opinion we should reduce our reliance on internal approximation schemes in theory codes,
+and rather focus on creating user-friendly external emulation interfaces.
 Someone who is unfamiliar with emulators should not have to learn how to create and train an emulator from scratch,
-but should be able to wrap their theory function into a general emulation framework with as little effort as possible.
-This would reduce sources of error and simplify implementation of modified models in theory codes,
-and emulators can provide a greater speedup than traditional approximation schemes anyway.
-This is in the spirit of OLÉ \cite{guntherUncertaintyawareDataefficientCosmological2024,guntherOLEOnlineLearning2025}, for example.
+but should be able to wrap their theory function into a general emulation framework with little effort.
+This approach to approximations is less model-dependent,
+reduces sources of error and simplifies implementation of modified models in the theory codes.
+At the same time, it would speed up the final inference step by a greater factor than traditional approximation schemes.
+This is in the spirit of OLÉ \cite{guntherUncertaintyawareDataefficientCosmological2024,guntherOLEOnlineLearning2025}, for example,
+as described in greater detail in \cref{sec:emulators}.
 
 \subsection{Gradients through automatic differentiation}
 
