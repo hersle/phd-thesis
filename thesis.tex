@@ -2623,7 +2623,7 @@ set this up as a \emph{nonlinear} equation for $u_{n+1}$ and solve it with a New
 \begin{equation}
 F(u_{n+1}) = u_{n+1} - \Delta\tau \cdot f(u_{n+1}) - u_n = 0.
 \end{equation}
-This requires $F$'s Jacobian matrix $W = \nabla F = 1 - \Delta\tau \cdot J$
+This requires $F$'s Jacobian matrix $W = \nabla F = I - \Delta\tau \cdot J$
 and $f$'s Jacobian $J = \nabla f$.
 Newton's method iteratively solves linear systems of equations $W (u^{(m+1)}-u^{(m)}) = -F(u^{(m)})$,
 and doing this several times in every time step is extremely slow if done naively!
@@ -2666,7 +2666,7 @@ Inserting this in the implicit Euler method (again used for simplicity)
 gives a \emph{linear} system for $u_{n+1}$,
 which can be solved directly without Newton iterations:
 \begin{equation}
-\big( 1 - \Delta\tau \, J(u_n) \, \big) u_{n+1} = \big( 1 - \Delta\tau \, J(u_n) \big) u_n + \Delta\tau \, f(u_n) .
+\big( I - \Delta\tau \, J(u_n) \, \big) u_{n+1} = \big( I - \Delta\tau \, J(u_n) \big) u_n + \Delta\tau \, f(u_n) .
 \label{eq:rosenbrock_linsolve}
 \end{equation}
 
