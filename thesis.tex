@@ -381,7 +381,7 @@ the constraints become compatible.
 These and other discrepancies motivate research on modifying all parts of the cosmological model
 and relaxing the assumptions of \LCDM{}.
 I review some examples of modified models in \cref{sec:modifications}.
-As one modified the cosmological model,
+As one modifies the cosmological model,
 one must also modify computer software that solves its governing equations.
 
 \begin{figure}[t!]
@@ -566,7 +566,7 @@ From a bird's-eye view,
 one can see emulation as a marriage between computational cosmology
 and the mathematical field of function approximation.
 In the latter field, the smoothness of the function is an important property
-that can be used to access better and faster converging interplation methods
+that can be used to access better and faster converging interpolation methods
 (as explored in \cref{paper:chebyshev}).
 The expensive function is evaluated at a number of sample points,
 and then interpolation and regression methods are used to evaluate it cheaply at other points.
@@ -2156,7 +2156,7 @@ are inconsistent because every term involving baryon pressure is ignored \emph{e
 This breaks general covariance and energy-momentum conservation.
 Similarly, one could argue that the nonzero baryon equation of state $w_b \ll 1$
 makes it inconsistent to solve the background independently of thermodynamics.
-In principle, the background continuity equation $\dot{\rho_b} = -3\calH(1+w_b) \rho_b$ with $w_b \neq 0$ from thermodynamics
+In principle, the background continuity equation $\dot{\rho}_b =-3\calH(1+w_b) \rho_b$ with $w_b \neq 0$ from thermodynamics
 should be evolved as one coupled system.
 This would be hard to implement in most codes that are structured with the background being independent of thermodynamics,
 by assuming $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and independently of thermodynamics.
@@ -2714,7 +2714,7 @@ With no extra input from the user,
 they can \emph{symbolically} differentiate the user-specified expressions for $f$
 to generate the Jacobian $J$ \emph{analytically}.
 This fundamental architectural difference
-makes it possible to compute the Jacobian in an optimal way that is strictly faster and more accurate,
+makes it possible to compute the Jacobian in an optimal way that is faster and more accurate,
 and therefore maximizes the potential of using implicit solvers to avoid approximation schemes.
 In my opinion, it is critical to understand that it is precisely
 \emph{the combination of a symbolic-numeric framework and implicit solvers}
@@ -3209,7 +3209,7 @@ This makes it problematic to use them for exploring parameter space and even mor
 \caption[$N$-body simulations and the COLA method]{\label{fig:cola}%
 $N$-body simulations simulate mutual gravitational forces between matter particles in an expanding universe.
 Standard $N$-body simulations (right) solve directly for the positions and must take many time steps.
-The COmoving Lagranigan Acceleration method (middle) instead solves for the difference of the positions from those predicted by analytically Lagrangian Perturbation Theory (left),
+The COmoving Lagrangian Acceleration method (middle) instead solves for the difference of the positions from those predicted by analytical Lagrangian Perturbation Theory (left),
 which allows them to take much longer time steps while sacrificing some accuracy at very small scales.
 From \cite{tassevSolvingLargeScale2013b}.}
 \end{figure}
