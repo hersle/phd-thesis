@@ -1738,17 +1738,16 @@ At the time of writing, the code has not been actively developed since 2024 and 
 \subsubsection{DISCO-EB}
 DISCO-EB\footnote{\url{https://github.com/ohahn/DISCO-EB/}} \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a}
 is another differentiable \EB{} code written in the JAX framework in Python \cite{jax}.
-This is a popular framework that extends the \texttt{numpy} library in Python with support for automatic differentiation and GPUs, for example.
+This is a popular framework that extends the \texttt{numpy} library in Python with support for automatic differentiation and GPU compatibility, for example.
 It is the first \EB{} code that targets GPU compatibility,
-which can parallelize the evaluation of independent perturbation ODEs \eqref{eq:pt_ode},
-line-of-sight integrals \eqref{eq:los}
+which can parallelize the evaluation of independent perturbation ODEs, line-of-sight integrals
 and entire parameter sets to a greater extent than CPUs.
-GPU solvers like straightforward and branch-free computations,
-so DISCO-EB uses implicit solvers to avoid approximation schemes.
-DISCO-EB is compatible with the Diffrax ODE solver library \cite{kidgerNeuralDifferentialEquations2022},
-which also offers an appreciable suite of implicit ODE solvers similarly to OrdinaryDiffEq.jl in Bolt.
+GPU solvers want straightforward and branch-free computations,
+so DISCO-EB uses implicit solvers and leaves approximation schemes disabled.
+DISCO-EB depends on the Diffrax ODE solver library \cite{kidgerNeuralDifferentialEquations2022},
+which offers an appreciable suite of implicit ODE solvers similarly to OrdinaryDiffEq.jl in Bolt and SymBoltz.
 At the time of writing, development has focused on enabling a fully differentiable end-to-end simulation pipeline from linear perturbation theory through nonlinear $N$-body simulations of structure formation \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026}.
-Consequently, DISCO-EB currently has a simplified recombination treatment and does not compute CMB observables, for example.
+Consequently, DISCO-EB currently has a simplified recombination treatment and does not yet compute CMB observables.
 
 \subsubsection{ABCMB}
 ABCMB\footnote{\url{https://github.com/TonyZhou729/ABCMB}} \cite{zhouABCMBPythonJAXPackage2026} is
