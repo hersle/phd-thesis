@@ -1754,15 +1754,19 @@ Consequently, DISCO-EB currently has a simplified recombination treatment and do
 ABCMB\footnote{\url{https://github.com/TonyZhou729/ABCMB}} \cite{zhouABCMBPythonJAXPackage2026} is
 another differentiable \EB{} code.
 It is built on the same Python+JAX platform as DISCO-EB and also uses Diffrax,
-but also features detailed implementations of recombination, BBN, line-of-sight integration and lensed CMB power spectra.
-Like DISCO-EB, it targets GPU parallelization, avoids approximation schemes
-and reports better runtime scaling with increasing $\lmax$ over CPU-based codes.
+but additionally features detailed implementations of recombination, Big Bang Nucleosynthesis through LINX \cite{giovanettiLINXFastDifferentiable2025},
+line-of-sight integration and lensed CMB power spectra.
+Like DISCO-EB it currently avoids approximation schemes and targets GPU parallelization,
+which gives better runtime scaling with increasing $\lmax$ than CPU-based codes.
 For the whole pipeline to support automatic differentiation,
 ABCMB cannot simply call out to external recombination codes (like CAMB and CLASS can),
-but reimplements HyRec-2 in native JAX (see \cref{sec:modify_baryons}).
-Similarly to CMBEASY, it features an object-oriented interface for adding new species
-by specifying their energy-momentum contributions \eqref{eq:totalT} as a class,
-which makes it convenient to implement modifications when they fit into this form.
+but reimplements HyRec-2 in native Python+JAX (see \cref{sec:modify_baryons}).
+Similarly to CMBEASY, it features an object-oriented interface for modifying and adding species using classes in Python,
+which makes it possible to implement modifications without touching code internals when they fit into this form.
+The code automatically collects the ODE variables exposed by the class of every species
+into a full ODE state vector for the coupled \EB{} system.
+ABCMB has already been used for parameter inference with Planck data through emulators
+\cite{giovanettiGenericTension2026,weinerBurstReionizationDark2026}.
 
 \begin{table}[tb]
 \caption[Comparison of technical properties of \EB{} codes]{%
