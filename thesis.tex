@@ -3311,12 +3311,25 @@ we can compute the boost efficiently with only two calls to cheap \EB{} solvers.
 
 \section{Paper, conclusion and outlook}
 
-The emulation strategy described above and in \cref{paper:bransdicke}
-avoids the traditional training step of neural network emulators.
-It could also be used for other modified gravity theories.
-By starting with one carefully designed emulator of $P_\mathrm{GR}(z, k)$ for \GR{},
-one could in this way build up a network of \enquote{boost approximations} (or emulators)
-that predicts nonlinear matter power spectra for several modified gravity models.
+The emulation strategy described here and in \cref{paper:bransdicke}
+avoids the training step of additional (neural network) emulators for modified gravity theories.
+Instead, the freedom of parameterization of the boost \eqref{eq:boost_intro} is exploited
+to approximate the nonlinear boost by cheaper computations from linear \EB{} codes,
+validated by running a handful of test simulations to ensure that the mapping is sufficiently accurate.
+
+The resulting boost emulator accurately incorporates nonlinear effects to $1\%$--$2\%$
+for the scales relevant for stage-IV large-scale structure data.
+This could give tighter cosmological constraints on \BD{} gravity
+and narrow the gap to the stronger constraints from astrophysical data.
+
+One could also try similar \enquote{boost parameterization} techniques on other modified gravity theories.
+Starting from one carefully designed emulator for \GR{},
+one could ramp up the production of boost emulators for a range of modified gravity models
+and increase the coverage of nonlinear modeling throughout the model space in \cref{fig:mg}.
+There is no guarantee that the same trick will work for every theory, however.
+\BD{} is a mild modification of \GR{} with only scale-independent growth modifications,
+which is likely why such a nonlinear-to-linear mapping works well.
+More complex modified gravity theories may need more elaborate mappings or direct emulation.
 
 \uiopaper[%compact,
     authors={Herman Sletmoen\and Hans A. Winther},
