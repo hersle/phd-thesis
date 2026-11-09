@@ -2546,10 +2546,9 @@ and to handle it one must seek either physical or numerical treatment.
 \centering
 \includegraphics[width=\textwidth]{media/stiff}
 \caption[Implicit versus explicit solvers on the stiff \EB{} ODEs]{\label{fig:stiff}
-Explicit ODE solvers fail catastrophically at solving the stiff \EB{} perturbation ODEs,
-here taking around 1000 tiny steps before aborting (all the red points are on top of each other).
-Implicit solvers handle the stiffness fine,
-here taking around 100 long steps over the entire time domain.
+Explicit ODE solvers fail catastrophically at solving the stiff \EB{} perturbation ODEs
+(the red points are on top of each other, and the blue curve diverges).
+Implicit solvers solve the stiff equations without problems over the entire time domain with long steps.
 Created with SymBoltz \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.}
 \end{figure}
 
