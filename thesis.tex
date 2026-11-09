@@ -1976,9 +1976,10 @@ Non-cold dark matter (NCDM) models
 relax the assumptions that dark matter is cold (CDM) with non-relativistic velocity and negligible velocity dispersion.
 For example, massive neutrinos are non-relativistic and make up a small fraction of the dark matter content today,
 but were relativistic in the early universe and thus a form of hot dark matter (HDM).
+Between CDM and HDM are warm dark matter (WDM) models, such as sterile neutrinos \cite[e.g.][]{boyarskySterileNeutrinoDark2019}.
 CLASS has an elegant implementation of non-cold dark matter models
 that reads an arbitrary distribution function $f(q)$,
-either specified analytically or interpolated from a data table.
+either specified analytically or interpolated from a data table \cite{lesgourguesCosmicLinearAnisotropy2011f}.
 It then automatically uses $f(q)$ to determine quadrature points $q_i$ and weights $W_i$
 for the general $(q,l)$-hierarchy \eqref{eq:eb_massive_neutrinos}
 (which is valid for general $f(q)$; massive neutrinos are just a special case with $f(q) = 1/(e^{q/T}+1)$).
@@ -2069,7 +2070,7 @@ where it has been re-calibrated to the output of CosmoRec (see below)
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=0.7\textwidth]{media/emla}
+\includegraphics[width=0.8\textwidth]{media/emla}
 \caption[Effective multi-level Hydrogen atom of the recombination problem]{\label{fig:emla}
 The effective multi-level atom (EMLA) is a method that splits the excited atomic states in the recombination problem in two categories.
 \enquote{Interface states} are directly connected to the ground state with radiative transitions, and are cheap to solve but cosmology-dependent.
