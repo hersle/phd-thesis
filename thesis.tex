@@ -3003,12 +3003,13 @@ In addition, \cref{fig:ad_evolution} shows how it can be used to evolve the sens
 
 \begin{table}[t]
 \caption[Local versus spectral methods in approximation-based versus approximation-free \EB{} codes]{\label{tab:spectral}
-Best-case convergence of local versus spectral numerical methods in \EB{} codes that are approximation-based (with less smooth solutions) versus approximation-free (with smoother solutions).}
+Best-case convergence of local versus spectral methods in \EB{} codes that are approximation-based (less smooth solutions) versus approximation-free (more smooth solutions).
+Approximation-free codes open the door to spectral methods.}
 \centering
 \def\arraystretch{1.5}
 \begin{tabular}{lcc}
 \toprule
-& \makecell{\textbf{Approximation-based} \\ (e.g. CAMB, CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz, PyCosmo)} \\
+& \makecell{\textbf{Approximation-based} \\ (e.g. CAMB \& CLASS)} & \makecell{\textbf{Approximation-free} \\ (e.g. SymBoltz \& PyCosmo)} \\
 \midrule
 \textbf{Local methods}    & Algebraic convergence                   & Algebraic convergence                   \\
 \textbf{Spectral methods} & Degraded convergence                    & Exponential convergence                  \\
