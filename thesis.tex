@@ -2370,30 +2370,31 @@ and taking perturbation theory up to second order in the code SONG \cite{pettina
 \section{SymBoltz: motivation, development and features}
 \label{sec:symboltz}
 
-Through my PhD I became increasingly interested in \EB{} codes.
-First, I learned to use CLASS (and hi\_class) myself while working on \cref{paper:bransdicke} in this thesis.
-Second, it is a mandatory project%
+During my time as a PhD student, I have become increasingly interested in \EB{} codes.
+First, I learned to use CLASS (and hi\_class) myself in \cref{paper:bransdicke} in this thesis.
+Second, it is a mandatory project in the \textit{Cosmology 2}%
 \footnote{The project is given on \url{https://cmb.wintherscoming.no/} and largely follows \cite{callinHowCalculateCMB2006b}.}
-in the \textit{Cosmology 2} course offered by the University of Oslo to write a simplified \EB{} code
+course offered by the University of Oslo to write a simplified \EB{} code
 that solves the background, thermodynamics with Peebles recombination, perturbations, and computes matter and CMB power spectra.
-Third, over time I have seen countless cosmologists and papers that modify \EB{} codes to implement extended cosmological models (see \cref{sec:modifications}),
-and seen how it can be difficult to navigate, understand and modify their source codes and deal with approximation schemes of the equations,
-leading to (parts of) the codes being treated as \enquote{black boxes} by users.
+Third, over time I have met and heard from many cosmologists who modify \EB{} codes to implement their favorite extended cosmological models (see \cref{sec:modifications}),
+and seen how it can be difficult to navigate, understand and modify their source codes and deal with approximation schemes,
+leading to (parts of) the equations and codes being treated as \enquote{black boxes} by users.
 Fourth, I find \EB{} codes to be a very satisfying combination of many different numerical methods used in conjunction (implicit ODE solvers, linear algebra, numerical quadrature, interpolation methods, root solvers, differentiation, ...);
-and I think it is very elegant how they are the fundamental theoretical tool that captures the background and linear perturbations of \enquote{all} cosmological models in a general way.
+and I find it very elegant how they are the fundamental theoretical tool that captures the background and linear perturbations of \enquote{all} cosmological models in a general way.
 
 The sum of these experiences and the evolution of other codes in \cref{sec:history}
 gave me insight into how \EB{} codes work internally and are modified.
-This is what inspired me to create a new code from scratch called \textbf{SymBoltz}%
-\footnote{$\textbf{SymBoltz} = \text{\textbf{sym}bolic-numeric Einstein--\textbf{Boltz}mann solver}$.},
-which is designed with the following high-level goals in mind:
+This is what inspired me to create a new code from scratch called \textbf{SymBoltz},%
+\footnote{$\textbf{SymBoltz} = \text{\textbf{sym}bolic-numeric Einstein--\textbf{Boltz}mann solver}$.}
+with the aim of making it easier for others to study modified cosmological models.
+To this end, SymBoltz is designed with the following high-level goals in mind:
 \begin{itemize}
 \item
 The entire \enquote{cosmological model} should be exposed through a symbolic modeling language
 that uniformly captures and transparently shows all variables, parameters and equations
 that make up the background and perturbations of the entire \EB{} system \eqref{eq:eb}.
 This abstraction layer should be taken maximal advantage of to make it convenient for users
-to use the code and modify any parts of the cosmological model.
+to use the code and modify \emph{any} part of the cosmological model.
 At the same time it should automatically translate the equations into numerical code
 that is optimal for solving the resulting ODEs with implicit solvers.
 \item
@@ -2401,9 +2402,10 @@ Users should specify only one set of equations without approximation schemes.
 It should not be necessary to derive and validate approximations of the equations in different regimes.
 This also encourages specification of well-defined cosmological models of our smooth universe,
 which does not switch its governing equations abruptly at some arbitrary time.
-This is numerically nontrivial because the approximation-free equations are stiff and must be solved by implicit ODE solvers.
-They need the Jacobian matrix of the ODEs,
-which would be very cumbersome for users to specify manually
+Approximation-free equations are nontrivial from a numerical standpoint,
+because the full equations are stiff and must be solved by implicit ODE solvers.
+They need the Jacobian matrices of the ODEs,
+which are very cumbersome for users to specify manually
 but can be found automatically from the symbolic equations.
 \item
 The code should support modern numerical methods.
@@ -2414,15 +2416,15 @@ and can be used to take maximum advantage of the approximation-free output,
 for example in internal interpolation and quadrature methods.
 \end{itemize}
 In the following, I elaborate on these aspects in greater detail
-and from a higher level than in \cref{paper:symboltz}.
+and from a higher level than what \cref{paper:symboltz} does.
 I also account for the updates to SymBoltz that were made with \cref{paper:chebyshev,paper:interactions}.
-I will compare some aspects to CLASS, which is the established code that I am most familiar with.
+I compare some aspects to CLASS, which is the established \EB{} code that I am most familiar with.
 
 \subsection{Symbolic-numeric interface for easy model specification}
 \label{sec:symbolicnumeric}
 
 As \cref{sec:modifications} shows, the standard \LCDM{} \EB{} equations \eqref{eq:eb} are highly subject to modification.
-To modify the equations in other \EB{} codes,
+To modify the equations in other codes,
 one must often make significant edits to the source code in many different places.
 For example, in CLASS one must generally edit some or all of the following files:
 \begin{itemize}
@@ -2431,21 +2433,32 @@ For example, in CLASS one must generally edit some or all of the following files
 \item \href{https://github.com/lesgourg/class_public/blob/master/source/thermodynamics.c}{\texttt{thermodynamics.c}} and \href{https://github.com/lesgourg/class_public/blob/master/include/thermodynamics.h}{\texttt{thermodynamics.h}} for thermodynamics equations,
 \item \href{https://github.com/lesgourg/class_public/blob/master/source/perturbations.c}{\texttt{perturbations.c}} and \href{https://github.com/lesgourg/class_public/blob/master/include/perturbations.h}{\texttt{perturbations.h}} for perturbation equations.
 \end{itemize}
-Moreover, each file must typically be edited in several places.
-Initial conditions, evolution equations, approximation schemes, parameter handling and input/output handling are handled in different places in each file.
-Navigating and understanding all these files is nontrivial for users who are unfamiliar with the code.
+Moreover, each file must typically be edited in several places,
+as initial conditions, evolution equations, approximation schemes, parameter handling and input/output are handled in different places.
 At the time of writing these files contain more than 20 000 lines of code in total,
-where high-level equations are scattered and intertwined with low-level machinery.
-In my opinion, this separation of modules in CLASS
-reflects the right way to \emph{solve} the \EB{} problem,
-but is not the easiest way to \emph{specify} it.
+where high-level equations are spread across different files and mixed with low-level machinery.
+It is nontrivial for users who are unfamiliar with the code to navigate and understand all these files.
+In my opinion, this separation of modules
+is the right way to \emph{solve} the \EB{} problem (as in \cref{sec:eb_codes}),
+but not the easiest way to \emph{specify} it.%
+\footnote{%
+CLASS is a very well-structured code that is
+tailored to the computational structure of the \EB{} problem,
+with explicitly laid out steps in low-level efficient C code that operates at the numerical level,
+while remaining flexible and modular at the same time.
+I have found it very useful and insightful to understand its code,
+which has inspired my design of SymBoltz.
+My intention is to show a \emph{different} approach to the same problem,
+with different goals and thus a different design,
+such as a symbolic interface in a higher-level programming language.}
 
-With SymBoltz, my vision is to separate out the full specification of the \EB{} equations \eqref{eq:eb}
+In SymBoltz, my vision is to separate out the full specification of the \EB{} equations \eqref{eq:eb}
 from internal machinery in the code.
-In particular, I advocate for thinking about the full \EB{} system of equations \eqref{eq:eb}
+In particular, I advocate for thinking about the \enquote{full} \EB{} system of equations \eqref{eq:eb}
 -- which includes what is commonly called the \enquote{background}, \enquote{thermodynamics}, \enquote{recombination code} and \enquote{perturbations} --
 as fundamentally \emph{one} (large) system of ODEs where $k$ is a parameter.
-All its variables, parameters, differential and algebraic equations and initial conditions can be specified in a single place.
+All its variables, parameters, differential and algebraic equations and initial conditions can be specified as one ODE system in a single place.%
+\footnote{This is equivalent to specifying the perturbations where the background is \emph{not} splined.}
 It is the responsibility of the cosmologist (\enquote{user}) to specify their model through this large system of equations;
 and it is the responsibility of the code to break up the system, transform it into a numerical problem and solve it.
 The symbolic-numeric interface in SymBoltz
@@ -2458,15 +2471,15 @@ To illustrate how the symbolic-numeric interface looks in practice,
 I refer the reader to the full \LCDM{} example on SymBoltz' documentation page.%
 \footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/LCDM/}}
 It encodes the entire standard model in only around 300 lines of code
-that directly resemble the \EB{} equations \eqref{eq:eb}.
-It includes all variables, parameters and equations for the background and perturbations,
-with baryons, photons, cold dark matter, dark energy, massless and massive neutrinos and RECFAST recombination.
+that directly resemble the \EB{} equations \eqref{eq:eb},
+including all variables, parameters and equations for the background and perturbations of
+baryons, photons, cold dark matter, dark energy, massless and massive neutrinos and RECFAST recombination.
 This makes the model specification clear, compact and convenient.
 
 The symbolic-numeric interface is built on top of a library in Julia called ModelingToolkit.jl,%
 \footnote{\url{https://github.com/SciML/ModelingToolkit.jl/}}
 which is a general-purpose symbolic modeling framework integrated with ODE solvers in the OrdinaryDiffEq.jl library (see \cref{sec:approx}).
-The development of SymBoltz has contributed back to these libraries in Julia.%
+My development of SymBoltz has contributed back to these libraries in Julia.%
 \footnote{\url{https://github.com/search?q=org:SciML+author:hersle&type=issues}}
 
 \Cref{paper:symboltz,paper:interactions} explain in greater detail
@@ -2478,24 +2491,27 @@ To summarize, it currently supports:
 All variables, parameters, differential and algebraic equations, initial conditions and parameter relationships
 are declared through the symbolic modeling language of ModelingToolkit.
 This makes it possible to refer to arbitrary variables and parameters and build expressions thereof,
-and makes SymBoltz able to do internal logic with its programmatic \enquote{knowledge} of the underlying equations.
+and makes SymBoltz able to do internal logic with its programmatic knowledge of the underlying equations
+(i.e. \enquote{metaprogramming} of the model equations).
 \item \textbf{Stage separation:}
 All background and perturbation equations are written into the same system,
 where the perturbations are free to refer to any background variables.
 This system is automatically split into background and perturbation stages,
 and Hermite interpolation is set up to provide all necessary background variables to the perturbations.
 The background can also be split into several substages
-depending on the dependencies between variables (see \cref{paper:interactions}).
+depending on the dependencies between variables (see the point on mixed forwards-backwards integration below).
 \item \textbf{Numerical code generation:}
 Users can mix differential and algebraic equations in any order.
 ModelingToolkit reduces them to minimal first-order ODEs $\dot{u} = f(\tau,u)$
 for the differential variables $u$
 by sorting the equations and eliminating algebraic variables.
-Numerical code is then generated for the ODE function $f$ and its Jacobian $J$,
+Numerical code is then generated for both the ODE function $f$ and its Jacobian $J$,
 using optimizations such as Common Subexpression Elimination (CSE) to make it efficient.
-In particular, the symbolic equations are used to generate the Jacobian analytically,
-and in sparse form for the perturbations,
-which is \emph{crucial for avoiding approximation schemes} (see \cref{sec:approx}).
+\item \textbf{Analytical and sparse Jacobian:}
+In particular, the numerical code generation uses the symbolic equations to generate the Jacobian analytically
+and in sparse form for the perturbations.
+This is \emph{crucial for avoiding approximation schemes} while remaining as performant as possible,
+as explained in greater detail in \cref{sec:approx}.
 \item \textbf{Initial conditions:}
 At the initial time,
 the code solves a system of equations to determine the initial conditions for the differential variables.
@@ -2518,9 +2534,11 @@ This was introduced with SymBoltz version 2 and is described in \cref{paper:inte
 \item \textbf{Interpolation:}
 From the background and perturbation solutions,
 users can interpolate any variable $x(\tau)$ or $x(\tau,k)$ in both time and wavenumber.
-The time interpolation automatically decides the best way to compute the variable,
+In $\tau$, the code automatically decides the best way to interpolate the variable,
 depending on whether it belongs to the background or perturbations
 and whether it is determined by a differential or algebraic equation.
+In $k$, it is possible to use linear interpolation or cubic splines for arbitrary $k$-grids,
+or Chebyshev interpolation if the $k$-grid is chosen as such.
 \end{itemize}
 The ambition of the symbolic-numeric interface is to be a general framework
 that accommodates most modifications to the \EB{} equations.
@@ -2533,12 +2551,12 @@ through a high-level interface without having to touch internal low-level code.
 The background ODEs \eqref{eq:bg_ode} and particularly the perturbation ODEs \eqref{eq:pt_ode} of the \EB{} system are \emph{stiff}.
 Stiffness is a property of differential equations that is hard to define mathematically,
 but can arise when several timescales coexist in the equations.
-This is very common in cosmology where baryons and photons interact rapidly while the universe expands slowly, for example.
-This happens not only during tight coupling in the early universe,
+This is very common in cosmology where baryons and photons interact rapidly in a universe expands slowly, for example.
+However, stiffness arises not only during tight coupling in the early universe,
 but also for oscillatory perturbations in the late universe even in the absence of baryons
 \cite{nadkarni-ghoshEinsteinBoltzmannEquationsRevisited2017a}.
 Understanding stiffness is crucial for numerically solving the \EB{} equations in a stable and efficient way,
-and to handle it one must seek either physical or numerical treatment.
+and to cure stiffness one must seek treatment: either physically or numerically.
 
 \subsubsection{Explicit integrators with approximation schemes}
 
@@ -2553,7 +2571,7 @@ Created with SymBoltz \cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree20
 \end{figure}
 
 Standard explicit ODE solvers, such as the Euler, RK4 and Tsitouras 5(4) methods, fail catastrophically at solving stiff ODEs.%
-\footnote{\emph{By definition}, \enquote{stiff equations are problems for which explicit methods don't work} \cite{hairerSolvingOrdinaryDifferential1996}.}
+\footnote{By definition in \cite{hairerSolvingOrdinaryDifferential1996}: \enquote{stiff equations are problems for which explicit methods don't work}.}
 They are forced to take tiny time steps to follow the stiffness, and are extremely inefficient, abort early or crash and diverge with enormous errors,
 as illustrated in \cref{fig:stiff}.
 CAMB and to a smaller extent CLASS\footnote{CLASS also has an implicit integrator and can optionally disable most of its approximation schemes; see the next part on implicit integrators.} remove the stiffness in the equations by approximating them with different versions that are valid in different regimes.
@@ -2633,11 +2651,11 @@ for their effect on the numerical solution of the \EB{} equations.
 
 A pedagogical way of explaining explicit versus implicit methods
 for an (autonomous, for simplicity) ODE $\dot{u} = f(u)$
-is to compare the two Euler methods:%
+is to compare the Euler methods:%
 \footnote{Euler methods are seldom used in practice,
 but they are the simplest methods and make it possible to explain implicit ODE methods
 without complicating the high-level picture.
-Realistic solvers can have multiple stages and coefficients that are more complicated to write down.}
+Realistic solvers can have multiple stages and coefficients that are more complicated to write down.}%
 \begin{subequations}
 \label{eq:euler_methods}
 \begin{align}
@@ -2710,29 +2728,29 @@ Rosenbrock methods are not restricted by the Dahlquist barrier,
 and can remain stable even with higher orders and thus take more efficient steps.
 For example, the \texttt{Rodas5P} method that SymBoltz uses by default is a 5th order Rosenbrock method that is stable, accurate and efficient \cite{steinebachConstructionRosenbrockWanner2023}.
 
-Implicit methods must evaluate \textbf{the Jacobian} $J$ in addition to $f$, as we have seen above.
-This is particularly true for Rosenbrock methods that need a new Jacobian at every time step.
-In a purely numerical code, such as CLASS,
-the source code effectively specifies the ODE function $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
-and $J$ is found by evaluating $f$ many times with finite differences, for example.
+Implicit methods must evaluate not only $f$, but also \textbf{the Jacobian} $J$, as we have seen.
+This is particularly true for Rosenbrock methods that need new and accurate Jacobians at every time step.
+A numerical code such as CLASS
+specifies the ODE function $f$ through all the derivatives in the \EB{} system \eqref{eq:eb},
+and finds $J$ by evaluating $f$ many times with finite differences, for example.
 This is sensitive to a step size and not always reliable.
-It is also unnecessarily inefficient:
-the Jacobian of a linear ODE
+It is also unnecessarily inefficient,
+as the Jacobian of a linear ODE
 $f_i(\tau,u) = \sum_j A_{ij}(\tau) \, u_j$ is just $A_{ij}(\tau)$,
 but the finite differences do not \enquote{know} this
 and evaluate $f(u)$ and hence $A_{ij}(\tau)$ several times to find it.
-In practice, numerical codes are therefore restricted to either slow evaluation of $J$
-or suboptimal methods that rely heavily on reusing it over time steps.
+In practice, numerical codes are therefore restricted to slow evaluation of $J$
+or to implicit methods that rely on heavy reuse of $J$ in time.
 
 \emph{This is exactly where the symbolic-numeric interfaces of SymBoltz (and PyCosmo) come into the picture.}
-With no extra input from the user,
+With no extra user input,
 they can \emph{symbolically} differentiate the user-specified expressions for $f$
-to generate the Jacobian $J$ \emph{analytically}.
-This fundamental architectural difference
+to generate the \emph{analytical} Jacobian $J$.
+This architectural difference
 makes it possible to compute the Jacobian in an optimal way that is faster and more accurate,
 and therefore maximizes the potential of using implicit solvers to avoid approximation schemes.
 In my opinion, it is critical to understand that it is precisely
-\emph{the combination of a symbolic-numeric framework and implicit solvers}
+\emph{this combination of a symbolic-numeric framework and implicit solvers}
 that is the greatest advantage of this approach.
 
 Moreover, the Jacobian of the perturbation ODEs is typically a very \textbf{sparse} matrix
@@ -2740,32 +2758,35 @@ where every $\dot{u}_i$ depends on only a few states $u_j$.
 It is very inefficient to solve big linear systems in implicit solvers with dense matrix methods that handle all zeros explicitly,
 as the computational cost of LU-factorizing a dense $n \times n$ matrix scales as $O(n^3)$.
 Instead one should use special data structures and algorithms for sparse matrices,
-which are designed to handle only the nonzeros explicitly.
-Here the symbolic framework again comes in handy, as the Jacobian is precomputed analytically,
+which handle only the nonzeros explicitly.
+Here the symbolic framework again comes to use, as the Jacobian is precomputed analytically,
 so the sparsity pattern is determined ahead of time and the nonzero entries are computed directly by an automatically generated function.
 In contrast, a purely numerical code such as CLASS does not \enquote{know} where the zeros are and must determine them at runtime,
 and must rebuild the sparsity pattern when the ODE changes due to approximation schemes.
 
-\bigskip
+%\bigskip
 
 Due to all these technicalities,
 the speed and stability of implicit ODE solvers are highly problem-dependent
-\cite[e.g.][Section IV.10]{hairerSolvingOrdinaryDifferential1996}!
+\cite[e.g.][Section IV.10]{hairerSolvingOrdinaryDifferential1996}.
 It is therefore wise to take a \textbf{benchmark-oriented approach},
-where one makes use of a numerical ODE solver library that implements as many implicit solvers as possible
-and then benchmarks the performance of each of them on the equations at hand.
-This is one of the reasons that SymBoltz is written in Julia,
+where one uses a numerical ODE solver library that implements as many implicit solvers as possible
+and then benchmarks the performance of each of them on the problem at hand.
+This is one of the reasons why SymBoltz is written in Julia,
 which provides the OrdinaryDiffEq.jl\footnote{\url{https://github.com/SciML/OrdinaryDiffEq.jl/}} library
 with an enormous selection of implicit (and explicit) ODE solvers
 \cite{rackauckasDifferentialEquationsjlPerformantFeatureRich2017a}.
-It is further interfaced with the LinearSolve.jl\footnote{\url{https://github.com/SciML/LinearSolve.jl}} library,
-which makes it possible to swap out the linear system solver used inside the implicit solvers.
-We may then try several different combinations of ODE and linear system solvers
-by changing only a single line of code and benchmark their performance \emph{and} precision on the \EB{} equations.
-This is not easy in codes that include only one or a few hardcoded implicit solvers.
+This library is also interfaced with the LinearSolve.jl\footnote{\url{https://github.com/SciML/LinearSolve.jl}} library,
+which makes it possible to swap out the linear system solver used in the implicit solvers.
+We may then try different combinations of ODE and linear system solvers
+by changing only a single line of code and benchmark their performance and precision on the \EB{} equations.
+This is not easy in codes with only one or a few hardcoded implicit solvers.
 It is through such benchmarks that I have found the implicit \texttt{Rodas5P} method to work best
 \emph{in conjunction with} the analytical and sparse Jacobian of the perturbations.%
 \footnote{\url{https://hersle.github.io/SymBoltz.jl/stable/benchmarks/}}
+\Cref{paper:symboltz}
+also shows that the performance of SymBoltz without approximations is comparable to that of CLASS with all approximations enabled,
+and better when CLASS disables most of its approximations.
 
 I reiterate that it is \emph{the combination of} approximation-freeness and the symbolic-numeric interface
 that makes it easier for users to modify the equations,
@@ -2906,22 +2927,23 @@ The method is numerically exact with no additional hyperparameters to tune
 
 While the program \eqref{eq:program} must be evaluated inside-to-outside (right-to-left, i.e. the $i$-th line of code must run before the $(i+1)$-th line of code),
 this is not required for the chain rule \eqref{eq:ad}.
-The Jacobian product is associative, so it can be evaluated in any order.
-This property gives rise to two modes of automatic differentiation:%
-\footnote{Without loss of generality, we can always suppose that the first and last lines are the identity operations $f_1 = p$ and $f_N = f_{N-1}$ with identity Jacobians.}
+It is a product that can be evaluated in any order.
+This property gives rise to two modes of automatic differentiation:
 \begin{subequations}
-\begin{align}
-& \text{Forward-mode:} && \text{seed } \pdv{f_1}{f_1} = 1 \text{ and propagate } \pdv{f_i}{f_1} = J_i \cdot \pdv{f_{i-1}}{f_1} , \label{eq:ad_forward} \\
-& \text{Reverse-mode:} && \text{seed } \pdv{f_N}{f_N} = 1 \text{ and propagate } \pdv{f_N}{f_{i-1}} = \pdv{f_N}{f_i} \cdot J_i . \label{eq:ad_backward}
-\end{align}
+\label{eq:ad_modes}
+\begin{alignat}{5}
+& \textbf{Forward-mode:} \quad && \text{seed}\ & \pdv{f_1}{f_1} &= 1 \quad && \text{and propagate} \quad & \pdv{f_i}{f_1}     &= J_i \cdot \pdv{f_{i-1}}{f_1} , \label{eq:ad_forward} \\
+& \textbf{Reverse-mode:} \quad && \text{seed}\ & \pdv{f_N}{f_N} &= 1 \quad && \text{and propagate} \quad & \pdv{f_N}{f_{i-1}} &= \pdv{f_N}{f_i} \cdot J_i . \label{eq:ad_backward}
+\end{alignat}
 \end{subequations}
-The seeds only state that the derivative of the input or output with respect to itself is $1$.
-They are mathematically equivalent in theory,
+The seeds only state that the derivative of the input or output with respect to itself is $1$.%
+\footnote{Without loss of generality, we can always suppose that the first and last lines are the identity operations $f_1 = p$ and $f_N = f_{N-1}$, which have Jacobians equal to the identity matrix.}
+The modes are mathematically equivalent in theory,
 but differ in how they are implemented and in performance characteristics in practice.
 A rule of thumb is that forward-mode is simpler to implement and performs better when there are many more outputs than inputs ($m \ll n$),
 for example for distances and power spectra at 100s--1000s of $\{z,k,l\}$ as a function of 1--10 cosmological parameters.
 Reverse-mode is more challenging to implement and can perform better when there are many more inputs than outputs ($m \gg n$),
-and is in theory more appropriate for a scalar likelihood function, for example.
+and is for example more appropriate for a scalar likelihood function in theory.
 SymBoltz currently only supports forward-mode, so I focus on that here.
 
 \textbf{Dual numbers} are a natural way to implement forward-mode automatic differentiation.
@@ -2938,22 +2960,23 @@ By starting with $f_1 = p + \epsilon$ at $i=1$ and evaluating the program with d
 one accumulates both $F$ and $\pdv{F}/{p}$ at the final line $i=N$.
 
 This requires that every elementary function $f_i$ supports both standard real numbers and dual numbers.
-For example, the function $\sin(x)$ must be overloaded to return $\sin(x)$ when called with real $x$,
-but $\sin(x) + \epsilon \, y \cos(x)$ when called with dual $z = x + \epsilon \, y$.
+For example, the $\sin$ function must be overloaded to return $\sin(x)$ when called with real $x$,
+but $\sin(z) = \sin(x) + \epsilon \, y \cos(x)$ when called with dual $z = x + \epsilon \, y$.
 This is a problem of programming language design and compiler architecture,
-as a given function must be evaluated differently for real numbers versus dual numbers.
+as a given function must be evaluated differently for different input types.
 In addition, it is not always known at compile-time which functions must be compiled in which ways,
 as different sets of cosmological parameters influence the computation in different ways,
 and not all parameters are differentiated every time.
 For this reason, just-in-time (JIT) compiled languages and frameworks have become popular to accommodate this functionality.
-This includes fully JIT-compiled programming languages (e.g. Julia, in which SymBoltz and Bolt are written),
-and JIT \enquote{sublanguages} or frameworks inside interpreted languages (e.g. JAX in Python, in which DISCO-EB and ABCMB are written).
-Here the code is compiled right before it is evaluated,
-i.e. at the time when it is known what parameters are differentiated and what must be compiled in different ways.
-For this reason, it would be more challenging to support automatic differentiation in CAMB and CLASS,
+This includes fully JIT-compiled languages (e.g. Julia, in which SymBoltz and Bolt are written),
+and JIT frameworks inside interpreted languages (e.g. JAX in Python, in which DISCO-EB and ABCMB are written).
+Here the code is compiled just before it is evaluated,
+i.e. at the time when it is known what the input types are,
+so the compiler knows what must be compiled in different ways.
+Because of this it would be more challenging to support automatic differentiation in CAMB and CLASS,
 which are written in Fortran and C that are traditional ahead-of-time (AOT) compiled languages.
 
-\subsubsection{Automatic differentiation in SymBoltz}
+\subsubsection{Automatic differentiation in SymBoltz version 2}
 \label{sec:differentiability}
 
 \begin{figure}[t]
@@ -2997,7 +3020,7 @@ The absence of approximation schemes means that the same ODE is evolved at all t
 Consequently, the solution for any perturbation variable $u(\tau, k)$ is a \emph{smooth} function of both $\tau$ and $k$
 (down to the numerical noise, e.g. set by the ODE solver tolerance).
 This is not true to the same extent with approximations,
-as the transitions between equations at different $(\tau,k)$ (see \cref{fig:approximations})
+as the transitions between equations at different $(\tau,k)$ in \cref{fig:approximations}
 can introduce small discontinuities or kinks in the solution.
 This motivates the following question:
 \begin{displayquote}
@@ -3006,13 +3029,14 @@ Is it possible to exploit the smoothness of the perturbation solutions $u(\tau, 
 
 \emph{Spectral} methods are a class of computational methods (e.g. for ODEs, interpolation and quadrature).
 What they have in common is that they assume the underlying function (e.g. the ODE solution, interpolant or integrand) to be smooth,
-in the mathematical sense that it is differentiable as many times as possible.
+in the mathematical sense that it is differentiable many times.
 Spectral methods make use of this to expand the function into a linear combination of \emph{global} basis functions that run over the whole computational domain.
 This is in contrast to \emph{local} (non-spectral) methods that work with one subdomain at a time.
 The major selling point of spectral methods is that they can converge exponentially fast (e.g. with error $\rho^{-N}$ for $N$ points and some $\rho>1$),
 whereas local methods converge algebraically fast (e.g. as $N^{-p}$, where $p$ is usually the method's order of convergence).
-However, if the function is not smooth, even if it only has a kink at one point,
-then the exponential convergence degrades and local methods are safer.
+However, if the function is not smooth, even if it only has a small kink at one point,
+then the exponential convergence can degrade and mess up the function over the entire domain,
+while local methods confine the error in the vicinity of the kink and are safer \cite{trefethenApproximationTheoryApproximation2019}.
 Approximation-free \EB{} codes open the door to such methods,
 as illustrated in \cref{tab:spectral}.
 
@@ -3029,15 +3053,14 @@ instead of using model-dependent approximation schemes that complicate the physi
 we can relax approximation schemes and leverage the resulting smoothness
 to \enquote{win back} some performance.
 
-In my opinion, the improvement is not revolutionary given the $\approx 0.1\%$ precision target for current cosmological surveys,
+The improvement is not revolutionary for the $0.1\%$ precision target of current surveys,
 where interpolation with cubic splines is not much worse.
-However, as future surveys require greater precision from our modeling tools,
-I believe that spectral methods can become more important.
+However, future surveys need greater precision from modeling tools \cite[e.g.][]{mccarthyBaryonicFeedbackBiases2022,lewisCAMBV2Cosmological2026a},
+which can make spectral methods more important.
 In theory, going from $0.1\%$ to $0.01\%$ precision requires increasing $N$ to $10^{1/p} \times N$ with algebraic convergence (a multiplicative increase),
-but only to $N + \log(10)/\log(\rho)$ with exponential convergence (an additive increase).
+but only to $N + \log 10 / \log \rho$ with exponential convergence (an additive increase).
 \EB{} codes can slow down significantly when precision parameters are tightened,
-but the more favorable computational complexity of spectral methods
-makes it possible to achieve higher precision at lower cost.
+but the favorable computational complexity of spectral methods enables higher precision at lower cost.
 
 \bigskip
 
@@ -3047,13 +3070,14 @@ For example, the multipole expansion \eqref{eq:decompose_legendre} is a spectral
 and Gaussian $q$-quadrature in the massive neutrinos equations \eqref{eq:eb_massive_neutrinos} is a spectral method on $q \in [0, \infty)$.
 
 I speculate that there are some yet undiscovered ways of using spectral methods in other parts of \EB{} codes.
-For example, several works have improved the computation of angular power spectra
-by doing integration over the rapidly oscillating spherical Bessel functions
+Several works have already improved the computation of angular power spectra
+by integrating over the rapidly oscillating spherical Bessel functions
 with techniques such as the FFTlog algorithm, Chebyshev polynomials and Levin integration
 \cite[e.g.][]{schonebergTraditionalLineofSightApproach2018,fangLimberEfficientComputation2020a,leonardN5KChallengeNonLimber2023,chiarenzaBLASTLimberAngular2024,reischkePylevinEfficientNumerical2025a}.
+Spectral collocation has also been used to solve background ODEs in $f(R)$ gravity \cite{ranaSpectralChebyshevApproximation2025a}.
 My hope is that \cref{paper:chebyshev} serves not only to describe a particular interpolation method,
-but also encourages research on spectral methods from a greater perspective
-that could make the approximation-free approach even stronger in the future.
+but also encourages broader research on spectral methods
+that could further strengthen the approximation-free approach.
 
 \section{Papers, conclusions and outlook}
 
