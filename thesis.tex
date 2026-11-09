@@ -1879,26 +1879,27 @@ and support for automatic differentiation.
 \label{sec:modifications}
 
 Over the years, a plethora of modified cosmological models have been implemented into \EB{} codes.%
-\footnote{For example, \url{https://www.google.com/search?q=("modified+CAMB"+OR+"modified+CLASS"+OR+"modified+version+of+CAMB"+OR+"modified+version+of+CLASS")+site:arxiv.org} gives 4500 results at the time of writing.}
+\footnote{For example, \url{https://www.google.com/search?q=("modified+CAMB"+OR+"modified+CLASS"+OR+"modified+version+of+CAMB"+OR+"modified+version+of+CLASS")+site:arxiv.org} gives more than 4000 results at the time of writing.}
 Here I give a list of examples of modified models, which is far from exhaustive.
-My intention is to use a representative sample to show
-how \emph{all} parts of the \EB{} equations \eqref{eq:eb}
-(background, thermodynamics and perturbations for all components)
-are subject to modification, and what type of changes they lead to.
-It is not my objective to explain the physics and observational status of every modification in detail.
+My intention is to give a representative sample that shows
+how \emph{all parts of the \EB{} equations \eqref{eq:eb} are subject to modification}
+(i.e. the background, thermodynamics and perturbations for gravity and all components),
+and what type of changes this leads to in the equations.
+This motivates the design of SymBoltz in \cref{sec:symboltz} with its symbolic-numeric interface and approximation-free equations.
+It is not my objective here to explain the physics and observational status of every modification in detail.
 
 \subsection{Dark energy models}
 \label{sec:modify_de}
 
-Our understanding of the cosmological constant is poor,
+Our understanding of the cosmological constant $\Lambda$ is poor,
 and there is no good reason why dark energy could not have a dynamical and time-dependent nature.
-There is a very large range of modified dark energy models \cite[e.g.][]{copelandDynamicsDarkEnergy2006}.
+A very large range of modified dark energy models have been suggested \cite[e.g.][]{copelandDynamicsDarkEnergy2006}.
 
 Dark energy can be modeled as a fluid (\cref{sec:fluid}) with a general and time-dependent equation of state $w$
-(the cosmological constant corresponds to $w = -1$).
+($\Lambda$ corresponds to $w = -1$).
 A very popular parameterization is the Chevallier--Polarski--Linder equation of state
 \begin{equation}
-    w(a) = w_0 + w_a (1-a)
+    w(a) = w_0 + w_a (1-a),
 \label{eq:w0wa}
 \end{equation}
 for which the continuity equation \eqref{eq:fluid_continuity_bg} admits the new time-dependent analytical solution
@@ -1914,33 +1915,34 @@ all of which can be used to probe for deviations from the cosmological constant
 %piecewise constant (\enquote{binned}) $w(z) = w_i$ for $z_{i-1} < z \leq z_{i}$
 %and reconstruction of the full $w(a)$ from data using Gaussian processes
 %\cite[e.g.][]{jassalWMAPConstraintsLow2005,sahniReconstructingDarkEnergy2006,seikelReconstructionDarkEnergy2012,hutererDarkEnergyTwo2018}.
-The Chaplygin gas
+For example, the Chaplygin gas
 is a unified dark energy and dark matter fluid with equation of state $P=-A/\rho$,
-which gives the continuity equation \eqref{eq:fluid_continuity_bg} the analytical solution $\rho = \sqrt{A+B/a^6}$
+which gives the continuity equation \eqref{eq:fluid_continuity_bg} the analytical solution $\rho = (A+B/a^6)^{1/2}$
 that decays like dark matter at early times but stays constant at late times
 \cite{kamenshchikAlternativeQuintessence2001}.
 
 Dark energy can also be described by a scalar field $\varphi$ that rolls in a freely specified potential function $V(\varphi)$.
 Quintessence is the best known class of such models
-\cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013}.
-Here the scalar field follows a \KG{} equation
+\cite{ratraCosmologicalConsequencesRolling1988,caldwellCosmologicalImprintEnergy1998,tsujikawaQuintessenceReview2013},
+where $\varphi$ follows a \KG{} equation
 \begin{equation}
-\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 V^\prime(\varphi)
+\ddot{\varphi} = -2\calH\dot{\varphi} - a^2 \, V^\prime(\varphi)
 \label{eq:kg}
 \end{equation}
-and contributes $\rho = \dot{\varphi}^2 / 2 a^2 + V(\varphi)$ and $P = \dot{\varphi}^2 / 2 a^2 - V(\varphi)$.
-If $V(\varphi)$ is chosen so $\varphi$ rolls slowly, then $w \rightarrow -1$.
-A similar \KG{} equation must be solved in the perturbations.
-Scalar fields have been used to build Early Dark Energy (EDE) models,
+and contributes $\rho = \dot{\varphi}^2 / 2 a^2 + V(\varphi)$ and $P = \dot{\varphi}^2 / 2 a^2 - V(\varphi)$
+to the energy-momentum.
+If $V(\varphi)$ is chosen so $\varphi$ rolls slowly, then $w \rightarrow -1$ similarly to $\Lambda$.
+In the perturbations, a similar \KG{} equation must be solved for perturbations $\delta\varphi$ of the scalar field.
+Scalar fields have been used to build Early Dark Energy models,
 which speed up expansion in the early universe to lower the sound horizon
-while preserving the late-time evolution
-in order to alleviate the $H_0$ tension
+while preserving the late-time evolution.
+This can alleviate the $H_0$ tension
 \cite[e.g.][]{doranEarlyDarkEnergy2006,kamionkowskiDarkEnergyString2014,poulinCosmologicalImplicationsUltralight2018,poulinEarlyDarkEnergy2019,kamionkowskiHubbleTensionEarly2023,poulinUpsDownsEarly2023}.
 Quintessence can also be generalized to larger classes of models,
 such as $k$-essence and Horndeski theories (\cref{sec:modify_gravity}).
 
 These models require modified or new background and perturbation equations
-(the cosmological constant has no perturbations)
+($\Lambda$ has no perturbations)
 and additional parameters and initial conditions.
 %Models without analytical solutions must use the shooting method
 %but can integrate by pure quadrature if w = w(a) alone
@@ -1950,9 +1952,11 @@ and additional parameters and initial conditions.
 \subsection{Dark matter and dark radiation models}
 \label{sec:modify_dm}
 
-One plausible explanation for dark matter is that it is some elementary particle that we have not yet discovered,
-and that the cold dark matter equations \eqref{eq:eb_cold_dark_matter} are simply good approximations to it on cosmological scales.
-One example is axions,
+As for dark energy, we do not know what dark matter is either.
+One plausible explanation is that it is some elementary particle that we have not yet discovered,
+and that the cold dark matter equations \eqref{eq:eb_cold_dark_matter} happen to be good approximations on cosmological scales
+to something more fundamental at a lower level.
+One such example is axions,
 which are ultralight particles that can mimic both dark matter and dark energy
 \cite[e.g.][]{marshAxionCosmology2016}.
 They are implemented in the modified \EB{} solvers
@@ -1999,8 +2003,9 @@ and another full $l$-hierarchy \eqref{eq:hierarchy_l} must be evolved for the da
 If the decay involves a visible component such as photons or baryons,
 it can also affect recombination and reionization \cite[e.g.][]{chenParticleDecaysCosmic2004}
 and must be treated with \enquote{exotic injection} into the recombination codes (see \cref{sec:modify_baryons}).
-In general, this couples the background and thermodynamics physics,
-which are hardcoded to be distinct sequential stages of the background equations.
+In principle this could also couple the expansion history and thermodynamics
+(say if the thermodynamic pressure affects the continuity equations),
+which are often hardcoded to be distinct sequential stages of the background equations.
 
 Such a decaying type of dark matter is an example of interacting dark matter models,
 of which there are many other examples (see \cref{sec:modify_interacting}).
@@ -2016,7 +2021,7 @@ Recombination is often outsourced to one of several \enquote{recombination codes
 but in my opinion it should be understood as a part of the \EB{} system \eqref{eq:eb}
 on equal footing with other equations.
 
-\textbf{Peebles' equation} gives the basic recombination picture established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
+\textbf{Peebles' equation} is the basic recombination picture established by \cite{peeblesRecombinationPrimevalPlasma1968,zeldovichRecombinationHydrogenHot1968}.
 It is an effective three-state model of Hydrogen with
 the continuum of ions and electrons ($n=\infty$),
 the ground state 1s ($n=1$),
@@ -2053,13 +2058,13 @@ but with a recombination coefficient $\alpha_\Hy(T_b) \to F \cdot \alpha_\Hy(T_b
 In this way, it combines the accuracy of the multi-level computation with the speed of Peebles' equation,
 but the fitting assumes a fiducial \LCDM{} model and is less trustworthy for extended models.
 RECFAST has been updated and \enquote{re-fudged} several times since the original version
-to account for more effects and reproduce newer and increasingly accurate recombination results
+to account for more physical effects and to reproduce newer and more accurate recombination simulations
 %for example with corrections to \He{} recombination through distinct singlet and triplet channels,
 %and by running multi-level simulations that resolve both $(n,l)$ instead of just $n$.
 \cite{wongHowWellWe2008,rubino-martinEstimatingImpactRecombination2010,chlubaRadiativeTransferEffects2012a,collaborationPlanck2013Results2014,lewisCAMBV2Cosmological2026a}.
 Its ad-hoc nature has motivated development of more physically principled recombination models,
 but RECFAST remains the default recombination model in CAMB
-and has been re-calibrated to the output of CosmoRec (see below)
+where it has been re-calibrated to the output of CosmoRec (see below)
 \cite{lewisCAMBV2Cosmological2026a}.
 
 \begin{figure}[t!]
@@ -2078,10 +2083,11 @@ The figure is reproduced from \cite{ali-haimoudHyRecFastHighly2011a}.
 \textbf{CosmoRec} \cite{chlubaCompleteTreatmentCosmological2010} and
 \textbf{HyRec} \cite{ali-haimoudHyRecFastHighly2011a}
 are more physically principled recombination codes that avoid the fudge factors of RECFAST.
-They both use a new method called the effective multi-level atom (EMLA) \cite{ali-haimoudUltrafastEffectiveMultilevel2010}
-for treating the transitions between atomic states.
+They both use a new method called the effective multi-level atom (EMLA)
+for treating the transitions between atomic states
+\cite{ali-haimoudUltrafastEffectiveMultilevel2010}.
 As explained in \cref{fig:emla}, the EMLA splits the excited atomic states into \enquote{interior} and \enquote{interface} states.
-Its central result is that the effect of the \enquote{interior states}
+Its central result is that the effect of all \enquote{interior states}
 can be accounted for \emph{exactly} by effective combination and ionization coefficients $A_i(T_b, T_\gamma)$ and $B_i(T_\gamma)$
 to the \enquote{interface states}.
 These coefficients depend on $T_b$ and $T_\gamma$ but \emph{not on cosmology},
@@ -2095,7 +2101,7 @@ at most $\{2s, 2p, 3s, 3p, 3d, 4s, 4p, 4d\}$:
 \end{equation}
 These codes also treat the photon field more carefully
 by solving for its intensity distribution $J(\tau, \nu)$ both in time and frequency,
-instead of using Peebles' simplified reduction factor with the Sobolev approximation.
+instead of using Peebles' simplified reduction factor with the Sobolev escape approximation.
 This is a performance bottleneck that makes HyRec and CosmoRec slower than RECFAST,
 although they are more accurate and physically principled.
 %In some sense, the EMLA is a definitive and elegant exact generalization of Peebles' original three-level atom.
@@ -2105,10 +2111,10 @@ although they are more accurate and physically principled.
 resolves this performance bottleneck.
 Starting with an approximate base model of the ground state transition rate
 similar to Peebles' $2s \to 1s$ and $2p \to 1s$ treatment,
-HyRec-2 adds on top a tabulated correction function from an accurate (but slower) full HyRec simulation.
-This is similar to the fudge factors in RECFAST and sacrifices some generality,
+HyRec-2 adds a tabulated correction function on top from an accurate (but slower) full HyRec simulation.
+This is somewhat similar to the fudge factors in RECFAST and sacrifices some generality,
 but it is far less severe because it is applied on top of a more accurate base model,
-and the correction function also includes derivatives around the Planck 2018 parameters.
+and the correction function also includes derivatives around the Planck 2018 parameters \cite{planck18parameters}.
 With the EMLA and this trick, HyRec-2 avoids solving for the frequency-dependence of the photon field,
 and is both more accurate and faster than RECFAST.
 
@@ -2131,9 +2137,9 @@ instantaneous step function models \cite{seljakLineSightApproach1996,bruscoliHow
 piecewise binned models \cite{lewisCosmicMicrowaveBackground2006},
 a smooth and redshift-symmetric $\tanh$-activated function \cite{lewisCosmologicalParametersWMAP2008a}
 \begin{equation}
-x_e(z) = \frac{f}{2}\left[1 + \tanh \left(\frac{y_{\rm re} - y}{\Delta y}\right)\right], \qquad y = (1+z)^{3/2} ,
+x_e(z) = \frac{f}{2}\left[1 + \tanh \left(\frac{y_{\rm re} - y}{\Delta y}\right)\right] \qquad\text{with}\qquad y = (1+z)^{3/2} ,
 \end{equation}
-and redshift-asymmetric exponential models \cite{douspisNewParameterizationReionisation2015,collaborationPlanckIntermediateResults2016}
+redshift-asymmetric exponential models \cite{douspisNewParameterizationReionisation2015,collaborationPlanckIntermediateResults2016}
 %\begin{equation}
 %x_e = \begin{cases} 1-a^{-3} & \text{if $a<a_p$} \\ e^{-\lambda/a} & \text{if $a \geq a_p$} \end{cases}
 %\end{equation}
@@ -2157,14 +2163,15 @@ have implemented perturbed effects of recombination \cite{lewisLinearEffectsPert
 It has also been pointed out by \cite{pookkillathBaryonPhysicsTight2019} that the baryon and general fluid equations
 in \cite[equations 29-30 vs. 66-67]{maCosmologicalPerturbationTheory1995a}
 (our equations \eqref{eq:eb_baryons} vs. \eqref{eq:fluid})
-are inconsistent because every term involving baryon pressure is ignored \emph{except for} the term proportional to $(\delta P/\delta\rho) k^2 \delta$.
+are inconsistent because every term involving baryon pressure is ignored \emph{except} the term proportional to $(\delta P/\delta\rho) \, k^2 \delta$.
 This breaks general covariance and energy-momentum conservation.
 Similarly, one could argue that the nonzero baryon equation of state $w_b \ll 1$
 makes it inconsistent to solve the background independently of thermodynamics.
-In principle, the background continuity equation $\dot{\rho}_b =-3\calH(1+w_b) \rho_b$ with $w_b \neq 0$ from thermodynamics
+In principle, the continuity equation $\dot{\rho}_b =-3\calH(1+w_b) \rho_b$ in the background
+with $w_b \neq 0$ from thermodynamics
 should be evolved as one coupled system.
 This would be hard to implement in most codes that are structured with the background being independent of thermodynamics,
-by assuming $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and independently of thermodynamics.
+where it is assumed that $w_b=0$ so $\rho_b \propto a^{-3}$ is solved analytically and independently of thermodynamics.
 
 \subsection{Modified gravity theories}
 \label{sec:modify_gravity}
@@ -2179,28 +2186,30 @@ It is created by Tessa Baker, and is reused with permission from \url{https://ww
 }
 \end{figure}
 
-Just like Newton's laws of gravity and motion work great in many cases,
+Just like Newton's laws of gravity and motion are accurate in many but not all situations,
 it could be the case that Einstein's theory of \GR{} is a limit or approximation to the true theory of gravity.
-In principle, modified gravity theories also explain phenomena
-such as galaxy rotation curves, enhanced clustering and the late-time acceleration
-without dark matter and dark energy, which we do not understand the nature of anyway.\footnote{\url{https://xkcd.com/1758/}}
+Modified gravity can in principle address several observations and phenomena at the same time,
+such as galaxy rotation curves and enhanced clustering without dark matter,
+or late-time acceleration without the cosmological constant.%
+\footnote{\url{https://xkcd.com/1758/}}
 The space of modified gravity theories is very large (see \cref{fig:mg}),
 and some classes of theories have been implemented in \EB{} codes.
 
 MGCAMB \cite{zhaoSearchingModifiedGrowth2009} and
 MGCLASS \cite{bakerObservationalSignaturesModified2015,sakrCosmologicalConstraintsSubhorizon2022}
 modify the perturbed Einstein equations \eqref{eq:eb_gravity}
-with the phenomenological parameterizations
+with phenomenological parameterizations like
 \begin{subequations}
 \label{eq:mg}
 \begin{align}
-k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
-k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 (\rho+P)\sigma \label{eq:mg_slip} ,
+k^2\psi &= -4\pi \, \mu(a,k) \, a^2 \, \big( \rho \Delta + 3(\rho+P)\sigma \big), \label{eq:mg_poisson} \\
+k^2\big(\phi - \gamma(a,k) \psi\big) &= 12\pi \mu(a,k) \, a^2 \, (\rho+P)\sigma \label{eq:mg_slip} ,
 \end{align}
 \end{subequations}
 with a freely chosen \enquote{gravitational coupling} $\mu(a,k)$ and \enquote{slip} $\gamma(a, k)$.
-Derivatives like $\dot\phi$ are still needed by the continuity equation \eqref{eq:pert_cont},
-and must be found by differentiating the above expressions.
+These equations have a different structure than the \GR{} equations \eqref{eq:eb_gravity},
+so derivatives like $\dot\phi$ (still needed by the continuity equation \eqref{eq:pert_cont})
+must be found by differentiating the expressions \eqref{eq:mg}.
 
 $\mathcal{H}$-EFTCAMB \cite{huEffectiveFieldTheory2014,raveriEffectiveFieldTheory2014,yeEFTCAMBCobayaintegratedPythonwrapped2026} and
 hi\_class \cite{zumalacarreguiHiclassHorndeskiCosmic2017a,belliniHiclassBackgroundEvolution2020a}
@@ -2210,21 +2219,22 @@ This is the most general class of theories with second order equations of motion
 for a metric tensor $g_{\mu\nu}$ and scalar field $\varphi$.
 A Horndeski theory is specified by symbolic expressions for four free functions
 $G_2(\varphi, X)$, $G_3(\varphi, X)$, $G_4(\varphi, X)$ and $G_5(\varphi, X)$
-of $\varphi$ and the kinetic term $X = -\frac12(\partial_\mu \varphi)^2$ in its Lagrangian.
+of $\varphi$ and the kinetic term $X = -\frac12(\partial_\mu \varphi)^2$ in the action of the theory.
 The background gets an additional \KG{} equation that must be solved together with modified Friedmann equations.
 Notably, the 1st Friedmann equation can become a constraint equation that cannot be solved for $\calH$ directly,
-so the acceleration equation must be integrated instead with \enquote{constraint damping} of the 1st equation in order to accurately satisfy both.
+so the acceleration equation must be integrated instead with \enquote{constraint damping} of the 1st equation in order to accurately satisfy both \cite{belliniHiclassBackgroundEvolution2020a}.
 The perturbed Einstein equations are also modified and must be solved together with a perturbed \KG{} equation.
 The coefficients in the perturbation equations are given in terms of four general functions
 $\alpha_K(\tau)$, $\alpha_B(\tau)$, $\alpha_T(\tau)$ and $\alpha_M(\tau)$,
-which have general expressions in terms of $G_i$ and their derivatives with respect to $\varphi$ and $X$
+which have general expressions in terms of the $G_i$ and their derivatives with respect to $\varphi$ and $X$
 \cite{belliniMaximalFreedomMinimum2014a}.
+%A symbolic framework could be practical for working with such expressions and computing derivatives automatically.
 
 Modified gravity theories introduce new and modified background and perturbation equations.
 Symbolic work is frequently necessary to specify the equations
 (e.g. turning expressions for $\psi$ and $\phi$ into $\dot\psi$ and $\dot\phi$,
 or computation of $\alpha_i$ from $G_i$),
-so integration with a symbolic library could make it easier to specify the theories from high-level equation input.
+so integration with a symbolic framework could make it easier to specify the theories from high-level equation input.
 They also introduce additional stiffness in the \EB{} system,
 which hi\_class overcomes with a new quasi-static approximation (QSA) scheme.
 
@@ -2244,13 +2254,13 @@ In the language of the Boltzmann equation \eqref{eq:boltzmann},
 interactions correspond to a collision term $C \neq 0$ on the right side.
 In the language of energy-momentum conservation $\nabla_\mu T^{\mu\nu} = 0$
 of the total $T_{\mu\nu} = \sum_a T_{\mu\nu}^a$ from every species $a$,
-it corresponds to allowing a flow $Q^\nu_a \neq 0$ into every species' energy-momentum:
+it corresponds to adding an \enquote{influx} $Q^\nu_a \neq 0$ to every species' energy-momentum:
 \begin{equation}
 \nabla_\mu T^{\mu\nu}_a = Q^\nu_a
 \qquad \text{such that} \qquad
 \sum_a Q^\nu_a = 0.
 \end{equation}
-For example, pairwise interactions $a \leftrightarrow b$ can be specified as $Q^\nu_a = \sum_b Q^\nu_{ab}$ with $Q^\nu_{ab} = -Q^\nu_{ba}$.
+Pairwise interactions $a \leftrightarrow b$ are given by $Q^\nu_a = \sum_b Q^\nu_{ab}$ with $Q^\nu_{ab} = -Q^\nu_{ba}$.
 
 In \cref{tab:interactions}, I consider every pair of species in \LCDM{} with the addition of dark radiation (mentioned in \cref{sec:modify_dm}),
 and list examples of works that have implemented interactions between them by modifying \EB{} codes.
@@ -2271,7 +2281,7 @@ Some interactions require thermodynamics additions to account for Thomson-like s
 Interactions involving photons may modify the expressions for the CMB source functions \cite[e.g.][]{wilkinsonUsingCMBAngular2014,muraiIsotropicCosmicBirefringence2023}.
 Dark radiation and neutrino interactions require additional or modified $l$-hierarchies \eqref{eq:hierarchy_l} and/or $(q,l)$-hierarchies \eqref{eq:hierarchy_ql} \cite[e.g.][]{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017}.
 
-\Cref{paper:interactions} in this thesis also deals with the implementation of models with interactions
+\Cref{paper:interactions} in this thesis deals with the implementation of models with interactions
 between baryons, dark matter and dark energy,
 and shows how the symbolic-numeric interface and approximation-free structure make this easy in SymBoltz.
 
@@ -2348,11 +2358,11 @@ This is far from a complete list of modified \EB{} codes.
 Spatial curvature for modeling flat, open and closed universes has been incorporated as standard functionality in CMBFAST, CAMB and CLASS \cite{zaldarriagaIntegralSolutionMicrowave1998,zaldarriagaCMBFASTSpatiallyClosed2000,lewisEfficientComputationCMB2000a,lesgourguesFastAccurateCMB2014,pitrouOptimalBoltzmannHierarchies2020a}.
 Variation of fundamental constants has also been investigated for the
 fine-structure constant $\alpha$ and electron mass $m_e$ \cite[e.g.][]{hartNewConstraintsTimedependent2018,chlubaVaryingFundamentalConstants2023},
-the effective gravitational constant from modified gravity theories (see \cref{sec:modify_gravity}) \cite[e.g.][]{ballardiniCosmologicalConstraintsGravitational2022},
+the effective gravitational constant from modified gravity theories \cite[e.g.][]{ballardiniCosmologicalConstraintsGravitational2022},
 and humorously even for $\pi$ \cite{gammalCircularReasoningSolving2024}.
 Different approaches to the equations have also been explored, such as
 an integral equation approach to the Boltzmann hierarchies \cite{kamionkowskiCosmologicalPerturbationsBoltzmann2021a,noncoldwithouthierarchy,leeRapidAccurateNumerical2025a,leeCosmologicalEvolutionDecaying2026},
-a Generalized Boltzmann Hierarchy for massive neutrinos where momenta are integrated out \cite{nascimentoGeneralizedBoltzmannHierarchy2021},
+a \enquote{generalized Boltzmann hierarchy} for massive neutrinos where momenta are integrated out \cite{nascimentoGeneralizedBoltzmannHierarchy2021},
 emulation of the perturbation solutions in CLASS \cite{albersCosmicNetPhysicsdrivenImplementation2019,guntherCosmicNetIIEmulating2022},
 and taking perturbation theory up to second order in the code SONG \cite{pettinariIntrinsicBispectrumCosmic2013,pettinariIntrinsicBispectrumCosmic2016,pettinariImpactPolarisationIntrinsic2014}.
 
