@@ -99,23 +99,21 @@
 ]
 
 \begin{abstract}
-This thesis presents a new code called SymBoltz
-for solving the \EB{} equations in cosmology up to linear perturbations.
+SymBoltz is a new code for solving the \EB{} equations in cosmology up to linear perturbations.
 A symbolic-numeric interface exposes the full cosmological model, so all variables, parameters and equations are transparent and easy to modify.
-Modern implicit methods solve the stiff ordinary differential equations to avoid approximation schemes found in traditional codes.
-Automatic differentiation computes gradients robustly for Fisher forecasting, gradient-based parameter inference, optimization problems and other applications.
-Performance is competitive with that of approximation-based codes
-due to analytical and sparse Jacobians generated from the symbolic equations.
-Interpolation in \EB{} codes is improved with Chebyshev polynomials,
-which exploit the smoothness of the approximation-free output
+Modern implicit methods solve the stiff differential equations to avoid approximation schemes found in traditional codes.
+Automatic differentiation computes gradients robustly for Fisher forecasting, parameter inference and optimization problems.
+Analytical and sparse Jacobians generated from the symbolic equations
+make performance competitive with approximation-based codes.
+Chebyshev interpolation exploits the smooth approximation-free output
 to give higher precision with fewer function evaluations.
 Several interacting models are implemented
 to show that the symbolic-numeric interface and approximation-free structure
 make SymBoltz easy to use and modify.
 
-A new technique is also presented for emulating nonlinear matter power spectrum boosts in modified gravity theories
-by reducing them to linear boosts obtained from \EB{} codes.
-This incorporates nonlinear effects with the precision needed for current and upcoming observations,
+A new technique emulates nonlinear matter power spectrum boosts in modified gravity
+by reducing them to linear boosts from \EB{} codes.
+This captures nonlinear effects with the precision needed for upcoming observations,
 and is demonstrated for \BD{} gravity.
 \end{abstract}
 
