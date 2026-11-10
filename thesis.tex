@@ -199,36 +199,51 @@ to avoid unintended modifications.
 \label{chap:back}
 
 Modern cosmology is largely a computational science.
+%In this way, computational science is the bridge that connects the
+%theoretical and observational frontiers of cosmological research.
 
 %When Edwin Hubble measured the distances to ... and fit it to $v=H_0 d$,
 %he could do the calculation with pen/paper .
 
-Today, the increasing data volume and precision of modern observations make fully analytical modeling infeasible.
-Analytical work is used to formulate the laws of physics and the fundamental equations of cosmology,
+Analytical modeling alone is no longer sufficient to describe the universe accurately.
+Pen, paper and brave ideas are used to formulate the laws of physics and fundamental equations of cosmology,
 such as the Einstein and Boltzmann equations.
-However, they take the form of partial differential equations (PDEs) or ordinary differential equations (ODEs)
-that are impossible to solve analytically.
-Instead, we must now obtain numerical solutions of the fundamental equations through computer simulations.
-This involves development and use of advanced numerical methods and software packages that are fast and robust.
-In this way, computational science is the bridge that connects the
-theoretical and observational frontiers of cosmological research.
+But these take the form of ordinary differential equations (ODEs),
+partial differential equations (PDEs) or even integro-differential equations
+that are impossible to solve analytically except in very special cases or under simplifying assumptions.
+Instead, numerical computer programs (\enquote{codes}) are necessary to solve the equations that govern a given cosmological model.
+This involves programming and development of advanced, fast and robust software and numerical methods,
+including \EB{} codes, $N$-body simulations and emulators.
+% electricity, computers, programming languages and software (and coffee)
 
 Simultaneously, the current standard model of cosmology
--- the \LCDM{} model --
-is put under increased scrutiny from the tighter data error bars.
-This has revealed inconsistencies where different observational probes
-return different constraints for the parameters of the model.
-Assuming the data analysis is correct,
-this means that the \LCDM{} model is not realistic enough.
-Thus, a large fraction of contemporary cosmological research
+-- the \LCDM{} model, which attributes $95\%$ of the energy content to poorly understood \enquote{dark matter} and \enquote{dark energy} --
+is put under increased scrutiny from more and more precise observations of the cosmic microwave background and large-scale structure.
+This includes recent, ongoing and upcoming space-based and ground-based surveys such as
+\textit{Euclid} \cite{collaborationEuclidOverviewEuclid2025},
+\textit{Planck} \cite{collaborationPlanck2018Results2020,planck18parameters},
+the Atacama Cosmology Telescope (ACT) \cite{louisAtacamaCosmologyTelescope2025},
+the Dark Energy Spectroscopic Instrument (DESI) \cite{collaborationDESIExperimentPart2016,collaborationDESIDR2Results2025} and
+the Vera C.~Rubin Observatory (LSST) \cite{ivezicLSSTScienceDrivers2019}.
+%DES \cite{collaborationDarkEnergySurvey2016}
+As we compare our theoretical predictions to data with tighter error bars from different observational probes,
+we get different (statistically incompatible) constraints for the parameters of the model.
+Assuming the data analysis is done correctly,
+this means that the \LCDM{} model is incomplete.
+Thus, a substantial fraction of cosmological research today
 is devoted to exploring modifications to the standard model.
 
-What does this mean for our computational tools?
-It means that not only \enquote{hard} aspects like speed and robustness are priorities,
-but so are \enquote{soft} principles such as user-friendliness and flexibility,
+What does this situation mean for our computational tools?
+It means that not only \enquote{hard} properties like speed and robustness are priorities,
+but so are \enquote{soft} aspects such as user-friendliness and flexibility,
 in order to facilitate easy implementation of modified cosmological models.
 Moreover, we should strive to avoid model-specific approximation schemes and assumptions,
-as they make it harder to implement modifications and are a source of error for modifications.
+which are sources of error and make it harder to implement modifications.
+
+In this chapter,
+I briefly summarize the state of the standard model
+and the computational tools of cosmology
+that are relevant to my work.
 
 \section{The standard cosmological model}
 \label{sec:LCDM}
