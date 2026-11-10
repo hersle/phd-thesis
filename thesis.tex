@@ -99,22 +99,23 @@
 ]
 
 \begin{abstract}
-SymBoltz is a new code for solving the \EB{} equations in cosmology up to linear perturbations.
-A symbolic-numeric interface exposes the full cosmological model, so all variables, parameters and equations are transparent and easy to modify.
-Modern implicit methods solve the stiff differential equations to avoid approximation schemes found in traditional codes.
-Automatic differentiation computes gradients robustly for Fisher forecasting, parameter inference and optimization problems.
-Analytical and sparse Jacobians generated from the symbolic equations
+Increasingly precise observations of the cosmic microwave background and large-scale structure
+challenge the standard cosmological model.
+This calls for modified models and extensible computational tools.
+
+SymBoltz is a new code that solves the linearized \EB{} equations.
+A symbolic-numeric interface exposes the full cosmological model, so all equations are transparent and easy to modify.
+Modern implicit methods handle the stiff differential equations without approximation schemes of traditional codes.
+Automatic differentiation computes robust gradients for forecasting, parameter inference and optimization.
+Analytical and sparse Jacobians from the symbolic equations
 make performance competitive with approximation-based codes.
 Chebyshev interpolation exploits the smooth approximation-free output
-to give higher precision with fewer function evaluations.
-Several interacting models are implemented
-to show that the symbolic-numeric interface and approximation-free structure
-make SymBoltz easy to use and modify.
+for higher precision with fewer evaluations.
+Interacting models are implemented to show that SymBoltz is easy to modify.
 
 A new technique emulates nonlinear matter power spectrum boosts in modified gravity
-by reducing them to linear boosts from \EB{} codes.
-This captures nonlinear effects with the precision needed for upcoming observations,
-and is demonstrated for \BD{} gravity.
+by reducing them to linear boosts that are cheap to compute.
+This captures nonlinearities of \BD{} gravity with the precision needed for upcoming observations.
 \end{abstract}
 
 % https://ordliste.matematikkradet.no/
