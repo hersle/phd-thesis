@@ -2907,6 +2907,17 @@ of elementary functions $f_i: \mathbb{R}^{m_i} \rightarrow \mathbb{R}^{n_i}$, su
 \footnote{I find it intuitive to think of $f_i$ as the $i$-th line of the source code.}
 For example, an \EB{} code takes in cosmological parameters $p = \{h, \Omega_{b0}, \Omega_{c0}, \ldots\}$ and computes distances, matter power spectra and CMB power spectra $F = \{D(z), P(k), C_\ell, \ldots\}$ at some desired redshifts $z$, wavenumbers $k$ and multipoles $\ell$.
 
+\begin{figure}[p]
+\centering
+\includegraphics[width=1.0\textwidth]{media/Pkz_sensitivity}
+\caption[Automatic differentiation gradients in SymBoltz]{\label{fig:ad_evolution}
+Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
+This is a recreation of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
+but in SymBoltz instead of DISCO-EB, to show that both codes can compute similar sensitivities.
+The plots show how the codes effectively evolve not values, but gradients of the matter power spectrum over time,
+and can be used in this form as a way to learn how it is influenced by different cosmological parameters.}
+\end{figure}
+
 \subsubsection{Finite differences}
 
 \begin{figure}[t]
@@ -3011,17 +3022,6 @@ which are written in Fortran and C that are traditional ahead-of-time (AOT) comp
 
 \subsubsection{Automatic differentiation in SymBoltz version 2}
 \label{sec:differentiability}
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=1.0\textwidth]{media/Pkz_sensitivity}
-\caption[Automatic differentiation gradients in SymBoltz]{\label{fig:ad_evolution}
-Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
-This is a recreation of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
-but in SymBoltz instead of DISCO-EB, to show that both codes can compute similar sensitivities.
-The plots show how the codes effectively evolve not values, but gradients of the matter power spectrum over time,
-and can be used in this form as a way to learn how it is influenced by different cosmological parameters.}
-\end{figure}
 
 SymBoltz is written in Julia and supports automatic differentiation with dual numbers using the ForwardDiff.jl package \cite{revelsForwardModeAutomaticDifferentiation2016}.
 This was working but quite slowly in the initial release in \cref{paper:symboltz},
