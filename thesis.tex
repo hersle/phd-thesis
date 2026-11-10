@@ -556,6 +556,18 @@ in order to make cheap predictions of the nonlinear \BD{} matter power spectrum.
 \subsection{Emulators and interpolation methods}
 \label{sec:emulators}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{media/emulator}
+\caption[Emulator schematic of COSMOPOWER with a neural network]{\label{fig:emulator}
+Emulators reproduce the input-output dependence of cosmological observables (e.g. power spectra) on parameters
+using cheap surrogate models instead of expensive physical simulations from first principles.
+For example, COSMOPOWER uses neural networks and principal component analysis
+\cite{manciniCOSMOPOWEREmulatingCosmological2022b}.
+\textit{Credit:} Alessio Spurio Mancini / CosmoPower / \url{https://github.com/alessiospuriomancini/cosmopower}.
+}
+\end{figure}
+
 It happens quite often in physics and cosmology that we have a way of computing or simulating
 something from physically principled equations that is very computationally expensive.
 Yet it is often the case that the final output depends on the input in a relatively smooth and \enquote{boring} way.
@@ -607,7 +619,7 @@ and then interpolation and regression methods are used to evaluate it cheaply at
 A challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space
 (\enquote{the curse of dimensionality}),
 but the recent explosion of research in artificial intelligence and machine learning has made it feasible to emulate functions of
-$O(10)$ parameters using neural networks with relatively small computational cost, for example.
+$O(10)$ parameters using neural networks with relatively small computational cost, for example (see \cref{fig:emulator}).
 
 Many emulators and emulator frameworks have been created
 for emulating the output from \EB{} codes and $N$-body simulations
