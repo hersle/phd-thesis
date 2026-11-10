@@ -121,24 +121,23 @@ This captures nonlinearities of \BD{} gravity with the precision needed for upco
 % https://ordliste.matematikkradet.no/
 % https://ordbokene.no/
 \begin{xabstract}[Sammendrag]
-Denne avhandlingen presenterer en ny kode som heter SymBoltz
-for å løse \EB{}-ligningene i kosmologi opp til lineære perturbasjoner.
-Et symbolsk-numerisk grensesnitt gjør hele den kosmologiske modellen tilgjengelig, slik at alle variabler, parametere og ligninger er transparente og enkle å endre.
-Moderne implisitte metoder løser de stive ordinære differensialligningene for å unngå tilnærmingsmetoder som brukes i tradisjonelle koder.
-Automatisk derivasjon regner ut gradienter robust for Fisher-prognoser, gradientbasert parameterinferens, optimeringsproblemer og andre anvendelser.
-Ytelsen konkurrerer med den i tilnærmingsbaserte koder
-på grunn av analytiske og glisne jacobimatriser generert fra de symbolske ligningene.
-Interpolasjon i \EB{}-koder forbedres med tsjebysjevpolynomer,
-som utnytter glattheten i de tilnærmingsfrie resultatene
-for å gi høyere presisjon med færre funksjonsevalueringer.
-Flere vekselvirkende modeller implementeres
-for å vise at det symbolsk-numeriske grensesnittet og den tilnærmingsfrie strukturen
-gjør SymBoltz enkel å bruke og endre.
+Stadig mer presise observasjoner av den kosmiske mikrobølgebakgrunnsstrålingen og storskalastrukturen
+utfordrer den kosmologiske standardmodellen.
+Dette skaper behov for modifiserte modeller og utvidbare beregningsverktøy.
 
-En ny teknikk presenteres også for å emulere ikke-lineære forsterkninger av materieeffektspekteret i modifiserte gravitasjonsteorier
-ved å redusere dem til lineære forsterkninger fra \EB{}-koder.
-Dette inkorporerer ikke-lineære effekter med presisjonen som kreves for nåværende og kommende observasjoner,
-og demonstreres for \BD{}-gravitasjon.
+SymBoltz er en ny kode som løser de lineariserte \EB{}-ligningene.
+Et symbolsk-numerisk grensesnitt eksponerer hele den kosmologiske modellen, slik at alle ligninger er transparente og enkle å endre.
+Moderne implisitte metoder håndterer de stive differensialligningene uten tilnærmingsmetodene i tradisjonelle koder.
+Automatisk derivasjon regner ut robuste gradienter for prognoser, parameterinferens og optimering.
+Analytiske og glisne jacobimatriser fra de symbolske ligningene
+gjør ytelsen konkurransedyktig med tilnærmingsbaserte koder.
+Tsjebysjevinterpolasjon utnytter de glatte tilnærmingsfrie resultatene
+for høyere presisjon med færre evalueringer.
+Vekselvirkende modeller implementeres for å vise at SymBoltz er enkel å endre.
+
+En ny teknikk emulerer ikke-lineære forsterkninger av materieeffektspekteret i modifiserte gravitasjonsteorier
+ved å redusere dem til lineære forsterkninger som er billige å beregne.
+Dette fanger opp ikke-lineariteter i \BD{}-gravitasjon med presisjonen som trengs for kommende observasjoner.
 \end{xabstract}
 
 \tableofcontents{}
