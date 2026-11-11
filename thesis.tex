@@ -1,6 +1,8 @@
 \documentclass[USenglish, thumbmarks]{uiophdthesis} % https://www.uio.no/english/about/designmanual/profile-in-use/latex/
 \usepackage[utf8]{inputenc}
 
+\usepackage{emptypage} % no page numbers on blank pages
+
 % Thesis requirements
 % https://www.mn.uio.no/english/research/phd/thesis-evaluation/thesis-requirements.html
 
@@ -9,6 +11,7 @@
 
 % Layout requirements
 % https://www.mn.uio.no/english/research/phd/thesis-evaluation/layout/index.html
+% https://www.uio.no/english/services/print/how-to-order/how-to-format-large-documents-for-printing.html#toc6
 
 % silence warning due to xcolor with [table] option using new version of array package,
 % which requests a newer latex kernel version than the one installed on my system
@@ -98,7 +101,8 @@
     year={2026}
 ]
 
-\begin{abstract}
+\chapter*{Abstract}
+%\begin{abstract}
 Increasingly precise observations of the cosmic microwave background and large-scale structure
 challenge the standard cosmological model.
 This calls for modified models and extensible computational tools.
@@ -116,11 +120,12 @@ Interacting models are implemented to show that SymBoltz is easy to modify.
 A new technique emulates nonlinear matter power spectrum boosts in modified gravity
 by reducing them to linear boosts that are cheap to compute.
 This captures nonlinearities of \BD{} gravity with the precision needed for upcoming observations.
-\end{abstract}
+%\end{abstract}
 
 % https://ordliste.matematikkradet.no/
 % https://ordbokene.no/
-\begin{xabstract}[Sammendrag]
+\chapter*{Sammendrag}
+%\begin{xabstract}[Sammendrag]
 Stadig mer presise observasjoner av den kosmiske mikrobølgebakgrunnsstrålingen og storskalastrukturen
 utfordrer den kosmologiske standardmodellen.
 Dette skaper behov for modifiserte modeller og utvidbare beregningsverktøy.
@@ -138,22 +143,9 @@ Vekselvirkende modeller implementeres for å vise at SymBoltz er enkel å endre.
 En ny teknikk emulerer ikke-lineære forsterkninger av materieeffektspekteret i modifiserte gravitasjonsteorier
 ved å redusere dem til lineære forsterkninger som er billige å beregne.
 Dette fanger opp ikke-lineariteter i \BD{}-gravitasjon med presisjonen som trengs for kommende observasjoner.
-\end{xabstract}
+%\end{xabstract}
 
-\tableofcontents{}
-\listoffigures{}
-\listoftables{}
-
-\begin{preface}
-
-I use natural units $G = c = \hbar = k_B = 1$.
-\Cref{chap:back} briefly introduces the standard model and computational tools of cosmology.
-\Cref{chap:lin} is the bulk and introduces the linear \EB{} equations and codes in detail and puts SymBoltz and \cref{paper:symboltz,paper:chebyshev,paper:interactions} into context.
-\Cref{chap:nonlin} proceeds to the nonlinear regime and puts \cref{paper:bransdicke} into context.
-All four papers are appended in the order they are discussed rather than chronologically.
-\Cref{chap:lin,chap:nonlin} conclude separately.
-
-\section*{Acknowledgements}
+\chapter*{Acknowledgements}
 
 I dedicate this thesis to my grandfather.
 You always cared deeply for me and encouraged me to pursue my passion for computers and science,
@@ -177,6 +169,15 @@ which made SymBoltz possible.
 And to Per for including me in Euclid,
 and the Research Council of Norway for funding my position under project 325113.
 
+\begin{preface}
+
+I use natural units $G = c = \hbar = k_B = 1$.
+\Cref{chap:back} briefly introduces the standard model and computational tools of cosmology.
+\Cref{chap:lin} is the bulk and introduces the linear \EB{} equations and codes in detail and puts SymBoltz and \cref{paper:symboltz,paper:chebyshev,paper:interactions} into context.
+\Cref{chap:nonlin} proceeds to the nonlinear regime and puts \cref{paper:bransdicke} into context.
+All four papers are appended in the order they are discussed rather than chronologically.
+\Cref{chap:lin,chap:nonlin} conclude separately.
+
 \section*{Declaration of tools}
 
 % https://www.mn.uio.no/english/research/phd/structure/ai.html
@@ -194,6 +195,10 @@ All changes made to this document are tracked with version control\footnote{\url
 to avoid unintended modifications.
 
 \end{preface}
+
+\tableofcontents{}
+\listoffigures{}
+\listoftables{}
 
 \mainmatter{}
 
