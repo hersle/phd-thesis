@@ -11,7 +11,7 @@ jobs:
         uses: xu-cheng/latex-action@v4
         with:
           root_file: thesis.tex
-          texlive_version: 2023 # same as my laptop
+          texlive_version: 2026 # same as my laptop
       - name: Upload artifact to Github pages
         uses: actions/upload-pages-artifact@v3
         with:
