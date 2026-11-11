@@ -3192,6 +3192,11 @@ for example in line-of-sight integration (as discussed in \cref{sec:spectral}).
 \item Clean up and polish the current code base,
 which has shifted a little back and forth during development
 while testing different approaches.
+\item
+Use SymBoltz to provide initial conditions to a differentiable $N$-body code,
+in order to do field-level inference \cite[e.g.][]{leclercqFieldlevelInferenceCosmology2025} with an end-to-end differentiable pipeline.
+This is a much more ambitious project, and has recently been achieved with the DISCO-DJ I+II project \cite{hahnDISCODJDifferentiableEinsteinBoltzmann2024a,listDISCODJIIDifferentiable2026},
+where the DISCO-EB code mentioned in \cref{sec:eb_codes} provides initial conditions.
 \end{itemize}
 It is my hope that others will pick up on some of these ideas and take SymBoltz further,
 or that some of the ideas that shaped SymBoltz prove useful and can be incorporated into other \EB{} codes.
