@@ -218,7 +218,7 @@ including \EB{} codes, $N$-body simulations and emulators.
 
 Simultaneously, the current standard model of cosmology
 -- the \LCDM{} model, which attributes $95\%$ of the energy content to poorly understood \enquote{dark matter} and \enquote{dark energy} --
-is put under increased scrutiny from more and more precise observations of the cosmic microwave background and large-scale structure.
+is put under increased scrutiny from more and more precise observations of the cosmic microwave background (CMB) and large-scale structure (LSS).
 This includes recent, ongoing and upcoming space-based and ground-based surveys such as
 \textit{Euclid} \cite{collaborationEuclidOverviewEuclid2025},
 \textit{Planck} \cite{collaborationPlanck2018Results2020,planck18parameters},
@@ -227,8 +227,8 @@ the Dark Energy Spectroscopic Instrument (DESI) \cite{collaborationDESIExperimen
 the Vera C.~Rubin Observatory (LSST) \cite{ivezicLSSTScienceDrivers2019}.
 %DES \cite{collaborationDarkEnergySurvey2016}
 As we compare our theoretical predictions to data with tighter error bars from different observational probes,
-we get different (statistically incompatible) constraints for the parameters of the model.
-Assuming the data analysis is done correctly,
+we get different (statistically incompatible) constraints for some parameters of the model.
+Assuming the data analysis is done correctly and that there are no systematic errors,
 this means that the \LCDM{} model is incomplete.
 Thus, a substantial fraction of cosmological research today
 is devoted to exploring modifications to the standard model.
@@ -257,26 +257,26 @@ the energy density of each species in the \LCDM{} model relative to the total ch
 Radiation (photons and neutrinos) dominates the early universe,
 matter (dark matter and baryons) dominates later,
 and dark energy dominates today ($a = 1$).
-Created with SymBoltz
-\cite{sletmoenSymBoltzjlSymbolicnumericApproximationfree2026}.}
+Created with SymBoltz.}
 \end{figure}
 
 The \LCDM{} model is the current \enquote{version} of the standard model in cosmology.
-It is defined by a number of assumptions.
-For example
-\cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
+It is defined by a number of assumptions
+regarding gravity, geometry and what \enquote{stuff} makes up the universe,
+as summarized below and shown in \cref{fig:species}:
+%\cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
 \item \textbf{\GR{}}
 is the correct theory of gravity.
 It describes how the geometry of spacetime in the Einstein tensor $G_{\mu\nu}$
-reacts to the content of energy and momentum $T_{\mu\nu}$
+reacts to the content of energy and momentum $T_{\mu\nu}$ of matter
 through the Einstein equations:
 \begin{equation}
     G_{\mu\nu} + \Lambda g_{\mu\nu} = 8\pi T_{\mu\nu}.
 \label{eq:einstein_intro}
 \end{equation}
 It also describes the reverse process:
-how energy and momentum react to the geometry of spacetime through the geodesic equation:
+how matter reacts to the geometry of spacetime through the geodesic equation:
 \begin{equation}
 \odv[order=2]{x^\mu}{\lambda} + \Gamma^\mu_{\alpha\beta} \odv{x^\alpha}{\lambda} \odv{x^\beta}{\lambda} = 0 .
 \label{eq:geodesic}
@@ -284,15 +284,18 @@ how energy and momentum react to the geometry of spacetime through the geodesic 
 
 \item \textbf{The cosmological principle}
 asserts that the universe is almost homogeneous and isotropic.
-As a zeroth order approximation, it is described by the flat
-Friedmann--Lemaître--Robertson--Walker (FLRW) spacetime metric:
+To lowest order, spacetime is therefore described by the
+Friedmann--Lemaître--Robertson--Walker (FLRW) metric
+(here for flat space):
 \begin{equation}
-\diff{s}^2 = -\diff{t}^2 + a(t)^2 \left( \diff{r}^2 + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
+%\diff{s}^2 = -\diff{t}^2 + a(t)^2 \left( \diff{r}^2 + r^2 \diff{\theta}^2 + r^2 \sin^2 \theta \, \diff{\phi}^2 \right).
+\diff{s}^2 = -\diff{t}^2 + a(t)^2 \big( \diff{x}^2 + \diff{y}^2 + \diff{z}^2 \big).
 \label{eq:flrw}
 \end{equation}
 When this $g_{\mu\nu}$ is inserted into the Einstein equation \eqref{eq:einstein_intro}
 and one assumes that $T_{\mu\nu}$ is described by a perfect fluid with energy density $\rho$ and pressure $P$,
-one obtains the first and second Friedmann equations:
+one obtains the first and second Friedmann equations
+(here $\dot{\phantom{x}} = \odv{}/{t}$):
 \begin{subequations}
 \label{eq:fried}
 \begin{align}
@@ -301,34 +304,35 @@ one obtains the first and second Friedmann equations:
 \end{align}
 \end{subequations}
 They describe how the universe expands with the scale factor $a(t)$ due to $\rho$ and $P$,
-which are sourced by the following \enquote{ingredients} (illustrated in \cref{fig:species}).
+which are sourced by the \enquote{ingredients} that follow below.
 
-\item \textbf{Dark energy}
-as a cosmological constant $\Lambda$ was first added by Einstein in his equations \eqref{eq:einstein_intro}
-in order for them to give a stable solution for a static (non-expanding) universe, which was assumed at the time.
+\item \textbf{The cosmological constant}
+$\Lambda$ was first added by Einstein in his equations \eqref{eq:einstein_intro}
+to allow for a static (non-expanding) universe.
 When Hubble observed that nearby galaxies are receding and showed that the universe expands with time,
-Einstein famously erased it and called it his \enquote{biggest blunder}.
-However, it is now back in the equations to explain the acceleration \eqref{eq:fried2}
-of the expansion that was found from supernova observations in the 1990s.
-We move $\Lambda$ to the right side of the Einstein equations $G_{\mu\nu} = 8\pi T_{\mu\nu}$,
+Einstein famously erased it and reportedly called it his \enquote{biggest blunder}.
+However, supernova observations in the 1990s reintroduced $\Lambda$ to explain the accelerating expansion \eqref{eq:fried2}.
+It makes up around $70\%$ of the energy today and is a type of \textbf{dark energy},
+which is a wider class of theories that explain this phenomenon.
+We will move $\Lambda$ to the right side of the Einstein equations $G_{\mu\nu} = 8\pi T_{\mu\nu}$,
 and absorb it into $T_{\mu\nu}$ with $P = -\rho$.
 
 \item \textbf{Cold dark matter} (CDM)
 is an invisible, slow-moving and collisionless form of matter
-that only interacts gravitationally and makes up around $25\%$ of the energy density today.
+that only interacts gravitationally and makes up around $25\%$ of the energy today.
 Historically, dark matter was first proposed to explain higher observed velocities of stars and galaxies
-than can be explained by the estimated amount of visible matter alone,
-and later to explain the level of temperature anisotropies in the cosmic microwave background
-with undisturbed clustering of matter before the interacting baryons and photons decouple
+than can be explained by the estimated amount of visible matter alone.
+Now it also explains the measured cosmic microwave background,
+where the pressure-suppressed clustering of baryons alone in the early universe
+is insufficient to give the level of temperature anisotropies we observe
 \cite[e.g.][]{bertoneHistoryDarkMatter2018}.
 
 \item \textbf{Baryons}
 are \enquote{normal} visible matter that interacts with light,
-and makes up around $5\%$ of the energy density today.
+and makes up around $5\%$ of the energy today.
 \enquote{Baryons} in cosmology includes baryons, such as protons and neutrons, that make up the elements;
-but also leptons, such as electrons, which are not baryons, but nevertheless referred to as such by cosmologists.
-Baryons cluster like CDM, but unlike CDM the interacting baryon-photon plasma in the early universe
-creates outwards pressure that counteracts collapse.
+but also leptons, such as electrons, which are not baryons, but nevertheless referred to as such by (pragmatic) cosmologists.
+Baryons cluster like CDM, but their collapse is counteracted by pressure from the baryon-photon plasma in the early universe.
 The resulting baryon acoustic oscillations (BAO) leave a detectable signature on the matter distribution and cosmic microwave background.
 
 \item \textbf{Photons}
@@ -337,18 +341,18 @@ They interact with baryons through scattering off charged particles.
 In the early universe the temperature was so high that atoms were ionized and photons constantly scattered off electrons,
 but as the universe expanded and became cooler the electrons and ions combined and the universe became transparent to photons.
 Photons that were last scattered at this time have since traveled unimpeded through the universe and are observable as the cosmic microwave background today,
-which functions as a direct probe of early universe physics.
+which directly probes early-universe physics.
 This was first detected by Penzias and Wilson in 1964,
-and has now been refined with the Planck experiment.
-Photons made up a significant fraction of the energy budget in the early universe, but are negligible today.
+and has later been refined with many surveys, such as the Planck satellite.
+Photons dominated the energy in the early universe,
+but are negligible today with a temperature of $\approx 2.7\,\mathrm{K}$.
 
 \item \textbf{Neutrinos}
-are massive but light particles in the standard model of particle physics.
-They behave relativistically (similar to photons) in the early universe,
-but nonrelativistically (similar to matter) in the late universe
-as the expansion decreases their momentum.
+are light massive particles that
+were relativistic and dominated together with photons in the early universe,
+but became nonrelativistic in the late universe as the expansion slowed them down.
 They decoupled from the primordial plasma in the very early universe,
-where they interacted only weakly with electrons and positrons.
+where they interacted weakly with electrons and positrons.
 
 \item \textbf{Inflation}
 is a brief period of exponentially fast expansion that took place in the very early universe.
@@ -368,7 +372,8 @@ have uncovered a discrepancy in the inferred value of the $H_0$ parameter of the
 called the \enquote{Hubble tension}
 \cite{perivolaropoulosChallengesCDMUpdate2022b}.
 \textbf{Right:}
-Recent observations of baryon acoustic oscillations prefer a form of dynamical dark energy,
+Recent observations of baryon acoustic oscillations in combination with the CMB and supernovae
+prefer a form of dynamical dark energy,
 here in the popular \wowaCDM{} extension of the standard model
 that parameterizes deviations $w_0 \neq -1$ and $w_a \neq 0$ from a cosmological constant
 \cite{collaborationDESIDR2Results2025}.
@@ -383,8 +388,9 @@ the accelerating expansion of the late universe seen from supernovae,
 temperature and polarization anisotropies in the cosmic microwave background from the early universe,
 and statistics of large-scale structure in the late universe.
 
-However, as gradually uncovered by increasingly precise observations,
-it also faces a number of challenges.
+However,
+it now faces a number of challenges uncovered by increasingly precise observations,
+as illustrated in \cref{fig:tensions}.
 For example
 \cite{bullLCDMProblemsSolutions2016,abdallaCosmologyIntertwinedReview2022a,perivolaropoulosChallengesCDMUpdate2022b}:
 \begin{itemize}
@@ -394,41 +400,41 @@ We do not understand the theoretical nature of dark matter and dark energy (the 
 The equations of the \LCDM{} model describe only \emph{how} dark matter effectively behaves,
 but not what it \emph{is} in terms of physical theories we already understand.
 A natural theoretical candidate for the cosmological constant is the vacuum energy density from quantum field theory,
-but calculations show that it is off by at least 60 orders of magnitude.
+but calculations show that it is off by many orders of magnitude.
 
 \item
 Observations of the CMB (which depends mostly on early-universe physics)
 and of supernova distances (which depend mostly on late-universe physics)
 give incompatible values of the Hubble parameter $H_0 = H(t_0)$ today
 \cite[e.g.][]{perivolaropoulosChallengesCDMUpdate2022b}.
-This is called the \enquote{Hubble tension} and illustrated in \cref{fig:tensions}.
+This is the (in)famous \enquote{Hubble tension} and is illustrated in \cref{fig:tensions}.
 A similar tension exists for the amplitude of matter clustering from CMB versus LSS data,
 but is much less severe.
 
 \item
-We observe a dipole moment in the CMB due to the Solar System's relative motion to it,
-but the dipole effect found in the LSS for the same reason is found to be twice as large
+We observe a dipole moment in the CMB due to the Solar System's relative motion to it.
+However, a corresponding dipole effect in the LSS is found to be two times larger than expected
 \cite{secrestTestCosmologicalPrinciple2021}.
-This potential anisotropy in our universe challenges the cosmological principle,
-which is a very fundamental assumption in both the \LCDM{} model and common extensions of it.
+This sign of potential anisotropy in our universe challenges the cosmological principle,
+which is a fundamental assumption in both the \LCDM{} model and many extensions.
 
 \item
-Recent measurements from the DESI survey of the BAO feature imprinted in the LSS
+Recent measurements from the DESI survey of the BAO feature imprinted in the LSS,
+in combination with CMB and supernovae observations,
 prefer time-varying models of dark energy when its equation of state is
 parameterized as a first-order Taylor expansion in the scale factor around its value today
 \cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}.
-This is shown in \cref{fig:tensions}
+This is also shown in \cref{fig:tensions}
 and has received significant attention lately in the cosmology community.
 
 \item
 The DESI results also constrain the total neutrino mass by an \emph{upper} bound
-that is in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments
+that is increasingly in tension with the \emph{lower} bound found from terrestrial neutrino oscillation experiments
 \cite{collaborationDESI2024VI2025,collaborationDESIDR2Results2025}.
 However, when the time-varying dark energy model is used instead of the \LCDM{} model,
 the constraints become compatible.
 \end{itemize}
-These and other discrepancies motivate research on modifying all parts of the cosmological model
-and relaxing the assumptions of \LCDM{}.
+These and other discrepancies motivate research on modifying all parts of the standard \LCDM{} model.
 I review some examples of modified models in \cref{sec:modifications}.
 As one modifies the cosmological model,
 one must also modify computer software that solves its governing equations.
@@ -465,9 +471,9 @@ that are related to my contributions in this thesis.
 
 \EB{} codes solve the background and linear perturbations of the coupled \EB{} equations in cosmology.
 They describe the Einstein equations \eqref{eq:einstein_intro} coupled to the evolution of the matter content in the universe given by the Boltzmann equation,
-and are solved perturbatively around the FLRW metric \eqref{eq:flrw} for a given cosmological model.
+and are solved perturbatively around the FLRW metric \eqref{eq:flrw}.
 These equations must be modified depending on the cosmological model.
-The solutions of these equations are used to predict distance measures,
+Their solutions are used to predict distance measures,
 power spectra for the spatial distribution of matter
 (as shown in \cref{fig:lss})
 and power spectra for the angular distribution of anisotropies in the cosmic microwave background
@@ -476,7 +482,7 @@ and how this is influenced by gravitational lensing.
 %This approach is accurate for large distance scales, up to $k \lesssim 0.1 \, h/\Mpc$ (today; the limit increases with time),
 %but on shorter scales one must resort to higher-order (and more complicated) perturbation theory or nonlinear simulations.
 
-This is the most fundamental piece of software used for cosmological modeling.
+This is perhaps the most fundamental piece of software used for cosmological modeling.
 Not only do \EB{} codes lead directly to the important observables mentioned above,
 but they also provide initial conditions for other modeling tools such as $N$-body simulations (see below).
 The two most established codes today are CAMB \cite{lewisEfficientComputationCMB2000a} and CLASS \cite{lesgourguesCosmicLinearAnisotropy2011d,blasCosmicLinearAnisotropy2011c},
@@ -485,15 +491,17 @@ such as CosmoMC \cite{lewisCosmologicalParametersCMB2002,lewisEfficientSamplingF
 MontePython \cite{audrenConservativeConstraintsEarly2013,brinckmannMontePython3Boosted2019}
 and Cobaya \cite{torradoCobayaCodeBayesian2021}.
 It is the combination of these tools with observational data
-that is responsible for most constraints on cosmological parameters in the contemporary literature.
+that is responsible for most constraints on cosmological parameters in the literature today.
 
-The codes incorporate a wide range of numerical methods
+These codes incorporate a wide range of numerical methods
 in order to solve several challenging numerical problems.
 This includes large and highly stiff ordinary differential equations,
 numerical quadrature of thousands of line-of-sight integrals,
 computation of special functions such as (hyper)spherical Bessel functions,
 interpolation schemes and parallelization techniques.
-Despite these challenges, the codes have been highly refined and run on the order of seconds on a modern laptop.
+Despite these challenges, the codes have been highly refined
+and solve a cosmological model with some given parameters
+on the order of seconds on a modern laptop.
 
 \Cref{chap:lin} in this thesis describes the largest contribution of my work,
 which is the implementation of a new \EB{} code called SymBoltz
@@ -501,7 +509,7 @@ which is the implementation of a new \EB{} code called SymBoltz
 It is designed to make it easier to implement modified cosmological models,
 remove the need for approximation schemes that complicate the equations in other codes,
 and support modern numerical methods such as automatic differentiation and spectral interpolation methods.
-We will go into much more depth on \EB{} codes there.
+We will go into much more depth on the \EB{} equations and codes there.
 
 \begin{figure}[t!]
 \centering
@@ -528,10 +536,10 @@ for a \LCDM{} model computed by SymBoltz
 At sufficiently small distance scales and late times,
 the linear perturbation theory that underlies \EB{} codes is no longer sufficient.
 Here nonlinear effects from gravitational clustering become important.
-$N$-body codes are codes that simulate the nonlinear evolution of gravitational clustering
+$N$-body codes simulate the nonlinear evolution of gravitational clustering
 by evolving $N$ matter particles in a box that interact with each other due to gravity.
-This is extremely expensive as $N$ grows and can take anywhere from minutes to months,
-and $N$-body simulation codes can be grouped in two categories.
+This is extremely expensive as $N$ grows and can take anywhere from minutes on laptops to months on supercomputers.
+Due to the computational demands, we can group $N$-body codes in two categories.
 
 \enquote{Slow-but-accurate} codes aim to describe the nonlinear clustering as accurately as possible.
 This includes both taking physical effects such as baryons into account,
@@ -540,18 +548,18 @@ and using computational techniques such as adaptive mesh refinement in order to
 increase the resolution of the computational grid in areas where the particles cluster
 to get accurate results down to small scales.
 This is good for running one or a few simulations,
-but is very demanding for exploring the parameter space of the model.
+but is very demanding for exploring the parameter space of a model.
 Some examples of codes in this category are
 GADGET \cite{springelGADGETCodeCollisionless2001},
 RAMSES \cite{teyssierCosmologicalHydrodynamicsAdaptive2002a} and
 AREPO \cite{weinbergerArepoPublicCode2020}.
 
-\enquote{Fast-but-approximate} codes sacrifice accuracy in order to achieve faster computational speeds.
+\enquote{Fast-but-approximate} codes sacrifice some accuracy for speed.
 These codes usually neglect baryonic effects and consider only cold dark matter, which results in a simpler and more elegant computational problem,
 and a fixed particle-mesh (PM) structure of the computational grid.
 Some codes employ approximations such as the COLA method \cite{tassevSolvingLargeScale2013b},
 which sacrifices accuracy at the very smallest scales in order to take far fewer time steps.
-Such methods are more appropriate for exploring dependence throughout parameter space,
+Such methods are more appropriate for exploring dependence through parameter space,
 and their accuracy sacrifice is less of a downside in applications that study differences or ratios of an observable in two different universes.
 Some examples of codes in this category are
 L-PICOLA \cite{howlettLPICOLAParallelCode2015},
@@ -584,10 +592,11 @@ For example, COSMOPOWER uses neural networks and principal component analysis
 \end{figure}
 
 It happens quite often in physics and cosmology that we have a way of computing or simulating
-something from physically principled equations that is very computationally expensive.
+something from physically principled equations that is computationally expensive.
 Yet it is often the case that the final output depends on the input in a relatively smooth and \enquote{boring} way.
-It then seems quite unnecessary to repeat similar computations many times by brute force,
-when the input-output dependence can be captured in a cheaper way.
+It then seems quite unnecessary to repeat many similar computations by brute force,
+when the input-output dependence can be captured in a cheaper way
+using interpolation or regression methods.
 
 This is true for \EB{} codes and to an even greater extent $N$-body simulations.
 For example, the power spectra at each $k$ and $l$ in \cref{fig:cmb,fig:lss}
@@ -612,16 +621,16 @@ of parameters $\mathbf{p}$ using a cheap \enquote{black box} surrogate model:
 The most important point is that the result $\mathcal{O}$ correctly matches the target function within some given tolerance,
 and that the evaluation of the \enquote{black box} is as fast as possible using whatever means necessary.
 
-Perhaps pedantically and philosophically, how can we be sure that a \enquote{black box} produces correct results when we have no idea what it does?
-And how do we reconcile this with our standards for validation, transparency and explainable methods in research?
-The most crucial insight is in my opinion the very simple property that observables in physical models
-(ignoring quantum mechanical effects)
-are \emph{smooth} functions of the model parameters.
+Perhaps pedantically and philosophically,
+how can we be sure that a \enquote{black box} produces correct results when we disregard what it does?
+And how do we reconcile this with our standards for validation, transparency and explainable methods in science?
+The most crucial insight is in my opinion the simple property that observables in physical models
+are usually \emph{smooth} functions of the model parameters.
 As one perturbs the parameters $\mathbf{p}$ slightly,
-any well-defined observable function that we can detect in our universe should respond smoothly to it,
-so that the value of $\mathcal{O}$ and all of its derivatives (which are really just derived observables from $\mathcal{O}$) are continuous functions of $\mathbf{p}$.
-This is a fundamental philosophical assumption at least in classical (non-quantum) theories of physics,
-and is what makes it possible to describe physics in the mathematical language of calculus and differential equations.
+a physical observable function $\mathcal{O}$ responds smoothly to it.
+This is what makes it possible to formulate physics in the mathematical language of calculus and differential equations, for example.
+We can therefore train an emulator on samples of the function,
+and then test that it gives correct results on an independent set of validation points.
 
 From a bird's-eye view,
 one can see emulation as a marriage between computational cosmology
@@ -631,10 +640,10 @@ that can be used to access better and faster converging interpolation methods
 (as explored in \cref{paper:chebyshev}).
 The expensive function is evaluated at a number of sample points,
 and then interpolation and regression methods are used to evaluate it cheaply at other points.
-A challenge of traditional interpolation methods is that their cost scales exponentially with the dimension of the parameter space
+A challenge of traditional interpolation methods is that their cost scales exponentially with the parameter space dimension
 (\enquote{the curse of dimensionality}),
 but the recent explosion of research in artificial intelligence and machine learning has made it feasible to emulate functions of
-$O(10)$ parameters using neural networks with relatively small computational cost, for example (see \cref{fig:emulator}).
+$O(10)$ parameters using neural networks with relatively small computational cost (see \cref{fig:emulator}).
 
 Many emulators and emulator frameworks have been created
 for emulating the output from \EB{} codes and $N$-body simulations
@@ -682,9 +691,8 @@ to make emulators widespread and accessible for standard and extended models ali
 that maps the expensive $N$-body simulations down to cheap \EB{} codes.
 \Cref{chap:lin} presents a new interpolation method inside SymBoltz
 that is enabled by the smoothness of its approximation-free output.
-I also argue how I believe we could benefit from moving our dependence on approximation schemes
-from the internal model-dependent layer implemented inside codes
-to the model-independent layer \emph{around} the code.
+There I also argue that we should rely less on internal model-dependent approximations
+and more on simple and general emulation methods of the final code outputs.
 
 \chapter{The linear part: SymBoltz}
 \label{chap:lin}
