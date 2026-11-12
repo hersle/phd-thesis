@@ -1897,7 +1897,7 @@ Citations              & 6960                          & 3459                   
 \noindent\footnotesize
 ${}^1$ABCMB and DISCO-EB are grouped because they are both built on Python, JAX and Diffrax with many technical similarities.
 ${}^2$Tight-coupling approximation is mandatory, but others can be disabled. %(\url{https://github.com/lesgourg/class_public/blob/e85808324f51fc694d12e3ed7439552a3c3f9540/include/perturbations.h\#L42}).
-${}^3$BDF/NDF methods are unconditionally \enquote{A-stable} only to 2nd order \cite[chapter V.1]{hairerSolvingOrdinaryDifferential1996}, so their order can degrade in stiff regions.
+${}^3$BDF/NDF methods are unconditionally \enquote{A-stable} only to 2nd order \cite[section V.1]{hairerSolvingOrdinaryDifferential1996}, so their order can degrade in stiff regions.
 ${}^4$Custom \texttt{BDF2} method that assumes linear $\mathbf{f} = \mathbf{J} \mathbf{u}$ \cite{refregierPyCosmoIntegratedCosmological2018} and needs $\mathbf{J}$ every time step.
 ${}^5$Rosenbrock methods linearize $\mathbf{f}$ and need $\mathbf{J}$ every time step \cite{steinebachConstructionRosenbrockWanner2023}.
 ${}^6$Sparsity found numerically and changes with approximations.
@@ -2239,7 +2239,7 @@ for example decaying and annihilating dark matter or evaporation of light primor
 \textbf{Other baryon modifications}
 have implemented perturbed effects of recombination \cite{lewisLinearEffectsPerturbed2007}.
 It has also been pointed out by \cite{pookkillathBaryonPhysicsTight2019} that the baryon and general fluid equations
-in \cite[equations 29-30 vs. 66-67]{maCosmologicalPerturbationTheory1995a}
+in \cite[equations 29--30 vs. 66--67]{maCosmologicalPerturbationTheory1995a}
 (our equations \eqref{eq:eb_baryons} vs. \eqref{eq:fluid})
 are inconsistent because every term involving baryon pressure is ignored \emph{except} the term proportional to $(\delta P/\delta\rho) \, k^2 \delta$.
 This breaks general covariance and energy-momentum conservation.
@@ -2844,7 +2844,7 @@ and must rebuild the sparsity pattern when the ODE changes due to approximation 
 
 Due to all these technicalities,
 the speed and stability of implicit ODE solvers are highly problem-dependent
-\cite[e.g.][Section IV.10]{hairerSolvingOrdinaryDifferential1996}.
+\cite[e.g.][section IV.10]{hairerSolvingOrdinaryDifferential1996}.
 It is therefore wise to take a \textbf{benchmark-oriented approach},
 where one uses a numerical ODE solver library that implements as many implicit solvers as possible
 and then benchmarks the performance of each of them on the problem at hand.
@@ -2955,7 +2955,7 @@ For example, an \EB{} code takes in cosmological parameters $p = \{h, \Omega_{b0
 \includegraphics[width=1.0\textwidth]{media/Pkz_sensitivity}
 \caption[Automatic differentiation gradients in SymBoltz]{\label{fig:ad_evolution}
 Derivative of the matter power spectrum $P(a, k; \mathbf{p})$ at scale factors $a$ and wavenumbers $k$ as a function of 12 cosmological parameters $\mathbf{p}$.
-This is a recreation of \cite[Figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
+This is a recreation of \cite[figure 4]{hahnDISCODJDifferentiableEinsteinBoltzmann2024a},
 but in SymBoltz instead of DISCO-EB, to show that both codes can compute similar sensitivities.
 The plots show how the codes effectively evolve not values, but gradients of the matter power spectrum over time,
 and can be used in this form as a way to learn how it is influenced by different cosmological parameters.}
