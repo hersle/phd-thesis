@@ -83,7 +83,6 @@
 \newcommand\BD{Brans--Dicke}
 \DeclareMathOperator{\sign}{sign} % sign function
 
-% TODO: reconsider title?
 \title{New tools for exploring cosmological models}
 \subtitle{Including a symbolic-numeric, approximation-free and differentiable \EB{} code}
 \author{Herman Sletmoen}
@@ -820,7 +819,6 @@ where $\{T,L\}$ are scalars and $L_i$ is a transverse vector with $\partial^i L_
 This leads to the following change in the scalar-vector-tensor parts \cite[e.g.][]{baumannNotes}:
 \begin{equation}
 \begin{alignedat}{3}
-% TODO: how to get 3 perfectly spaced columns while preserving 1 eq number?
 A &\to \tilde{A} = A - \dot{T} - \tfrac{\dot{a}}{a} T, \qquad &
 B_i &\to \tilde{B}_i = B_i - \dot{L}_i, \qquad &
 E_{ij} &\to \tilde{E}_{ij} = E_{ij}, \\
@@ -1534,8 +1532,6 @@ and for performance they should be rescaled back to the flat spherical Bessel fu
 
 \iffalse
 Photon before multipole expansion:
-\TODO{$\mu^n$ or $P_n(\mu)$?}
-\TODO{ideally ref back to $\dot{F}$ equation in Boltzmann equation section}
 \begin{equation}
 \dot{F}(\tau,k,\mu) + \big(i k \mu + \dot{\kappa}(\tau)\big) F(\tau,k,\mu) = S(\tau, k) = S_0 + \mu S_1 + \mu^2 S_2
 \end{equation}
@@ -2204,9 +2200,6 @@ and is both more accurate and faster than RECFAST.
 %while CAMB can optionally be compiled for it but still defaults to RECFAST recalibrated against HyRec and CosmoRec.
 %SymBoltz also offers both RECFAST and HyRec-2.
 
-%\TODO{this exactly generalizes ...} the effective recombination coefficient $\alpha_B$ to $2 \leq n < \infty$ in Peebles' equation \eqref{eq:peebles}
-%\TODO{rename $\alpha^{(2)} \to \alpha_B$ in Peebles eq.?}
-
 \textbf{Reionization} models modify the late-time ionization history of the universe,
 when radiation from the first stars and galaxies reionizes the neutral atoms after recombination.
 It is difficult to describe these processes from first principles with linear theory,
@@ -2370,7 +2363,7 @@ photons ($\gamma$), baryons (b), massless or massive neutrinos ($\nu$), dark mat
 Only baryon--photon interactions are part of the standard \LCDM{} model.
 }
 \centering
-\small % TODO: \normalsize?
+\small
 \setlength{\tabcolsep}{2pt}
 \def\arraystretch{1.3}
 \newcolumntype{P}{>{\raggedright\arraybackslash}p{0.175\textwidth}}
@@ -2423,7 +2416,7 @@ where the moemntum $q$ cannot be integrated out
 even in the limit of massive neutrinos.
 \cite{oldengottBoltzmannHierarchyInteracting2015,oldengottInteractingNeutrinosCosmology2017}
 
-\TODO{go by modification instead:}
+Or go by modification instead?
 Background continuity equation modified, breaks analytical solution.
 New and modified perturbation equations,
 can require revisions to the TCA.
