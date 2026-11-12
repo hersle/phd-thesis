@@ -24,7 +24,7 @@ ks = 10 .^ range(-4, 1, length = 100)
 
 # CDM + baryon power spectrum P[iτ, ik]. Large scales need tighter tolerances (∝ k²):
 # there the gauge-invariant overdensity ∝ (kτ)² is a tiny difference between two O(1) terms in the conformal Newtonian gauge.
-tol(k) = 1e-5 * min(1, k / 1000)^2 # k in H₀/c
+tol(k) = 1e-7 * min(1, k / 1000)^2 # k in H₀/c
 lnP(θ) = log.(spectrum_matter(:cb, probf(symboltz(θ)), ks ./ k100, τs; ptreltol = tol, ptabstol = tol))
 
 # ∂ln P / ∂ln θᵢ = θᵢ ∂ln P / ∂θᵢ (also works for negative w₀)
@@ -41,7 +41,7 @@ for i in eachindex(θ)
         xlabel = row == 4 ? L"k \,/\, (h/\mathrm{Mpc})" : "", ylabel = col == 1 ? L"a" : "",
     )
     c = maximum(abs, dlnP[:, :, i])
-    hm = heatmap!(ax, ks, as, dlnP[:, :, i]'; colormap = Reverse(:RdBu), colorrange = (-c, +c))
+    hm = heatmap!(ax, ks, as, dlnP[:, :, i]'; colormap = Reverse(:RdBu), colorrange = (-c, +c), rasterize = 2)
     Colorbar(fig[row, 2col], hm)
 end
 save(joinpath(@__DIR__, "../media/Pkz_sensitivity.pdf"), fig)

@@ -5,4 +5,4 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 SymBoltz = "64c5a815-d72d-4982-8b1f-85a778bbef4e"
 
 [compat]
-SymBoltz = "=2.1.0"
+SymBoltz = "=2.2.0"
